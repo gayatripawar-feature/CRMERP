@@ -7,7 +7,16 @@ import {
   PieChart, Pie, Cell, BarChart, Bar
 } from "recharts";
 
+
+import { FormControl } from "@mui/material";
+
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from '@mui/material';
+import {  InputLabel} from "@mui/material";
+
+
+
+
+
 
 const SalesDashboard = () => {
   const buttons = [
@@ -17,7 +26,9 @@ const SalesDashboard = () => {
     { label: "Visit Tracker", icon: <FaMapMarkerAlt size={20} />, bgColor: "#2ecc71" },
   ];
 
-  const [selectedTab, setSelectedTab] = useState("Lead Conversion"); // Default tab
+  const [selectedTab, setSelectedTab] = useState("Lead Conversion"); 
+  const [selectedSource, setSelectedSource] = useState(""); 
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState(""); // Added missing state
@@ -51,14 +62,14 @@ const chartData = [
 
 const teamData = [
   {
-    salesPerson: "John Doe",
-    totalLeadAssigned: 15,
-    visitAssigned: 10,
-    lost: 3,
-    hot: 5,
-    warm: 4,
-    cold: 2,
-    undefined: 1
+    // salesPerson: "John Doe",
+    // totalLeadAssigned: 15,
+    // visitAssigned: 10,
+    // lost: 3,
+    // hot: 5,
+    // warm: 4,
+    // cold: 2,
+    // undefined: 1
   }
 ];
 
@@ -74,6 +85,28 @@ const pieData = [
 const COLORS = ["#e74c3c", "#f1c40f", "#3498db", "#2ecc71", "#95a5a6"];
 
 
+const sources = [
+  "Actual Site", "Hoarding", "Facebook", "Insta", "Website", "Print Media", "Radio", "Google Ad", "Exhibition",
+  "Online Portal", "Direct Call", "Pamphlet", "Channel Partner"
+];
+
+const COLOR = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A28DFF", "#FF6666", "#66CC66", "#CC99FF", "#FFCC99", "#99CCCC", "#FF99CC", "#CCCC66", "#9999FF"];
+
+const data = [
+  { name: "Total Lead Assigned", value: 400 },
+  { name: "Visit Assigned", value: 300 },
+  { name: "Visit Postponed", value: 200 },
+  { name: "Visit Cancelled", value: 150 },
+  { name: "Re-scheduled", value: 180 },
+  { name: "Visit Done", value: 320 },
+  { name: "Lead to Actual Visit", value: 280 },
+  { name: "Total Visits", value: 500 },
+  { name: "Lost", value: 120 },
+  { name: "Hot", value: 100 },
+  { name: "Warm", value: 140 },
+  { name: "Cold", value: 160 },
+  { name: "Undefined", value: 80 },
+];
 
 
 const barData = [
@@ -126,7 +159,7 @@ const barData = [
   >
     {btn.icon}
   </div>
-  {btn.label}  {/* Display the label text here */}
+  {btn.label}  
 </Button>
 
           </div>
@@ -134,7 +167,7 @@ const barData = [
       </div>
 
 
-      <Box mt={3} p={3} style={{ border: "1px solid #ddd", borderRadius: "10px" }}>
+      <Box mt={3} p={3} style={{ border: "1px solid #ddd", borderRadius: "10px", maxHeight: "80vh", overflowY: "auto", padding: "10px" }}>
     
 
         {selectedTab === "Lead Conversion" && (
@@ -192,225 +225,7 @@ const barData = [
           </Box>
         )}
 
-{/*      
 
-{selectedTab === "Team Performance" && (
-  <Box>
-    <Box mb={3}>
-      <Typography variant="h6" gutterBottom>Select Employee</Typography>
-      <Select
-        value={selectedEmployee}
-        onChange={(e) => setSelectedEmployee(e.target.value)}
-        style={{ width: "200px", marginBottom: "20px" }}
-      >
-        {employeeOptions.map((emp) => (
-          <MenuItem key={emp} value={emp}>{emp}</MenuItem>
-        ))}
-      </Select>
-    </Box>
-
- 
-    <Box display="flex" justifyContent="space-between" alignItems="center" gap={4}>
-    
-      <Box width="50%" p={2} boxShadow={3} borderRadius={2} bgcolor="white">
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie data={pieData} cx="50%" cy="50%" outerRadius={80} label>
-              {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend layout="horizontal" verticalAlign="bottom" align="center" />
-            <text x="50%" y="10%" textAnchor="middle" fontSize={16} fontWeight="bold">
-              Average Lead Status Distribution
-            </text>
-          </PieChart>
-        </ResponsiveContainer>
-      </Box>
-
-   
-      <Box width="50%" p={2} boxShadow={3} borderRadius={2} bgcolor="white">
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={barData}>
-          
-            <text x="50%" y="10%" textAnchor="middle" fontSize={16} fontWeight="bold">
-              Total Lead Metrics Overview
-            </text>
-
-            <XAxis dataKey="name" />
-            <YAxis
-              domain={[0, 35]}
-              tickInterval={5}
-              label={{ value: "Total Count", angle: -90, position: "insideLeft" }}
-              ticks={[0, 5, 10, 15, 20, 25, 30, 35]}
-            />
-            <Tooltip />
-            <Bar dataKey="count">
-              {barData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </Box>
-    </Box>
-
-
-    <Box mt={3} p={2} boxShadow={3} borderRadius={2} bgcolor="white">
-      <Typography variant="h6" gutterBottom>
-        Sales Person Performance
-      </Typography>
-      <TableContainer component={Paper} style={{ maxHeight: '300px', overflowY: 'auto' }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Sales Person</TableCell>
-              <TableCell>Total Lead Assigned</TableCell>
-              <TableCell>Visit Assigned</TableCell>
-              <TableCell>Lost</TableCell>
-              <TableCell>Hot</TableCell>
-              <TableCell>Warm</TableCell>
-              <TableCell>Cold</TableCell>
-              <TableCell>Undefined</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {teamData.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>{row.salesPerson}</TableCell>
-                <TableCell>{row.totalLeadAssigned}</TableCell>
-                <TableCell>{row.visitAssigned}</TableCell>
-                <TableCell>{row.lost}</TableCell>
-                <TableCell>{row.hot}</TableCell>
-                <TableCell>{row.warm}</TableCell>
-                <TableCell>{row.cold}</TableCell>
-                <TableCell>{row.undefined}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
-  </Box>git remote -v
-
-)}
-
-
-      */}
-
-{/* ------------- */}
-{/* 
-{selectedTab === "Team Performance" && (
-  <Box>
-    <Box mb={3}>
-      <Typography variant="h6" gutterBottom>Select Employee</Typography>
-      <Select
-        value={selectedEmployee}
-        onChange={(e) => setSelectedEmployee(e.target.value)}
-        style={{ width: "200px", marginBottom: "20px" }}
-      >
-        {employeeOptions.map((emp) => (
-          <MenuItem key={emp} value={emp}>{emp}</MenuItem>
-        ))}
-      </Select>
-    </Box>
-
-   
-    <Box display="flex" justifyContent="space-between" alignItems="center" gap={4}>
-      
-      <Box width="50%" p={2} boxShadow={3} borderRadius={2} bgcolor="white">
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie data={pieData} cx="50%" cy="50%" outerRadius={80} label>
-              {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend layout="horizontal" verticalAlign="bottom" align="center" />
-            <text x="50%" y="10%" textAnchor="middle" fontSize={16} fontWeight="bold">
-              Average Lead Status Distribution
-            </text>
-          </PieChart>
-        </ResponsiveContainer>
-      </Box>
-
-      <Box width="50%" p={2} boxShadow={3} borderRadius={2} bgcolor="white">
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={barData}>
-     
-            <text x="50%" y="10%" textAnchor="middle" fontSize={16} fontWeight="bold">
-              Total Lead Metrics Overview
-            </text>
-
-            <XAxis dataKey="name" />
-            <YAxis
-              domain={[0, 35]}
-              tickInterval={5}
-              label={{ value: "Total Count", angle: -90, position: "insideLeft" }}
-              ticks={[0, 5, 10, 15, 20, 25, 30, 35]}
-            />
-            <Tooltip />
-            <Bar dataKey="count">
-              {barData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </Box>
-    </Box>
-
-    <Box mt={3} p={2} boxShadow={3} borderRadius={2} bgcolor="white">
-      <Typography variant="h6" gutterBottom>
-        Sales Person Performance
-      </Typography>
-      <TableContainer
-        component={Paper}
-        style={{
-          maxHeight: '300px', 
-          overflowY: 'auto', 
-          display: 'block', 
-          height: 'auto', 
-          width: '100%',
-        }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Sales Person</TableCell>
-              <TableCell>Total Lead Assigned</TableCell>
-              <TableCell>Visit Assigned</TableCell>
-              <TableCell>Lost</TableCell>
-              <TableCell>Hot</TableCell>
-              <TableCell>Warm</TableCell>
-              <TableCell>Cold</TableCell>
-              <TableCell>Undefined</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {teamData.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>{row.salesPerson}</TableCell>
-                <TableCell>{row.totalLeadAssigned}</TableCell>
-                <TableCell>{row.visitAssigned}</TableCell>
-                <TableCell>{row.lost}</TableCell>
-                <TableCell>{row.hot}</TableCell>
-                <TableCell>{row.warm}</TableCell>
-                <TableCell>{row.cold}</TableCell>
-                <TableCell>{row.undefined}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
-  </Box>
-)} */}
-
-
-{/* ------ */}
 
 {selectedTab === "Team Performance" && (
   <Box>
@@ -475,7 +290,7 @@ const barData = [
     </Box>
 
     {/* Table Section */}
-    <Box mt={3} p={2} boxShadow={3} borderRadius={2} bgcolor="white">
+  <Box mt={3} p={2} boxShadow={3} borderRadius={2} bgcolor="white">
       <Typography variant="h6" gutterBottom>
         Sales Person Performance
       </Typography>
@@ -491,15 +306,15 @@ const barData = [
       >
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Sales Person</TableCell>
-              <TableCell>Total Lead Assigned</TableCell>
-              <TableCell>Visit Assigned</TableCell>
-              <TableCell>Lost</TableCell>
-              <TableCell>Hot</TableCell>
-              <TableCell>Warm</TableCell>
-              <TableCell>Cold</TableCell>
-              <TableCell>Undefined</TableCell>
+         <TableRow sx={{background:"#3621a9"}}>
+              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Sales Person</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Total Lead Assigned</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Visit Assigned</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Lost</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Hot</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Warm</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Cold</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Undefined</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -525,11 +340,267 @@ const barData = [
         </Table>
       </TableContainer>
     </Box>
+
+
+
   </Box>
 )}
 
 
-        {selectedTab === "Source Base Report" && <Typography>Source Base Report content here</Typography>}
+        
+
+
+
+
+{selectedTab === "Source Base Report" && (
+  <Box>
+    <Typography variant="h6" gutterBottom>
+      Source Base Report
+    </Typography>
+
+    <FormControl fullWidth sx={{ mb: 2 }}>
+      <InputLabel>Select Source</InputLabel>
+      <Select
+        value={selectedSource}
+        onChange={(e) => setSelectedSource(e.target.value)}
+      >
+        <MenuItem value="actual site">Actual Site</MenuItem>
+        <MenuItem value="hoarding">Hoarding</MenuItem>
+        <MenuItem value="facebook">Facebook</MenuItem>
+        <MenuItem value="insta">Instagram</MenuItem>
+        <MenuItem value="website">Website</MenuItem>
+        <MenuItem value="print media">Print Media</MenuItem>
+        <MenuItem value="radio">Radio</MenuItem>
+        <MenuItem value="google add">Google Ad</MenuItem>
+        <MenuItem value="exhibition">Exhibition</MenuItem>
+        <MenuItem value="online portal">Online Portal</MenuItem>
+        <MenuItem value="direct call">Direct Call</MenuItem>
+        <MenuItem value="pamphlet">Pamphlet</MenuItem>
+        <MenuItem value="channel partner">Channel Partner</MenuItem>
+      </Select>
+    </FormControl>
+
+    <Box sx={{ maxHeight: '600px', overflowY: 'auto', mb: 2 }}>
+      {/* Denotation (colored boxes above the Pie Chart) */}
+      <Box display="flex" justifyContent="space-between" mb={2}>
+     
+      </Box>
+
+      {/* Pie and Bar Charts */}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mt={4}>
+       
+
+<Box width="50%">
+        <Typography variant="h6" align="center" gutterBottom>
+          Lead Distribution Overview
+        </Typography>
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart>
+            <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8"    label={false}  >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+        <Box sx={{ mt: 3 }} />
+      </Box>
+
+      
+{/*         
+<Box width="50%">
+  <Typography variant="h6" align="center" gutterBottom>
+    Lead Metrics Breakdown
+  </Typography>
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart data={data}>
+      <XAxis
+        dataKey="name"
+        tick={{ fontSize: 10 }}
+        angle={-45}
+        textAnchor="end"
+        domain={[0, 'dataMax']} // Ensures X-axis starts from 0
+      />
+      <YAxis
+        tick={{ fontSize: 10 }}
+      />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="value" fill="#82ca9d">
+        {data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        ))}
+      </Bar>
+    </BarChart>
+  </ResponsiveContainer>
+</Box> */}
+
+
+
+{/* <Box width="50%">
+  <Typography variant="h6" align="center" gutterBottom>
+    Lead Metrics Breakdown
+  </Typography>
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart
+      data={data}
+      margin={{
+        top: 5,
+        right: 30,
+        left: 20,
+        bottom: 5,
+      }}
+      layout="horizontal"
+    >
+      <XAxis type="number" tick={{ fontSize: 10 }} domain={[0, 'dataMax']} />
+      <YAxis dataKey="name" tick={{ fontSize: 10 }} />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="value" fill="#82ca9d">
+        {data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
+        ))}
+      </Bar>
+    </BarChart>
+  </ResponsiveContainer>
+</Box> */}
+
+{/* ---------- */}
+{/* 
+<Box width="50%">
+  <Typography variant="h6" align="center" gutterBottom>
+    Lead Metrics Breakdown
+  </Typography>
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart
+      data={data}
+      margin={{
+        top: 5,
+        right: 30,
+        left: 20,
+        bottom: 5,
+      }}
+      layout="horizontal"
+    >
+      <XAxis type="number" tick={{ fontSize: 10 }} domain={[0, 'dataMax']} />
+      <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} />
+      <Tooltip />
+      <Legend />
+      
+     
+      <Bar dataKey="assigned" stackId="a" fill="#8884d8">
+        {data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
+        ))}
+      </Bar>
+      <Bar dataKey="postponed" stackId="a" fill="#82ca9d">
+        {data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
+        ))}
+      </Bar>
+      <Bar dataKey="remaining" stackId="a" fill="#ff7f50">
+        {data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
+        ))}
+      </Bar>
+    </BarChart>
+  </ResponsiveContainer>
+</Box> */}
+
+{/* -------------- */}
+{/* <Box width="50%">
+  <Typography variant="h6" align="center" gutterBottom>
+    Lead Metrics Breakdown
+  </Typography>
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart
+      data={data}
+      margin={{
+        top: 5,
+        right: 30,
+        left: 20,
+        bottom: 5,
+      }}
+      layout="horizontal"
+    >
+      <XAxis
+        type="number"
+        tick={{ fontSize: 10 }}
+        domain={[0, 'dataMax']}  // Ensure the X-axis goes from 0 to the max value of the data
+        ticks={[0, 5, 10, 15, 20, 25, 30, 35, 40]} // Adjust ticks as needed for the value range
+        interval={0}  // Ensures all ticks are visible
+      />
+      <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} />
+      <Tooltip />
+      <Legend />
+
+   
+      {data.map((entry, index) => (
+        <Bar
+          key={`bar-${index}`}
+          dataKey="value"  // This refers to the total value for each bar
+          fill={COLOR[index % COLOR.length]}  // Color from the COLOR array for each bar
+        >
+          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
+        </Bar>
+      ))}
+    </BarChart>
+  </ResponsiveContainer>
+</Box> */}
+
+
+<Box width="50%">
+  <Typography variant="h6" align="center" gutterBottom>
+    Lead Metrics Breakdown
+  </Typography>
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart
+      data={data}
+      margin={{
+        top: 5,
+        right: 30,
+        left: 20,
+        bottom: 5,
+      }}
+      layout="horizontal"
+    >
+      <XAxis
+        type="number"
+        tick={{ fontSize: 10 }}
+        domain={[0, 'dataMax']}  // Ensure the X-axis goes from 0 to the max value of the data
+        ticks={[0, 5, 10, 15, 20, 25, 30, 35, 40]} // Adjust ticks as needed for the value range
+        interval={0}  // Ensures all ticks are visible
+      />
+      <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} />
+      <Tooltip />
+      <Legend />
+
+      {/* Single horizontal bars for each category */}
+      {data.map((entry, index) => (
+        <Bar
+          key={`bar-${index}`}
+          dataKey="value"  // Reference the value field from the data
+          fill={COLOR[index % COLOR.length]}  // Use a color from the COLOR array for each bar
+        >
+          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
+        </Bar>
+      ))}
+    </BarChart>
+  </ResponsiveContainer>
+</Box>
+
+
+      </Box>
+    </Box> 
+
+
+
+  </Box>
+)}
+
+
         {selectedTab === "Visit Tracker" && <Typography>Visit Tracker content here</Typography>}
       </Box>
     </div>
@@ -537,6 +608,4 @@ const barData = [
 };
 
 export default SalesDashboard;
-
-
 
