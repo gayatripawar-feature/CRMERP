@@ -3,17 +3,18 @@
 
 
 
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { FaPlus } from "react-icons/fa";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { Button, Modal } from "react-bootstrap";
 import {  toast } from "react-toastify";
 
-const Banker = () => {
+const Admin_Banker = () => {
   const [showForm, setShowForm] = useState(false);
   // const [bankers, setBankers] = useState([]);
   const [bankers, setBankers] = useState([{ bankerName: '', bankerMobile: '' }]);
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -32,12 +33,36 @@ const Banker = () => {
     setBankers([...bankers, { bankerName: "", bankerMobile: "" }]);
   };
 
-  const handleBankerChange = (index, field, value) => {
-    const updatedBankers = [...bankers];
-    updatedBankers[index][field] = value;
-    setBankers(updatedBankers);
-  };
+  // const handleBankerChange = (index, field, value) => {
+  //   const updatedBankers = [...bankers];
+  //   updatedBankers[index][field] = value;
+  //   setBankers(updatedBankers);
+  // };
 
+
+  const handleBankerChange = (index, field, value) => {
+   
+    const regex = /^[0-9]*$/; 
+ 
+    if (regex.test(value)) {
+   
+      if (value.length > 10) {
+        toast.error("Invalid input: Please enter a valid 10-digit contact number.");
+      } else {
+        
+        setBankers((prevBankers) => {
+          const updatedBankers = [...prevBankers];
+          updatedBankers[index][field] = value;
+          return updatedBankers;
+        });
+      }
+    } else {
+      
+      console.log("Invalid input: Only digits are allowed.");
+    }
+  };
+  
+  
   const handleRemoveBanker = (index) => {
     const updatedBankers = bankers.filter((_, i) => i !== index);
     setBankers(updatedBankers);
@@ -45,11 +70,27 @@ const Banker = () => {
 
 
   const openModal = () => {
-    // Your modal opening logic here
+    
   };
   const closeModal = () => {
-    // Your modal closing logic
+   
   };
+
+
+  useEffect(() => {
+    if (showForm) {
+      setFormData({
+        name: "",
+        email: "",
+        mobile: "",
+        designation: "",
+        joiningDate: "",
+        status: "Active", // Optional, set default if necessary
+      });
+    }
+  }, [showForm]); 
+
+
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent default form submission
     toast.success("Data submitted successfully!");
@@ -250,4 +291,4 @@ const Banker = () => {
   );
 };
 
-export default Banker;
+export default Admin_Banker;

@@ -48,6 +48,7 @@ const Agreement = () => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
 
+
   useEffect(() => {
     loadLoansData();
   }, []);
@@ -58,15 +59,69 @@ const Agreement = () => {
     setFilteredLoans(data);
   };
 
-  const handleInputChange = (field, value) => {
-    // Update the selectedLoan or any other state here
-    setSelectedLoan((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  // const handleInputChange = (field, value) => {
+  //   // Update the selectedLoan or any other state here
+  //   setSelectedLoan((prev) => ({
+  //     ...prev,
+  //     [field]: value,
+  //   }));
+  // };
 
+  const handleInputChange = (field, value) => {
+    // Handle Age field validation
+    if (field === "alloteeAge") {
+      // Ensure that the value entered is a number and within an acceptable range
+      if (!isNaN(value) && value >= 0 && value <= 120) {  // Allow only numbers between 0 and 120 for age
+        setSelectedLoan((prev) => ({
+          ...prev,
+          [field]: value,
+        }));
+      } else {
+        toast.error("Invalid input: Please enter a valid age.");
+        console.log("Invalid input: Please enter a valid age.");
+      }
+    } else if (field === "nameOfAllotee" || field === "coAlloteeName") {
+      // Handle Allotee Name and Co-Allotee Name (letters and spaces only)
+      const regex = /^[A-Za-z\s]*$/;
   
+      if (regex.test(value) || value === "") {  // Allowing empty input initially
+        setSelectedLoan((prev) => ({
+          ...prev,
+          [field]: value,
+        }));
+      } else {
+        // Show error toast if the input is invalid (non-alphabetical characters)
+        toast.error("Invalid input: Only letters and spaces are allowed.");
+        console.log("Invalid input: Only letters and spaces are allowed.");
+      }
+    } else if (field === "contact") {
+      // Handle Contact field (only 10 digits allowed)
+      const regex = /^[0-9]{0,10}$/;  // Allow only numbers and restrict to 10 digits
+  
+      if (regex.test(value)) {
+        setSelectedLoan((prev) => ({
+          ...prev,
+          [field]: value,
+        }));
+      } else {
+        toast.error("Invalid input: Please enter a valid 10-digit contact number.");
+        console.log("Invalid input: Please enter a valid 10-digit contact number.");
+      }
+    } 
+    else {
+      // For other fields, just update the state
+      setSelectedLoan((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    }
+  };
+  
+  
+  
+  
+
+
 
   const filterLoans = () => {
     const filtered = loans.filter(loan => {
@@ -153,6 +208,9 @@ const generatePDF = () => {
     autoClose: 3000,
   });
 };
+
+
+
 
 
   const resetFilters = () => {
@@ -388,28 +446,44 @@ const generatePDF = () => {
     <input
       type="date"
       className="form-control"
-      value={selectedLoan?.date || ""} // You can bind it to state or the selectedLoan date field
-      onChange={(e) => handleInputChange("date", e.target.value)} // Handle the input change
+      value={selectedLoan?.date || ""} 
+      onChange={(e) => handleInputChange("date", e.target.value)} 
     />
   </div>
-  <div className="col-md-4">
-    <label className="form-label">Flat No</label>
+  {/* <div className="col-md-4">
+    <label className="form-label">Flat No</label> 
     <input
-      type="text"
+      type="number"
       className="form-control"
       value={selectedLoan?.flatNo || ""}
-      onChange={(e) => handleInputChange("flatNo", e.target.value)} // Handle the input change
+      onChange={(e) => handleInputChange("flatNo", e.target.value)} 
     />
-  </div>
+  </div> */}
+
+<div className="col-md-4">
+      <label className="form-label">Flat No</label>
+      <input
+        type="number"
+        className="form-control"
+        value={selectedLoan?.flatNo || ""}
+        onChange={(e) => handleInputChange("flatNo", e.target.value)} 
+      />
+    </div>
+
+
+             
               <div className="col-md-4">
-                <label className="form-label">Allotee Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={selectedLoan?.nameOfAllotee || ""}
-                  onChange={(e) => handleInputChange("nameOfAllotee", e.target.value)}
-                />
-              </div>
+  <label className="form-label">Allotee Name</label>
+  <input
+    type="text"
+    className="form-control"
+    value={selectedLoan?.nameOfAllotee || ""}
+    onChange={(e) => handleInputChange("nameOfAllotee", e.target.value)}
+    pattern="[A-Za-z\s]+"  
+    title="Only alphabets and spaces are allowed"
+  />
+</div>
+
             </div>
 
             {/* Second Row */}
@@ -426,7 +500,7 @@ const generatePDF = () => {
   <div className="col-md-4">
     <label className="form-label">Allotee Age</label>
     <input
-      type="text"
+      type="number"
       className="form-control"
       value={selectedLoan?.alloteeAge || ""}
       onChange={(e) => handleInputChange("alloteeAge", e.target.value)} // Handle the input change
@@ -462,6 +536,8 @@ const generatePDF = () => {
                   className="form-control"
                   value={selectedLoan?.coAlloteeName || ""}
                   onChange={(e) => handleInputChange("coAlloteeName", e.target.value)} 
+                  pattern="[A-Za-z\s]+"  
+    title="Only alphabets and spaces are allowed"
                 />
               </div>
             </div>

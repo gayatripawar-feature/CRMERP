@@ -5,12 +5,30 @@
 
 import React, { useState } from 'react';
 import { FaProjectDiagram, FaShareAlt, FaEdit, FaEye } from 'react-icons/fa';
-
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import ListItemText from '@mui/material/ListItemText';
+import Select from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
+import { ToastContainer, toast } from 'react-toastify';
 const ShareSpace = () => {
   const [activeIcon, setActiveIcon] = useState('project');
   const [showForm, setShowForm] = useState(false);
   const [showProjectTable, setShowProjectTable] = useState(true); // Show Project Display Table by default
   const [rows, setRows] = useState([{}]);
+
+
+
+  const row = {
+    shareTo: ['Sales', 'CRM','Admin','Legal','Engineering','Accounting'], // Example data
+  };
+
+
+  // const [selectedItems, setSelectedItems] = React.useState(row.shareTo || []);
+  const [selectedItems, setSelectedItems] = React.useState([]);
+
   const [sharedWithMeRows, setSharedWithMeRows] = useState([
     {
       sharedFrom: "Sales",
@@ -62,12 +80,40 @@ const ShareSpace = () => {
     setRows(newRows);
   };
 
+  const handleChange = (event) => {
+    const { target: { value } } = event;
+    setSelectedItems(typeof value === 'string' ? value.split(',') : value);
+    handleShareToChange(event, index); // Ensure you call the provided handleShareToChange function
+  };
+
+ 
+  const options = [
+    'Sales',
+    'CRM',
+    'Admin',
+    'Legal',
+    'Engineering',
+    'Accounting',
+  ];
 
   const handleDocumentTypeChange = (e, index) => {
     const newRows = [...rows];
     newRows[index].documentType = e.target.value;
     setRows(newRows);
   };
+
+
+  const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 
   // Handle file change
   const handleFileChange = (e, index) => {
@@ -87,6 +133,8 @@ const ShareSpace = () => {
     console.log(rows);
     setShowForm(false);
     setShowProjectTable(true);
+    console.log("data submitted ");
+    toast.success('Data submitted successfully!');
   };
 
   // Remove row
@@ -221,7 +269,7 @@ const ShareSpace = () => {
                   <tr key={index}>
                     <td>
                 
-                      <div className="d-flex flex-column gap-2">
+                      {/* <div className="d-flex flex-column gap-2">
                         <div>
                           <input
                             type="checkbox"
@@ -276,7 +324,30 @@ const ShareSpace = () => {
                           />
                           <label className="ms-2">Accounting</label>
                         </div>
-                      </div>
+                      </div> */}
+
+<div className="d-flex flex-column gap-2">
+      <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel id="select-share-to-label">Share To</InputLabel>
+        <Select
+          labelId="select-share-to-label"
+          id="select-share-to"
+          multiple
+          value={selectedItems}
+          onChange={handleChange}
+          input={<OutlinedInput label="Share To" />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {options.map((option) => (
+            <MenuItem key={option} value={option}>
+              <Checkbox checked={selectedItems.includes(option)} />
+              <ListItemText primary={option} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
                     </td>
                     <td>
                       {/* Type of Document Column with Dropdown */}
@@ -376,7 +447,9 @@ const ShareSpace = () => {
           <button className="btn btn-secondary me-2" onClick={addRow}>Add Row</button>
           {/* Submit and Cancel Buttons */}
           <button className="btn btn-success me-2" onClick={handleSubmit}>Submit</button>
+       
           <button className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
+          {/* <ToastContainer /> */}
         </div>
       )}
 

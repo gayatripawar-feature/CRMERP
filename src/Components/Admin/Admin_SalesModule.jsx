@@ -1,208 +1,14 @@
 
-// Second  & correct:
-
-// import React, { useState } from "react";
-// import { FaPlus } from "react-icons/fa";
-// import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
-// import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-// import { Modal, Button } from 'react-bootstrap'; 
-
-// const SalesModule = () => {
-//   const [showForm, setShowForm] = useState(false);
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     email: "",
-//     mobile: "",
-//     designation: "",
-//     joiningDate: "",
-//     status: "Active",
-//   });
-//   const [salesPersons, setSalesPersons] = useState([{ salesPersonName: '', salesPersonMobile: '' }]); // Define salesPersons state
-
-//   const handleAddNew = () => {
-//     setShowForm(true);
-//   };
-
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     console.log("Submitted Data:", formData);
-//     setShowForm(false);
-//   };
-
-//   const handleCancel = () => {
-//     setShowForm(false);  
-//   };
-
-//   const openModal = () => {
-//     setShowForm(true); 
-//   };
-
-//   const closeModal = () => {
-//     setShowForm(false);  
-//   };
-
-//   const handleSalesPersonChange = (index, field, value) => {
-//     const updatedSalesPersons = [...salesPersons];
-//     updatedSalesPersons[index][field] = value;
-//     setSalesPersons(updatedSalesPersons);
-//   };
-
-//   const handleAddSalesPerson = () => {
-//     setSalesPersons([...salesPersons, { salesPersonName: '', salesPersonMobile: '' }]);
-//   };
-
-//   const handleRemoveSalesPerson = (index) => {
-//     const updatedSalesPersons = salesPersons.filter((_, i) => i !== index);
-//     setSalesPersons(updatedSalesPersons);
-//   };
-
-//   return (
-//     <div className="container my-4">
-//       <div className="row mb-3">
-//         <div className="col-md-6 d-flex flex-column align-items-start">
-//           <h2 className="mb-2 fs-6">Admin Module / Sales Person Management</h2>
-//           {!showForm && (
-//             <button className="btn btn-primary d-flex align-items-center" onClick={handleAddNew}>
-//               <FaPlus className="me-2" />
-//               Add New Sales Person
-//             </button>
-//           )}
-//         </div>
-//         {!showForm && (
-//           <div className="col-md-6 d-flex justify-content-end align-items-center">
-//             <input type="text" className="form-control w-50" placeholder="Search..." />
-//           </div>
-//         )}
-//       </div>
-
-//       {/* Dimming the sidebar using a simple overlay when modal is open */}
-//       {showForm && <div className="position-fixed top-0 start-0 w-50 h-100 bg-dark opacity-50" style={{ zIndex: 1049 }}></div>}
-
-//     {showForm ? (
-//         <>
-//           <Modal 
-//             show={showForm} 
-//             onHide={closeModal}
-//             dialogClassName="modal-dialog modal-fullscreen-sm-down" // Bootstrap modal class for fullscreen
-//             aria-labelledby="modal-title"
-//             centered
-//           >
-//             <Modal.Body className="d-flex align-items-center justify-content-center vh-100 p-4">
-//               <div style={{ maxWidth: "600px", width: "100%", background: "#fff", padding: "20px", borderRadius: "8px", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}>
-//                 <Modal.Header closeButton className="bg-primary text-white mb-4">
-//                   <Modal.Title id="modal-title">Add New Sales Person</Modal.Title>
-//                 </Modal.Header>
-//                 <form onSubmit={handleSubmit}>
-                
-//                   <div className="row mb-3">
-//                     <div className="col-md-6">
-//                       <label className="form-label">Name</label>
-//                       <input type="text" className="form-control" name="name" value={formData.name} onChange={handleChange} required />
-//                     </div>
-//                     <div className="col-md-6">
-//                       <label className="form-label">Email</label>
-//                       <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} required />
-//                     </div>
-//                   </div>
-//                   <div className="row mb-3">
-//                     <div className="col-md-6">
-//                       <label className="form-label">Mobile</label>
-//                       <input type="text" className="form-control" name="mobile" value={formData.mobile} onChange={handleChange} required />
-//                     </div>
-//                     <div className="col-md-6">
-//                       <label className="form-label">Designation</label>
-//                       <input type="text" className="form-control" name="designation" value={formData.designation} onChange={handleChange} required />
-//                     </div>
-//                   </div>
-//                   <div className="row mb-3">
-//                     <div className="col-md-6">
-//                       <label className="form-label">Joining Date</label>
-//                       <input type="date" className="form-control" name="joiningDate" value={formData.joiningDate} onChange={handleChange} required />
-//                     </div>
-//                     <div className="col-md-6">
-//                       <label className="form-label">Status</label>
-//                       <select className="form-control" name="status" value={formData.status} onChange={handleChange}>
-//                         <option value="Active">Active</option>
-//                         <option value="Inactive">Inactive</option>
-//                       </select>
-//                     </div>
-//                   </div>
-
-//                   <div className="d-flex gap-2 justify-content-center">
-//                     <button type="submit" className="btn btn-success">Submit</button>
-//                     <button type="button" className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
-//                   </div>
-//                 </form>
-//               </div>
-//             </Modal.Body>
-//           </Modal>
-//         </>
-//       ) : ( 
-      
 
 
-      
-//         <TableContainer component={Paper} sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
-//           <Table>
-//             <TableHead sx={{ bgcolor: "primary.main" }}>
-//               <TableRow>
-//                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>Action</TableCell>
-//                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>Name</TableCell>
-//                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>Email</TableCell>
-//                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>Mobile</TableCell>
-//                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>Designation</TableCell>
-//                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>Joining Date</TableCell>
-//                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>Status</TableCell>
-//               </TableRow>
-//             </TableHead>
-//             <TableBody>
-//               <TableRow>
-//                 <TableCell>
-//                   <IconButton color="primary">
-//                     <EditIcon />
-//                   </IconButton>
-//                   <IconButton color="error">
-//                     <DeleteIcon />
-//                   </IconButton>
-//                 </TableCell>
-//                 <TableCell>John Doe</TableCell>
-//                 <TableCell>johndoe@example.com</TableCell>
-//                 <TableCell>+1234567890</TableCell>
-//                 <TableCell>Software Engineer</TableCell>
-//                 <TableCell>2023-08-15</TableCell>
-//                 <TableCell>Active</TableCell>
-//               </TableRow>
-//             </TableBody>
-//           </Table>
-//         </TableContainer>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default SalesModule;
-
-
-
-
-
-
-
-
-
-
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { FaPlus } from "react-icons/fa";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-// import { toast, ToastContainer } from 'react-toastify';
+
 import { toast, ToastContainer } from 'react-toastify';
 
-const SalesModule = () => {
+const Admin_SalesModule = () => {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -218,9 +24,98 @@ const SalesModule = () => {
     setShowForm(true);
   };
 
+  
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  
+   
+  //   if (name === "name") {
+  //     const regex = /^[A-Za-z\s]*$/;  
+  
+  //     if (regex.test(value) || value === "") {
+  //       setFormData((prevData) => ({
+  //         ...prevData,
+  //         [name]: value,
+  //       }));
+  //     } else {
+  //       toast.error("Invalid input: Only letters and spaces are allowed in Name.");
+  //       console.log("Invalid input: Only letters and spaces are allowed in Name.");
+  //     }
+  //   }
+    
+   
+  //   else {
+     
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       [name]: value,
+  //     }));
+  //   }
+  // };
+  
+
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+  
+    // Name validation: Only letters and spaces
+    if (name === "name") {
+      const regex = /^[A-Za-z\s]*$/;  
+      if (regex.test(value) || value === "") {
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: value,
+        }));
+      } else {
+        toast.error("Invalid input: Only letters and spaces are allowed in Name.");
+        console.log("Invalid input: Only letters and spaces are allowed in Name.");
+      }
+    }
+    
+    // Mobile number validation: Only digits and restrict to a maximum of 10 digits
+    else if (name === "mobile") {
+      const regex = /^[0-9]*$/;  // Regex to allow only digits
+      
+      if (regex.test(value)) {
+        // Show toast if input exceeds 10 digits
+        if (value.length > 10) {
+          toast.error("Invalid input: Please enter a valid 10-digit mobile number.");
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+          }));
+        }
+      } else {
+        console.log("Invalid input: Only digits are allowed in Mobile.");
+      }
+    }
+  
+    // For other fields, just update the form data without validation
+    else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
+
+  
+  useEffect(() => {
+    if (showForm) {
+      // Reset formData when the form is opened again
+      setFormData({
+        name: "",
+        email: "",
+        mobile: "",
+        designation: "",
+        joiningDate: "",
+        status: "Active",
+      });
+    }
+  }, [showForm]); // This will trigger when showForm changes (i.e., when the form opens)
+
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -241,6 +136,17 @@ const SalesModule = () => {
 
   const handleCancel = () => {
     setShowForm(false); 
+  };
+
+  const handleEmailBlur = () => {
+    const email = formData.email;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // Basic email validation regex
+  
+    // If the email is invalid, show the error toast
+    if (email && !emailRegex.test(email)) {
+      toast.error("Invalid email: Please enter a valid email address.");
+      console.log("Invalid email: Please enter a valid email address.");
+    }
   };
 
   return (
@@ -338,6 +244,7 @@ const SalesModule = () => {
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
+                            onBlur={handleEmailBlur}
                             required
                           />
                         </div>
@@ -457,4 +364,4 @@ const SalesModule = () => {
 };
  
 
-export default SalesModule;
+export default Admin_SalesModule;

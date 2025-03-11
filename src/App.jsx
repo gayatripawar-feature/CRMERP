@@ -4,27 +4,32 @@ import Dashboard from './Components/Dashboard'; // Import the Dashboard componen
 // import DashboardContent from './DashboardContent'; // Dashboard content component
 // import AdminSection from './AdminSection'; 
 // import DeveloperModule from './DeveloperModule'; 
-import SalesModule from './Components/SalesModule';
-import ShareSpace from './Components/ShareSpace';
+// import SalesModule from './Components/Admin_SalesModule';
+// import Admin_SalesModule from './Components/Admin_SalesModule';
+import ShareSpace from './Components/Developer/ShareSpace';
 import LostVisitsModule from './Components/LostVisitsModule';
-import CRM from "./Components/CRM";
-import Registration from "./Components/Registration";
-import HomeLoan from './Components/HomeLoan';
-import OCR from "./Components/OCR";
-import Agreement from './Components/Agreement';
-import Architect from './Components/Architect';
-import Demand from './Components/Demand';
-import Banker from './Components/Banker';
-import BasicInfo from './Components/BasicInfo';
-import ProjectInventory from './Components/ProjectInventory';
-import CostSheet from './Components/CostSheet';
-import Salesmis from './Components/Salesmis';
-import Marketing from './Components/Marketing';
+import CRM from "./Components/CRM/CRM";
+import Registration from "./Components/CRM/Registration";
+import HomeLoan from './Components/CRM/HomeLoan';
+import OCR from "./Components/CRM/OCR";
+import Agreement from './Components/CRM/Agreement';
+import Architect from './Components/CRM/Architect';
+import Demand from './Components/CRM/Demand';
+
+// import Banker from './Components/Banker';
+// import Admin_Banker from './Components/Admin_Banker';
+import Admin_Banker from './Components/Admin/Admin_Banker';
+import BasicInfo from './Components/Developer/BasicInfo';
+import ProjectInventory from './Components/Developer/ProjectInventory';
+import CostSheet from './Components/Developer/CostSheet';
+import Salesmis from './Components/Developer/Salesmis';
+import Marketing from './Components/Developer/Marketing';
 import { Calendar } from 'lucide-react';
 // import SalesCalendar from "./Components/SalesCalendar";
-import SalesDashboard from "./Components/SalesDashboard";
+import SalesDashboard from "./Components/Sales/SalesDashboard";
 // import SalesSharespace from "./Components/SalesSharespace";
 import { toast ,ToastContainer} from "react-toastify";
+import Admin_SalesModule from './Components/Admin/Admin_SalesModule';
 const App = () => {
   return (
     <Router>
@@ -32,8 +37,14 @@ const App = () => {
       <Routes>
       
         <Route path="/" element={<Dashboard />}>
-        <Route path="admin/salesperson" element={<SalesModule />} />
-        <Route path="admin/banker" element={<Banker />} />
+        {/* <Route path="admin/salesperson" element={<SalesModule />} /> */}
+        {/* <Route path="admin/banker" element={<Banker />} /> */}
+
+
+        <Route path="admin/salesperson" element={<Admin_SalesModule />} />
+        <Route path="admin/banker" element={<Admin_Banker/>} />
+
+
         <Route path="/developer/sharespace" element={<ShareSpace />} />
         <Route path ="/developer/basicinfo" element={<BasicInfo />} />
         <Route path ="/developer/projectinventory" element={<ProjectInventory />} />
