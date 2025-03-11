@@ -102,7 +102,9 @@ const Admin_Banker = () => {
         <div className="col-md-6 d-flex flex-column align-items-start">
           <h2 className="mb-2 fs-6">Admin Module / Banker Details Management</h2>
           {!showForm && (
-            <button className="btn btn-primary d-flex align-items-center" onClick={handleAddNew}>
+            <button className="btn btn-primary d-flex align-items-center fw-bold" onClick={handleAddNew} 
+              style={{ background: '#272ba8' }} 
+            >
               <FaPlus className="me-2" />
               Add Banker Details
             </button>
@@ -119,7 +121,7 @@ const Admin_Banker = () => {
 {showForm ? (
   <>
     <Button variant="primary" onClick={openModal}>Add Banker Details</Button>
-
+ 
     <div 
       className="modal"
       style={{
@@ -159,6 +161,7 @@ const Admin_Banker = () => {
           >
             <h5 className="modal-title">Add Banker Details</h5>
             <button type="button" className="btn-close" onClick={closeModal}></button>
+     
           </div>
 
           {/* Modal Body */}
@@ -259,8 +262,9 @@ const Admin_Banker = () => {
       {!showForm && (
         <TableContainer component={Paper} sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
           <Table>
-            <TableHead sx={{ bgcolor: "primary.main" }}>
-              <TableRow>
+            <TableHead >
+              {/* <TableRow> */}
+               <TableRow sx={{background:"#3621a9"}}>
                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>
                 Action</TableCell>
                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>Timestamp</TableCell>

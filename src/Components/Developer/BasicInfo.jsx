@@ -1,13 +1,13 @@
 
 
 import React, { useState, useEffect } from 'react';
-import {Input, Table, TableBody, TableCell, TableContainer, Typography,IconButton,TableHead, TableRow, Paper,Box,Tabs, Tab, Button, TextField, Grid } from '@mui/material';
+import {Input, Table, TableBody, TableCell, TableContainer, Typography,IconButton,TableHead, TableRow, Paper,Box,Tabs, Tab, Button, TextField, Grid ,MenuItem,FormControl,Select, InputLabel} from '@mui/material';
 import { FaEye, FaBuilding, FaFileDownload, FaPlus, FaTrash,FaUpload } from "react-icons/fa";
 import FirmTable from './FirmTable';
 import DisplayTable from "./DisplayTable";
 import LandownerTable from "./LandownerTable";
 import FlatAllotment from './FlatAllotement';
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from 'react-toastify';
 
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
@@ -39,8 +39,31 @@ const BasicInfo = () => {
   const [selectedTab, setSelectedTab] = useState("firm");
   const [projectData, setProjectData] = useState([]);
   const[FlatAllotement , setFlatAllotement] = useState([false]);
-  
+  const [selectedProject, setSelectedProject] = useState('');
   const [Flatdata, setFlatdata] = useState([]);
+  const [selectedBank, setSelectedBank] = useState('');
+
+  const [name, setName] = useState('');
+  const [mobileNo, setMobileNo] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [mobileNoError, setMobileNoError] = useState('');
+  const [fileNames, setFileNames] = useState({
+    firmPanNoDocument: "",
+    firmGstNoDocument: "",
+    firmLightBillForAddressProof: "",
+  });
+
+   // Handle file selection and update the state with the file name
+   const handleFileChange = (e, key) => {
+    const file = e.target.files[0]; // Get the selected file
+    if (file) {
+      setFileNames((prevState) => ({
+        ...prevState,
+        [key]: file.name, // Update the file name for the corresponding key
+      }));
+    }
+  };
+
 
   const [partners, setPartners] = useState([
     { name: "", age: "", occupation: "", mobile: "", email: "", address: "", pan: "", aadhaar: "" }
@@ -154,7 +177,81 @@ const handleTabClick = (index) => {
     setShowProjectForm(true);
   };
 
+  const documentLabels = [
+    "Residential Address Document",
+    "PAN No Document",
+    "Aadhaar No Document",
+    "Photo Document",
+    "Light Bill for Address Proof",
+  ];
 
+  const handleBankChange = (event) => {
+    setSelectedBank(event.target.value);
+  };
+
+  const handleNameChange = (event) => {
+    const value = event.target.value;
+    // Only allow letters and spaces
+    if (/[^a-zA-Z\s]/.test(value)) {
+      toast.error('Name should only contain letters and spaces.');
+    }
+    setName(value);
+  };
+
+  const handleMobileNoChange = (event) => {
+    const value = event.target.value;
+    // Only allow numbers and ensure it doesn't exceed 10 digits
+    if (/[^0-9]/.test(value)) {
+      toast.error('Mobile number should only contain digits.');
+    } else if (value.length > 10) {
+      toast.error('Mobile number cannot exceed 10 digits.');
+    }
+    setMobileNo(value);
+  };
+
+
+  const handleMobileChange = (event, partnerIndex) => {
+    const value = event.target.value;
+
+    // If the value exceeds 10 digits, show a toast and prevent the change
+    if (value.length > 10) {
+      toast.error("Mobile number cannot exceed 10 digits!");
+    } else {
+      // Update the partner state or handle other changes here
+      const updatedPartners = [...partners];
+      updatedPartners[partnerIndex].mobile = value;
+      setPartners(updatedPartners);
+    }
+  };
+
+  const handleChange = (e, label, partnerIndex) => {
+    const { value } = e.target;
+  
+    // Update the partners array with the new value for the specific field
+    const updatedPartners = [...partners];
+    updatedPartners[partnerIndex][label.toLowerCase().replace(/ /g, "")] = value;
+    setPartners(updatedPartners);
+  
+    // Apply validation for the 'firmName' field
+    if (label === 'Firm Name') {
+      // Check if the input contains only letters and spaces
+      if (!/^[A-Za-z\s]*$/.test(value)) {
+        setErrors((prev) => ({
+          ...prev,
+          firmName: 'Firm Name should only contain letters and spaces',
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          firmName: '', // Clear the error if valid
+        }));
+      }
+    }
+  };
+  
+
+ 
+  
   return (
     <div className="main-content">
       <h6>Developer Module / Basic Information Management</h6>
@@ -233,26 +330,75 @@ const handleTabClick = (index) => {
             </Grid>
           ))}
 
-          {["Firm PAN No Document", "Firm GST No Document", "Firm Light Bill for Address Proof"].map((label, index) => (
-            <Grid item xs={6} key={index}>
-              <Typography variant="body2" gutterBottom>
-                {label}
-              </Typography>
-              <label>
-                <Input type="file" style={{ display: "none" }} />
-                <IconButton color="primary" component="span">
-                  <FaUpload />
-                </IconButton>
-              </label>
-            </Grid>
-          ))}
+         
+{/* 
+
+{["Firm PAN No Document", "Firm GST No Document", "Firm Light Bill for Address Proof"].map((label, index) => (
+  <Grid item xs={6} key={index}>
+    <Typography variant="body2" gutterBottom>
+      {label}
+    </Typography>
+    <label>
+      <Input
+        type="file"
+        style={{ display: "none" }} // Hide the default input
+        id={`file-input-${index}`} // Unique ID for each input
+      />
+      <Button 
+        variant="contained" 
+        color="light" 
+        component="span"
+        // Trigger the file input on button click
+        onClick={() => document.getElementById(`file-input-${index}`).click()}
+      >
+        Choose File
+      </Button>
+    </label>
+  </Grid>
+))} */}
+
+{[
+        { label: "Firm PAN No Document", key: "firmPanNoDocument" },
+        { label: "Firm GST No Document", key: "firmGstNoDocument" },
+        { label: "Firm Light Bill for Address Proof", key: "firmLightBillForAddressProof" },
+      ].map((item, index) => (
+        <Grid item xs={6} key={index}>
+          <Typography variant="body2" gutterBottom>
+            {item.label}
+          </Typography>
+          <label>
+            <Input
+              type="file"
+              style={{ display: "none" }} // Hide the default input
+              id={`file-input-${index}`} // Unique ID for each input
+              onChange={(e) => handleFileChange(e, item.key)} // Handle file change
+            />
+            <Button
+              variant="contained"
+              color="light"
+              component="span"
+              // Trigger the file input on button click
+              // onClick={() => document.getElementById(`file-input-${index}`).click()}
+            >
+              Choose File
+            </Button>
+          </label>
+
+          {/* Display selected file name */}
+          {fileNames[item.key] && (
+            <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
+              {fileNames[item.key]}
+            </Typography>
+          )}
+        </Grid>
+      ))}
         </Grid>
 
         <Typography variant="h5" className="mt-4" gutterBottom>
           Partner Details
         </Typography>
 
-        {partners.map((partner, index) => (
+        {/* {partners.map((partner, index) => (
           <Paper key={index} className="p-3 mb-3" elevation={2} style={{ borderRadius: "10px" }}>
             <Grid container spacing={2}>
               {["Name", "Age", "Occupation", "Mobile No.", "Mail ID", "Residential Address", "PAN No.", "Aadhaar No."].map(
@@ -261,27 +407,66 @@ const handleTabClick = (index) => {
                     <TextField label={label} fullWidth variant="outlined" />
                   </Grid>
                 )
-              )}
+              )} */}
 
-              {[
-                "Residential Address Document",
-                "PAN No Document",
-                "Aadhaar No Document",
-                "Photo Document",
-                "Light Bill for Address Proof",
-              ].map((label, i) => (
-                <Grid item xs={6} key={i}>
-                  <Typography variant="body2" gutterBottom>
-                    {label}
-                  </Typography>
-                  <label>
-                    <Input type="file" style={{ display: "none" }} />
-                    <IconButton color="primary" component="span">
-                      <FaUpload />
-                    </IconButton>
-                  </label>
-                </Grid>
-              ))}
+{partners.map((partner, index) => (
+  <Paper key={index} className="p-3 mb-3" elevation={2} style={{ borderRadius: "10px" }}>
+    <Grid container spacing={2}>
+      {["Name", "Age", "Occupation", "Mobile No.", "Mail ID", "Residential Address", "PAN No.", "Aadhaar No."].map(
+        (label, i) => (
+          <Grid item xs={6} key={i}>
+            <TextField
+              label={label}
+              fullWidth
+              variant="outlined"
+              type={label === "Age" ? "number" : "text"} 
+              value={partner[label.toLowerCase().replace(/ /g, "")]} // Dynamically map to partner data
+                    onChange={(e) => {
+                      if (label === "Mobile No.") {
+                        handleMobileChange(e, index); // Handle Mobile No. validation
+                      } else {
+                        // Handle other field changes
+                      }
+                    }}
+            />
+          </Grid>
+        )
+      )}
+
+
+
+            
+
+{documentLabels.map((label, i) => (
+        <Grid item xs={6} key={i}>
+          <Typography variant="body2" gutterBottom>
+            {label}
+          </Typography>
+          <label>
+            <Input
+              type="file"
+              style={{ display: "none" }} // Hide the default file input
+              id={`file-input-${i}`} // Unique ID for each file input
+            />
+            <Button
+              variant="contained"
+              color="light"
+              component="span"
+              // Trigger the file input on button click
+              // onClick={() => document.getElementById(`file-input-${i}`).click()}
+            >
+              Choose File
+            </Button>
+          </label>
+
+             {/* Display selected file name */}
+             {fileNames[label] && (
+            <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
+              {fileNames[label]}
+            </Typography>
+          )}
+        </Grid>
+      ))}
 
               {partners.length > 1 && (
                 <Grid item xs={12} className="text-right">
@@ -540,34 +725,229 @@ onClick={() => {
       >
         <h5>Landowner Details</h5>
         <Grid container spacing={2}>
-          <Grid item xs={4}><TextField label="Project Name" fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="Mobile No." fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="Landowner Name" fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="Age" fullWidth /></Grid>
+          {/* <Grid item xs={4}><TextField label="Project Name" fullWidth /></Grid> */}
+          <Grid item xs={4}>
+        <FormControl fullWidth variant="outlined">
+          <InputLabel id="project-name-label">Project Name</InputLabel>
+          <Select
+            labelId="project-name-label"
+            id="project-name-select"
+            value={selectedProject}
+            onChange={handleChange}
+            label="Project Name"
+          >
+            <MenuItem value="Project Name 1">Project Name 1</MenuItem>
+            <MenuItem value="Project Name 121">Project Name 121</MenuItem>
+            <MenuItem value="11">11</MenuItem>
+            <MenuItem value="PROJECT NAME">PROJECT NAME</MenuItem>
+            <MenuItem value="Shubh Elara">Shubh Elara</MenuItem>
+            <MenuItem value="Sohan Enterprised">Sohan Enterprised</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
+          <Grid item xs={4}><TextField label="Mobile No." fullWidth value={mobileNo}
+            onChange={handleMobileNoChange}/></Grid>
+          <Grid item xs={4}><TextField label="Landowner Name" fullWidth value={name} onChange={handleNameChange}/></Grid>
+          <Grid item xs={4}><TextField type="number" label="Age" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="Occupation" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="Mail ID" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="Village" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="District" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="Taluka" fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="Name of Bank" fullWidth /></Grid>
+          {/* <Grid item xs={4}><TextField label="Name of Bank" fullWidth /></Grid> */}
+          <Grid item xs={4}>
+        <FormControl fullWidth variant="outlined">
+          <InputLabel id="bank-name-label">Name of Bank</InputLabel>
+          <Select
+            labelId="bank-name-label"
+            id="bank-name-select"
+            value={selectedBank}
+            onChange={handleBankChange}
+            label="Name of Bank"
+          >
+            <MenuItem value="SBI Bank">SBI Bank</MenuItem>
+            <MenuItem value="Bank Of Baroda">Bank Of Baroda</MenuItem>
+            <MenuItem value="Canara Bank">Canara Bank</MenuItem>
+            <MenuItem value="Axis Bank">Axis Bank</MenuItem>
+            <MenuItem value="Bank of India">Bank of India</MenuItem>
+            <MenuItem value="ICICI Bank">ICICI Bank</MenuItem>
+            <MenuItem value="HDFC Bank">HDFC Bank</MenuItem>
+            <MenuItem value="Bank of Maharashtra">Bank of Maharashtra</MenuItem>
+            <MenuItem value="Central Bank of India">Central Bank of India</MenuItem>
+            <MenuItem value="Punjab National Bank">Punjab National Bank</MenuItem>
+            <MenuItem value="Bandhan Bank">Bandhan Bank</MenuItem>
+            <MenuItem value="Indian Bank">Indian Bank</MenuItem>
+            <MenuItem value="IDBI Bank">IDBI Bank</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
           <Grid item xs={4}><TextField label="Bank Address" fullWidth /></Grid>
+          
           <Grid item xs={4}><TextField label="Account No." fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="Aadhaar No." fullWidth /></Grid>
+          <Grid item xs={4}><TextField label="IFSC Code" sx={{
+      marginTop: "13px",
+      
+    }} fullWidth /></Grid>
+          {/* <Grid item xs={4}><TextField label="Aadhaar No." fullWidth /></Grid>
           <Grid item xs={4}><TextField label="Residential Address" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="PAN No." fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="Light Bill" fullWidth /></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={4}><TextField label="Light Bill" fullWidth /></Grid> */}
+          {/* <Grid item xs={4}>
             <TextField type="file" accept="image/*" />
+          </Grid> */}
+
+<Grid item xs={4}>
+            <Typography variant="body2" gutterBottom>
+              Aadhaar No.
+            </Typography>
+            <label>
+              <Input
+                type="file"
+                style={{ display: "none" }} // Hide the default input
+                id="file-input-aadhaar" // Unique ID for the file input
+                onChange={(e) => handleFileChange(e, "aadhaarFile")} // Handle file selection
+              />
+              <Button
+                variant="contained"
+                color="light"
+                component="span"
+                // onClick={() => document.getElementById("file-input-aadhaar").click()} // Trigger the file input
+              >
+                Choose File
+              </Button>
+            </label>
+            {fileNames.aadhaarFile && (
+              <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
+                {fileNames.aadhaarFile} {/* Display the selected file name */}
+              </Typography>
+            )}
           </Grid>
+
+
+
+          <Grid item xs={4}>
+            <Typography variant="body2" gutterBottom>
+            Photo
+            </Typography>
+            <label>
+              <Input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }} // Hide the default input
+                id="file-input-image" // Unique ID for the file input
+                onChange={(e) => handleFileChange(e, "imageFile")} // Handle file selection
+              />
+              <Button
+                variant="contained"
+                color="light"
+                component="span"
+                // onClick={() => document.getElementById("file-input-image").click()} // Trigger the file input
+              >
+                Choose File
+              </Button>
+            </label>
+            {fileNames.imageFile && (
+              <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
+                {fileNames.imageFile} {/* Display the selected file name */}
+              </Typography>
+            )}
+          </Grid>
+
+
+          {/* Residential Address File Upload */}
+          <Grid item xs={4} sx={{ marginTop: "6px"}}>
+            <Typography variant="body2" gutterBottom>
+              Residential Address
+            </Typography>
+            <label>
+              <Input
+                type="file"
+                style={{ display: "none" }}
+                id="file-input-address"
+                onChange={(e) => handleFileChange(e, "addressFile")}
+              />
+              <Button
+                variant="contained"
+                color="light"
+                component="span"
+                // onClick={() => document.getElementById("file-input-address").click()}
+              >
+                Choose File
+              </Button>
+            </label>
+            {fileNames.addressFile && (
+              <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
+                {fileNames.addressFile}
+              </Typography>
+            )}
+          </Grid>
+
+          {/* PAN No. File Upload */}
+          <Grid item xs={4} sx={{ marginTop: "6px"}}>
+            <Typography variant="body2" gutterBottom>
+              PAN No.
+            </Typography>
+            <label>
+              <Input
+                type="file"
+                style={{ display: "none" }}
+                id="file-input-pan"
+                onChange={(e) => handleFileChange(e, "panFile")}
+              />
+              <Button
+                variant="contained"
+                color="light"
+                component="span"
+                // onClick={() => document.getElementById("file-input-pan").click()}
+              >
+                Choose File
+              </Button>
+            </label>
+            {fileNames.panFile && (
+              <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
+                {fileNames.panFile}
+              </Typography>
+            )}
+          </Grid>
+
+          {/* Light Bill File Upload */}
+          <Grid item xs={4} sx={{ marginTop: "6px"}}>
+            <Typography variant="body2" gutterBottom>
+              Light Bill
+            </Typography>
+            <label>
+              <Input
+                type="file"
+                style={{ display: "none" }}
+                id="file-input-lightbill"
+                onChange={(e) => handleFileChange(e, "lightBillFile")}
+              />
+              <Button
+                variant="contained"
+                color="light"
+                component="span"
+                // onClick={() => document.getElementById("file-input-lightbill").click()}
+              >
+                Choose File
+              </Button>
+            </label>
+            {fileNames.lightBillFile && (
+              <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
+                {fileNames.lightBillFile}
+              </Typography>
+            )}
+          </Grid>
+
+        
         </Grid>
 
-        <h5 className="mt-4">Bank Details</h5>
-        <Grid container spacing={2}>
+        {/* <h5 className="mt-4">Bank Details</h5> */}
+        {/* <Grid container spacing={2}>
           <Grid item xs={4}><TextField label="Select a Bank" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="Bank Address" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="Account No." fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="IFSC Code" fullWidth /></Grid>
-        </Grid>
+          
+        </Grid> */}
 
        
         
@@ -625,9 +1005,30 @@ Submit Landowner Info
         <h5>Flat Allotement Display </h5>
         <Grid container spacing={2}>
           <Grid item xs={4}><TextField label="Project Name" fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="Name" fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="Mobile No." fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="No. of Flats Alloted" fullWidth /></Grid>
+          {/* <Grid item xs={4}><TextField label="Name" fullWidth /></Grid> */}
+          <Grid item xs={4}>
+        <TextField
+          label="Name"
+          fullWidth
+          value={name}
+          onChange={handleNameChange}
+          error={!!nameError}
+          helperText={nameError}
+        />
+      </Grid>
+          {/* <Grid item xs={4}><TextField label="Mobile No." fullWidth /></Grid> */}
+          <Grid item xs={4}>
+        <TextField
+          label="Mobile No."
+          fullWidth
+          value={mobileNo}
+          onChange={handleMobileNoChange}
+          error={!!mobileNoError}
+          helperText={mobileNoError}
+        />
+      </Grid>
+
+          <Grid item xs={4}><TextField type="number" label="No. of Flats Alloted" fullWidth /></Grid>
         </Grid>
         <h4 className="pt-3">Flat Details</h4>
         <TableContainer component={Paper}>

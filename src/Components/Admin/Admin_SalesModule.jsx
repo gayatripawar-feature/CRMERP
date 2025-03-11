@@ -5,7 +5,7 @@ import React, { useState ,useEffect} from "react";
 import { FaPlus } from "react-icons/fa";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-
+import { TextField, Button, Grid, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 
 const Admin_SalesModule = () => {
@@ -155,8 +155,8 @@ const Admin_SalesModule = () => {
         <div className="col-md-6 d-flex flex-column align-items-start">
           <h2 className="mb-2 fs-6">Admin Module / Sales Person Management</h2>
           {!showForm && (
-            <button className="btn btn-primary d-flex align-items-center" onClick={handleAddNew}>
-              <FaPlus className="me-2" />
+            <button className="btn btn-primary d-flex align-items-center" onClick={handleAddNew} style={{ background: '#272ba8' }} >
+              <FaPlus className="me-2"  />
               Add New Sales Person
             </button>
           )}
@@ -169,7 +169,7 @@ const Admin_SalesModule = () => {
       </div>
 
       {/* Modal for adding new Sales Person */}
-      {showForm && (
+      {/* {showForm && (
         <div
           className="modal"
           style={{
@@ -183,7 +183,7 @@ const Admin_SalesModule = () => {
             zIndex: 9999,
           }}
         >
-          {/* Modal Content */}
+         
           <div
             className="modal-dialog modal-lg"
             style={{
@@ -200,7 +200,7 @@ const Admin_SalesModule = () => {
                 borderRadius: "10px",
               }}
             >
-              {/* Modal Header */}
+          
               <div
                 className="modal-header bg-primary text-white"
                 style={{
@@ -212,7 +212,7 @@ const Admin_SalesModule = () => {
                 <button type="button" className="btn-close" onClick={handleCancel}></button>
               </div>
 
-              {/* Modal Body */}
+          
               <div className="modal-body">
                 <div className="container">
                   <div
@@ -226,7 +226,7 @@ const Admin_SalesModule = () => {
                     <form onSubmit={handleSubmit}>
                       <div className="row mb-3">
                         <div className="col-md-6">
-                          <label className="form-label">Name</label>
+                          <label className="form-label">Name<span style={{ color: 'black' }}>*</span></label>
                           <input
                             type="text"
                             className="form-control"
@@ -237,7 +237,7 @@ const Admin_SalesModule = () => {
                           />
                         </div>
                         <div className="col-md-6">
-                          <label className="form-label">Email</label>
+                          <label className="form-label">Email<span style={{ color: 'black' }}>*</span></label>
                           <input
                             type="email"
                             className="form-control"
@@ -251,7 +251,7 @@ const Admin_SalesModule = () => {
                       </div>
                       <div className="row mb-3">
                         <div className="col-md-6">
-                          <label className="form-label">Mobile</label>
+                          <label className="form-label">Mobile<span style={{ color: 'black' }}>*</span></label>
                           <input
                             type="text"
                             className="form-control"
@@ -299,7 +299,6 @@ const Admin_SalesModule = () => {
                         </div>
                       </div>
 
-                      {/* Submit and Cancel Buttons */}
                       <div className="d-flex gap-2 justify-content-center">
                         <button type="submit" className="btn btn-success" onClick={handleSubmit}>
                           Submit
@@ -315,14 +314,185 @@ const Admin_SalesModule = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
+
+
+{showForm && (
+  <div
+    className="modal"
+    style={{
+      display: showForm ? "block" : "none",
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      zIndex: 9999,
+    }}
+  >
+    {/* Modal Content */}
+    <div
+      className="modal-dialog modal-lg"
+      style={{
+        position: "relative",
+        margin: "auto",
+        top: "50%",
+        transform: "translateY(-50%)",
+      }}
+    >
+      <div
+        className="modal-content p-3"
+        style={{
+          boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+          borderRadius: "10px",
+        }}
+      >
+        {/* Modal Header */}
+        <div
+          className="modal-header bg-primary text-white"
+          style={{
+            borderTopLeftRadius: "10px",
+            borderTopRightRadius: "10px",
+          }}
+        >
+          <h5 className="modal-title">Add New Sales Person</h5>
+          <button type="button" className="btn-close" onClick={handleCancel} ></button>
+        </div>
+
+        {/* Modal Body */}
+        <div className="modal-body">
+          <div className="container">
+            <div
+              className="p-3"
+              style={{
+                border: "1px solid #ddd",
+                borderRadius: "8px",
+                backgroundColor: "#f9f9f9",
+              }}
+            >
+              <form onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Name"
+                      fullWidth
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      sx={{ marginTop: '10px' }} 
+                      // helperText="* Required"
+                    />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Email"
+                      fullWidth
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      onBlur={handleEmailBlur}
+                      required
+                      sx={{ marginTop: '10px' }} 
+                      // helperText="* Required"
+                    />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Mobile"
+                      fullWidth
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleChange}
+                      required
+                      // helperText="* Required"
+                      sx={{ marginTop: '10px' }} 
+                    />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Designation"
+                      fullWidth
+                      name="designation"
+                      value={formData.designation}
+                      onChange={handleChange}
+                      sx={{ marginTop: '10px' }} 
+                    />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Joining Date"
+                      fullWidth
+                      type="date"
+                      name="joiningDate"
+                      value={formData.joiningDate}
+                      onChange={handleChange}
+                      sx={{ marginTop: '10px' }} 
+                      InputLabelProps={{
+                        shrink: true,
+                        
+                      }}
+                    />
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <FormControl fullWidth>
+                      <InputLabel>Status</InputLabel>
+                      <Select
+                        label="Status"
+                        name="status"
+                        value={formData.status}
+                        onChange={handleChange}
+                        sx={{ marginTop: '10px' }} 
+                      >
+                        <MenuItem value="Active">Active</MenuItem>
+                        <MenuItem value="Inactive">Inactive</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+
+                {/* Submit and Cancel Buttons */}
+                <div className="d-flex gap-2 justify-content-center mt-4">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="success"
+                    onClick={handleSubmit}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Sales Person Table */}
       {!showForm && (
         <TableContainer component={Paper} sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
           <Table>
-            <TableHead sx={{ bgcolor: "primary.main" }}>
-              <TableRow>
+            <TableHead >
+              {/* <TableRow> */}
+               <TableRow sx={{background:"#3621a9"}}>
                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>Action</TableCell>
                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>Name</TableCell>
                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>Email</TableCell>
