@@ -19,7 +19,12 @@ const Admin_SalesModule = () => {
     status: "Active",
   });
   const [salesPersons, setSalesPersons] = useState([]); 
-
+  const [emailError, setEmailError] = useState(''); 
+  const [nameError, setNameError] = useState(''); 
+  const [error, setError] = useState({
+    mobile: '',
+    
+  });
   const handleAddNew = () => {
     setShowForm(true);
   };
@@ -55,55 +60,149 @@ const Admin_SalesModule = () => {
   
 
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
   
-    // Name validation: Only letters and spaces
-    if (name === "name") {
-      const regex = /^[A-Za-z\s]*$/;  
-      if (regex.test(value) || value === "") {
-        setFormData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      } else {
-        toast.error("Invalid input: Only letters and spaces are allowed in Name.");
-        console.log("Invalid input: Only letters and spaces are allowed in Name.");
-      }
-    }
+  
+//     const regex = /^[A-Za-z\s]*$/;  
+
     
-    // Mobile number validation: Only digits and restrict to a maximum of 10 digits
-    else if (name === "mobile") {
-      const regex = /^[0-9]*$/;  // Regex to allow only digits
-      
-      if (regex.test(value)) {
-        // Show toast if input exceeds 10 digits
-        if (value.length > 10) {
-          toast.error("Invalid input: Please enter a valid 10-digit mobile number.");
-        } else {
-          setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-          }));
-        }
-      } else {
-        console.log("Invalid input: Only digits are allowed in Mobile.");
-      }
-    }
+//     if (name === "name") {
+//       if (regex.test(value) || value === "") {
+//         setFormData((prevData) => ({
+//           ...prevData,
+//           [name]: value,
+//         }));
+//         setNameError(''); 
+//       } else {
+//         setNameError("Invalid input: Only letters and spaces are allowed in Name.");
+//       }
+//     }
+    
+//   else if (name === "mobile") {
+//     const regex = /^[0-9]*$/;  
+//     let errorMessage = '';  
   
-    // For other fields, just update the form data without validation
-    else {
+   
+//     if (!regex.test(value)) {
+//       errorMessage = "Invalid input: Only digits are allowed in Mobile.";
+//     } else if (value.length > 10) {
+//       errorMessage = "Invalid input: Please enter a valid 10-digit mobile number.";
+//     }
+  
+ 
+//     setError((prevErrors) => ({
+//       ...prevErrors,
+//       [name]: errorMessage,
+//     }));
+  
+   
+   
+//     if (!errorMessage) {
+//       setFormData((prevData) => ({
+//         ...prevData,
+//         [name]: value,
+//       }));
+//     }
+
+
+//     else if (name === "email") {
+//       setFormData((prevData) => ({
+//         ...prevData,
+//         [name]: value,  // Update the formData state
+//       }));
+//       console.log("invalid email");
+//       setEmailError(''); // Clear email error when typing
+//     }
+//   }
+// }
+
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  console.log(`Handling change for ${name}: ${value}`); // Log the change to debug
+
+  // Handle Name input: Only allow letters and spaces
+  if (name === "name") {
+    const regex = /^[A-Za-z\s]*$/;  // Allow letters and spaces
+    if (regex.test(value) || value === "") {
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
+      setNameError('');  // Clear any previous error
+    } else {
+      setNameError("Invalid input: Only letters and spaces are allowed in Name.");
     }
-  };
+  }
 
+  // Handle Mobile input: Only allow digits and up to 10 digits
+  else if (name === "mobile") {
+    const regex = /^[0-9]*$/;  // Allow only digits
+    let errorMessage = '';
+
+    // Allow any input, but if it's invalid, show error messages
+    if (!regex.test(value) && value.length > 0) {
+      errorMessage = "Invalid input: Only digits are allowed in Mobile.";
+    } else if (value.length > 10) {
+      errorMessage = "Invalid input: Please enter a valid 10-digit mobile number.";
+    } else if (value.length < 10 && value.length > 0) {
+      errorMessage = "Mobile number must be 10 digits.";
+    }
+
+    setError((prevErrors) => ({
+      ...prevErrors,
+      [name]: errorMessage,
+    }));
+
+    // Update state with value regardless of the validation (allow user to keep typing)
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  }
+
+  // Handle Email input: Validate email format
+  else if (name === "email") {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // Basic email validation
+    if (emailRegex.test(value) || value === "") {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+      setEmailError('');  // Clear any previous error
+    } else {
+      setEmailError("Invalid email format: Please enter a valid email address.");
+    }
+  }
+
+  // Handle other fields (Designation, Joining Date, etc.)
+  else {
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  }
+};
+
+
+const handleEmailBlur = () => {
+  const email = formData.email;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // Basic email validation regex
+
+  // If the email is invalid, show the error message in the form
+  if (email && !emailRegex.test(email)) {
+    console.log("invalid email");
+    setEmailError("Invalid email: Please enter a valid email address.");
+  } else {
+    setEmailError(''); // Clear error if the email is valid
+  }
+};
   
   useEffect(() => {
     if (showForm) {
-      // Reset formData when the form is opened again
+  
       setFormData({
         name: "",
         email: "",
@@ -138,16 +237,17 @@ const Admin_SalesModule = () => {
     setShowForm(false); 
   };
 
-  const handleEmailBlur = () => {
-    const email = formData.email;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // Basic email validation regex
+  // const handleEmailBlur = () => {
+  //   const email = formData.email;
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // Basic email validation regex
   
-    // If the email is invalid, show the error toast
-    if (email && !emailRegex.test(email)) {
-      toast.error("Invalid email: Please enter a valid email address.");
-      console.log("Invalid email: Please enter a valid email address.");
-    }
-  };
+  //   // If the email is invalid, show the error toast
+  //   if (email && !emailRegex.test(email)) {
+  //     toast.error("Invalid email: Please enter a valid email address.");
+  //     console.log("Invalid email: Please enter a valid email address.");
+  //   }
+  // };
+ 
 
   return (
     <div className="container my-4">
@@ -384,9 +484,11 @@ const Admin_SalesModule = () => {
                       sx={{ marginTop: '10px' }} 
                       // helperText="* Required"
                     />
+                      {/* Display the error message below the name input */}
+        {nameError && <p style={{ color: 'red' }}>{nameError}</p>}
                   </Grid>
 
-                  <Grid item xs={6}>
+                  {/* <Grid item xs={6}>
                     <TextField
                       label="Email"
                       fullWidth
@@ -399,7 +501,23 @@ const Admin_SalesModule = () => {
                       sx={{ marginTop: '10px' }} 
                       // helperText="* Required"
                     />
-                  </Grid>
+                 
+        {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
+                  </Grid> */}
+                  <Grid item xs={6}>
+  <TextField
+    label="Email"
+    fullWidth
+    type="email"
+    name="email"
+    value={formData.email}  
+    onChange={handleChange}  
+    onBlur={handleEmailBlur}  
+    required
+    sx={{ marginTop: '10px' }}
+  />
+  {emailError && <p style={{ color: 'red' }}>{emailError}</p>}  
+</Grid>
 
                   <Grid item xs={6}>
                     <TextField
@@ -408,11 +526,16 @@ const Admin_SalesModule = () => {
                       name="mobile"
                       value={formData.mobile}
                       onChange={handleChange}
+                      onBlur={handleEmailBlur}
                       required
                       // helperText="* Required"
                       sx={{ marginTop: '10px' }} 
                     />
+                    
+                      {error.mobile && <p style={{ color: 'red' }}>{error.mobile}</p>}
                   </Grid>
+                 
+
 
                   <Grid item xs={6}>
                     <TextField

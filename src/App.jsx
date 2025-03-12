@@ -1,4 +1,5 @@
 import React from 'react';
+import {useEffect} from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './Components/Dashboard'; // Import the Dashboard component
 // import DashboardContent from './DashboardContent'; // Dashboard content component
@@ -27,10 +28,26 @@ import Marketing from './Components/Developer/Marketing';
 import { Calendar } from 'lucide-react';
 // import SalesCalendar from "./Components/SalesCalendar";
 import SalesDashboard from "./Components/Sales/SalesDashboard";
-// import SalesSharespace from "./Components/SalesSharespace";
+import SalesSharespace from "./Components/Sales/SalesSharespace";
+
+import SharedbyDeveloper from "./Components/Sales/SharedbyDeveloper";
 import { toast ,ToastContainer} from "react-toastify";
 import Admin_SalesModule from './Components/Admin/Admin_SalesModule';
 const App = () => {
+
+  useEffect(() => {
+   
+    document.title = "CRM ERP Application"; 
+    
+     const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
+     link.type = "image/png";
+     link.rel = "icon";
+     link.href = "/unnamed.png"; 
+     document.head.appendChild(link);  
+   }, []);
+  
+
+
   return (
     <Router>
       <ToastContainer position="top-right" autoClose={3000} />
@@ -54,6 +71,9 @@ const App = () => {
         
         <Route path="/sales/lostvisits"  element={<LostVisitsModule />} />
         <Route path ="/sales/salesdashboard" element={< SalesDashboard/>} />
+
+        <Route path ="/sales/sharespace" element={< SalesSharespace/>} /> 
+        <Route path = "/sales/sharedbydeveloper" element={<SharedbyDeveloper/>}  />
         {/* <Route path ="/sales/salescalander" element={< SalesCalendar/>} />
         <Route path ="/sales/sharespace" element={< SalesSharespace/>} /> */}
          

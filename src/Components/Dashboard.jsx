@@ -335,7 +335,8 @@ const Dashboard = () => {
           // { to: "/sales/sharespace", icon: <FaChartLine />, label: "Share Space" },
           { to: "/sales/salesdashboard", icon: <FaTachometerAlt />, label: "Dashboard" }, 
 { to: "/sales/salescalander", icon: <FaCalendarAlt />, label: "Calendar" }, 
-{ to: "/sales/sharespace", icon: <FaPeopleArrows />, label: "Share Space" } 
+{ to: "/sales/sharespace", icon: <FaPeopleArrows />, label: "Share Space" } ,
+{to : "/sales/sharedbydeveloper" , icon :<FaPeopleArrows />, label: "Shared By Developer" },
 
         ]}
       />

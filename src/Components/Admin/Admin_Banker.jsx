@@ -14,7 +14,7 @@ const Admin_Banker = () => {
   const [showForm, setShowForm] = useState(false);
   // const [bankers, setBankers] = useState([]);
   const [bankers, setBankers] = useState([{ bankerName: '', bankerMobile: '' }]);
-
+  const [error, setError] = useState('');
 
   const [formData, setFormData] = useState({
     name: "",
@@ -47,9 +47,10 @@ const Admin_Banker = () => {
     if (regex.test(value)) {
    
       if (value.length > 10) {
-        toast.error("Invalid input: Please enter a valid 10-digit contact number.");
+        setError('Invalid input: Please enter a valid 10-digit contact number.');
+        // toast.error("Invalid input: Please enter a valid 10-digit contact number.");
       } else {
-        
+        setError('');
         setBankers((prevBankers) => {
           const updatedBankers = [...prevBankers];
           updatedBankers[index][field] = value;
@@ -212,6 +213,8 @@ const Admin_Banker = () => {
                           onChange={(e) => handleBankerChange(index, "bankerMobile", e.target.value)}
                           required
                         />
+                          {/* Display error message */}
+          {error && <p style={{ color: 'red' }}>{error}</p>}
                       </div>
                       {index > 0 && (
                         <div className="col-md-4 pt-4">
