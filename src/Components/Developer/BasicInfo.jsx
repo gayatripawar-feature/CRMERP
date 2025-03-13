@@ -57,7 +57,9 @@ const [emailError, setEmailError] = useState("");
 
   const [firmPan, setFirmPan] = useState("");
   const [firmPanError, setFirmPanError] = useState("");
-
+  // const [age, setAge] = useState("");
+  const [ageError, setAgeError] = useState("");
+  const [occupationError, setOccupationError] = useState(""); 
   const [fileNames, setFileNames] = useState({
     firmPanNoDocument: "",
     firmGstNoDocument: "",
@@ -100,6 +102,28 @@ const [emailError, setEmailError] = useState("");
       }));
     }
   };
+
+  const handleAgeChange = (e, index) => {
+    const value = e.target.value;
+    const updatedPartners = [...partners];
+    updatedPartners[index].age = value; // Update the age of the specific partner
+    setPartners(updatedPartners); // Update the state
+  
+    // Validate the age value
+    validateAge(value); // You should already have this function defined
+  };
+
+  
+
+
+  const handleOccupationChange = (e, index) => {
+    const value = e.target.value;
+    const updatedPartners = [...partners];
+    updatedPartners[index].occupation = value; // Update the occupation field
+    setPartners(updatedPartners); // Update the state
+  };
+
+  
 
 
   const [partners, setPartners] = useState([
@@ -332,6 +356,10 @@ const handleTabClick = (index) => {
     return true;
   };
 
+
+
+  
+
   const handleChange = (e, label, partnerIndex) => {
     const { value } = e.target;
   
@@ -356,6 +384,17 @@ const handleTabClick = (index) => {
       }
     }
   };
+  
+  
+
+  const validateAge = (age) => {
+    if (!age || age < 0 || age > 120) {
+      setAgeError("Please enter a valid age between 0 and 120");
+    } else {
+      setAgeError("");
+    }
+  };
+  
   
 
   const handleMobileChange = (e, index) => {
@@ -393,6 +432,27 @@ const handleTabClick = (index) => {
     partnerCopy[index] = { ...partnerCopy[index], email: value };
     setPartners(partnerCopy);
   };
+
+
+
+  const validateForm = () => {
+    // let isValid = true;
+  
+    // // Validate firm name
+    // if (!validateFirmName()) {
+    //   isValid = false;
+    // }
+  
+    // // Validate age
+    // if (!validateAge(age)) {
+    //   isValid = false;
+    // }
+  
+    // // You can add other validations here as needed (e.g., for PAN, Mobile No, etc.)
+  
+    // return isValid;
+  };
+  
   
   return (
     <div className="main-content">
@@ -849,8 +909,8 @@ const handleTabClick = (index) => {
       label="Firm PAN No"
       fullWidth
       variant="outlined"
-      value={firmPAN}
-            onChange={handleFirmPANChange}
+      value={firmPan}
+            onChange={handleFirmPanChange}
             error={!!firmPanError}  // Show error if there is an error
             helperText={firmPanError}
     />
@@ -954,7 +1014,94 @@ const handleTabClick = (index) => {
           </Grid>
         </Paper>
       ))} */}
-      {partners.map((partner, index) => (
+      {/* {partners.map((partner, index) => (
+  <Paper key={index} className="p-3 mb-3" elevation={2} style={{ borderRadius: "10px" }}>
+    <Grid container spacing={2}>
+      {["Name", "Age", "Occupation", "Mobile No.", "Mail ID", "Residential Address", "PAN No.", "Aadhaar No."]
+        .map((label, i) => (
+          // <Grid item xs={6} key={i}>
+          //   <TextField
+          //     label={label}
+          //     fullWidth
+          //     variant="outlined"
+          //     type={label === "Age" ? "number" : "text"}
+          //     value={partner[label.toLowerCase().replace(/ /g, "")]} // Dynamically map to partner data
+          //     onChange={(e) => {
+          //       if (label === "Name") {
+          //         handlePartnerNameChange(e, index); // Handle Name change and validation
+          //       } else if (label === "Mobile No.") {
+          //         handleMobileChange(e, index); // Handle Mobile No. validation
+          //       } else if (label === "Mail ID") {
+          //         handleEmailChange(e, index); // Handle Email validation
+          //       }else if (label === "PAN No.") {
+          //         handlePANChange(e, index); // Handle PAN No. validation
+          //       }
+          //     }}
+          //     error={
+          //       (label === "Name" && !!nameError) ||
+          //       (label === "Mobile No." && !!mobileError) ||
+          //       (label === "Mail ID" && !!emailError) ||
+          //       (label === "PAN No." && !!panError)
+          //     } // Show error if any validation fails
+          //     helperText={
+          //       (label === "Name" && nameError) ||
+          //       (label === "Mobile No." && mobileError) ||
+          //       (label === "Mail ID" && emailError) ||
+          //       (label === "PAN No." && panError)
+          //     } // Display error message
+          //   />
+          // </Grid>
+
+          <Grid item xs={6} key={i}>
+          <TextField
+            label={label}
+            fullWidth
+            variant="outlined"
+            type={label === "Age" ? "text" : "text"} // Keep text type for simplicity
+            value={partner[label.toLowerCase().replace(/ /g, "")]} // Dynamically map to partner data
+            onChange={(e) => {
+              if (label === "Age") {
+                handleAgeChange(e, index); // Handle Age change
+              } else if (label === "Occupation") {
+                handleOccupationChange(e, index); // Handle Occupation change (if needed)
+              } else if (label === "Name") {
+                handlePartnerNameChange(e, index); // Handle Name change
+              } else if (label === "Mobile No.") {
+                handleMobileChange(e, index); // Handle Mobile No. change
+              } else if (label === "Mail ID") {
+                handleEmailChange(e, index); // Handle Mail ID change
+              } else if (label === "PAN No.") {
+                handlePANChange(e, index); // Handle PAN No. change
+              }
+            }}
+            error={ 
+              (label === "Name" && !!nameError) ||
+              (label === "Mobile No." && !!mobileError) ||
+              (label === "Mail ID" && !!emailError) ||
+              (label === "PAN No." && !!panError) ||
+              (label === "Age" && !!ageError) ||
+              (label === "Occupation" && false) // No error for Occupation
+            }
+            helperText={ 
+              (label === "Name" && nameError) ||
+              (label === "Mobile No." && mobileError) ||
+              (label === "Mail ID" && emailError) ||
+              (label === "PAN No." && panError) ||
+              (label === "Age" && ageError) ||
+              (label === "Occupation" && "") // No error message for Occupation
+            }
+          />
+        </Grid>
+        
+
+        ))}
+    </Grid>
+  </Paper>
+))} */}
+
+
+
+{partners.map((partner, index) => (
   <Paper key={index} className="p-3 mb-3" elevation={2} style={{ borderRadius: "10px" }}>
     <Grid container spacing={2}>
       {["Name", "Age", "Occupation", "Mobile No.", "Mail ID", "Residential Address", "PAN No.", "Aadhaar No."]
@@ -964,37 +1111,46 @@ const handleTabClick = (index) => {
               label={label}
               fullWidth
               variant="outlined"
-              type={label === "Age" ? "number" : "text"}
+              type={label === "Age" ? "text" : "text"} // Keep text type for simplicity
               value={partner[label.toLowerCase().replace(/ /g, "")]} // Dynamically map to partner data
               onChange={(e) => {
-                if (label === "Name") {
-                  handlePartnerNameChange(e, index); // Handle Name change and validation
+                if (label === "Age") {
+                  handleAgeChange(e, index); // Handle Age change and validation
+                } else if (label === "Occupation") {
+                  handleOccupationChange(e, index); // Handle Occupation change
+                } else if (label === "Name") {
+                  handlePartnerNameChange(e, index); // Handle Name change
                 } else if (label === "Mobile No.") {
-                  handleMobileChange(e, index); // Handle Mobile No. validation
+                  handleMobileChange(e, index); // Handle Mobile No. change
                 } else if (label === "Mail ID") {
-                  handleEmailChange(e, index); // Handle Email validation
-                }else if (label === "PAN No.") {
-                  handlePANChange(e, index); // Handle PAN No. validation
+                  handleEmailChange(e, index); // Handle Mail ID change
+                } else if (label === "PAN No.") {
+                  handlePANChange(e, index); // Handle PAN No. change
                 }
               }}
-              error={
+              error={ 
                 (label === "Name" && !!nameError) ||
                 (label === "Mobile No." && !!mobileError) ||
                 (label === "Mail ID" && !!emailError) ||
-                (label === "PAN No." && !!panError)
-              } // Show error if any validation fails
-              helperText={
+                (label === "PAN No." && !!panError) ||
+                (label === "Age" && !!ageError) ||
+                (label === "Occupation" && !!occupationError) // Check for Occupation error
+              }
+              helperText={ 
                 (label === "Name" && nameError) ||
                 (label === "Mobile No." && mobileError) ||
                 (label === "Mail ID" && emailError) ||
-                (label === "PAN No." && panError)
-              } // Display error message
+                (label === "PAN No." && panError) ||
+                (label === "Age" && ageError) ||
+                (label === "Occupation" && occupationError) // Show Occupation error
+              }
             />
           </Grid>
         ))}
     </Grid>
   </Paper>
 ))}
+
 
       <Button className="m-3 m-2" variant="contained" color="primary" onClick={() => setPartners([...partners, {}])}>
         <FaPlus /> Add Partner
@@ -1005,10 +1161,11 @@ const handleTabClick = (index) => {
         className="m-3"
         color="success"
         onClick={() => {
-          if (validateForm()) {
-            setShowFirmForm(false);
-            toast.success("Details are submitted!", { position: "top-right", autoClose: 3000 });
-          }
+          // Simply show the toast message without calling validation functions
+          toast.success("Details are submitted!", { position: "top-right", autoClose: 3000 });
+          
+          // If you want to close the form (or any other logic), you can add it here
+          setShowFirmForm(false); // Example of hiding the form after submission
         }}
       >
         Submit
