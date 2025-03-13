@@ -53,6 +53,7 @@ const BasicInfo = () => {
   const [firmNameError, setFirmNameError] = useState("");
 
   const [mobileError, setMobileError] = useState("");
+  const [email, setEmail] = useState('');
 const [emailError, setEmailError] = useState("");
 
   const [firmPan, setFirmPan] = useState("");
@@ -60,6 +61,15 @@ const [emailError, setEmailError] = useState("");
   // const [age, setAge] = useState("");
   const [ageError, setAgeError] = useState("");
   const [occupationError, setOccupationError] = useState(""); 
+
+
+  const [accountNo, setAccountNo] = useState(""); // Initialize the account number state
+const [accountNoError, setAccountNoError] = useState("");
+
+const [ifscCode, setIfscCode] = useState(""); 
+const [ifscCodeError, setIfscCodeError] = useState("");
+
+
   const [fileNames, setFileNames] = useState({
     firmPanNoDocument: "",
     firmGstNoDocument: "",
@@ -282,17 +292,51 @@ const handleTabClick = (index) => {
 
     setName(value);
   };
+
+  // const handleMobileNoChange = (event) => {
+  //   const value = event.target.value;
+    
+  //   if (/[^0-9]/.test(value)) {
+  //     toast.error('Mobile number should only contain digits.');
+  //   } else if (value.length > 10) {
+  //     toast.error('Mobile number cannot exceed 10 digits.');
+  //   }
+  //   setMobileNo(value);
+  // };
   const handleMobileNoChange = (event) => {
     const value = event.target.value;
-    
+  
+    // Validate the input value
     if (/[^0-9]/.test(value)) {
-      toast.error('Mobile number should only contain digits.');
+      setMobileError('Mobile number should only contain digits.');
     } else if (value.length > 10) {
-      toast.error('Mobile number cannot exceed 10 digits.');
+      setMobileError('Mobile number cannot exceed 10 digits.');
+    } else {
+      setMobileError(''); // Clear the error when it's valid
     }
+  
+    // Update the mobile number value
     setMobileNo(value);
   };
+  
 
+  const handleAccountNoChange = (e) => {
+    const value = e.target.value;
+    
+    // Regular expression to check if the value is numeric and has a valid length (e.g., 10-16 digits)
+    const accountNoRegex = /^[0-9]{10,16}$/; // 10 to 16 digits
+  
+    if (value && !accountNoRegex.test(value)) {
+      setAccountNoError("Account number must be between 10 to 16 digits.");
+    } else {
+      setAccountNoError(""); // Clear the error if valid
+    }
+  
+    // Update the account number in the state
+    setAccountNo(value);
+  };
+
+  
  
   const validatePAN = (pan) => {
     const panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/; // PAN format: 5 letters, 4 digits, 1 letter
@@ -357,7 +401,29 @@ const handleTabClick = (index) => {
   };
 
 
+  const [formValues, setFormValues] = useState({
+    firmName: "",
+    projectName: "",
+    projectAddress: "",
+    oldSurveyNumber: "",
+    newSurveyNumber: "",
+    village: "",
+    taluka: "",
+    district: "",
+    sanctionAuthority: "",
+    east: "",
+    west: "",
+    north: "",
+    south: "",
+    latitude: "",
+    longitude: "",
+    landmark: "",
+  });
 
+  // State to store validation errors
+  const [errors, setErrors] = useState({
+    firmName: "",
+  });
   
 
   const handleChange = (e, label, partnerIndex) => {
@@ -396,6 +462,22 @@ const handleTabClick = (index) => {
   };
   
   
+  const handleIfscCodeChange = (e) => {
+    const value = e.target.value;
+  
+    // Regular expression to validate IFSC code format
+    const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+  
+    if (value && !ifscRegex.test(value)) {
+      setIfscCodeError("Invalid IFSC code. It should be in the format: XXXX0XXXXX.");
+    } else {
+      setIfscCodeError(""); // Clear the error if valid
+    }
+  
+    // Update the IFSC code in the state
+    setIfscCode(value); // Assuming you have a state for the IFSC code
+  };
+  
 
   const handleMobileChange = (e, index) => {
     const value = e.target.value;
@@ -424,6 +506,7 @@ const handleTabClick = (index) => {
   
     if (value && !emailRegex.test(value)) {
       setEmailError("Invalid Gmail address");
+      console.log("invalid email");
     } else {
       setEmailError(""); // Clear the error if the value is valid
     }
@@ -1227,7 +1310,7 @@ onClick={() => {
       Project Details
     </Typography>
 
-    <Grid container spacing={2}>
+    {/* <Grid container spacing={2}>
       {[
         "FIRM Name",
         "Project Name",
@@ -1246,11 +1329,65 @@ onClick={() => {
         "Longitude",
         "Landmark",
       ].map((label, index) => (
-        <Grid item xs={4} key={index}>
-          <TextField label={label} fullWidth variant="outlined" />
-        </Grid>
-      ))}
+       
+      <Grid item xs={4} key={index}>
+      <TextField
+        label={label}
+        fullWidth
+        variant="outlined"
+        name={label} // Directly use the label as the name (or use a custom name if needed)
+        value={formValues[label]} // Bind to the correct value
+        onChange={(e) => handleChange(e, label)} // Pass the label for validation
+        error={!!errors[label]} // Show error if validation failed
+        helperText={errors[label]} // Display error message
+      />
     </Grid>
+      ))}
+    </Grid> */}
+
+<Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField
+              label="Firm Name"
+              fullWidth
+              variant="outlined"
+              value={firmName}
+              onChange={handleFirmNameChange} // Handle Firm Name change with validation
+              error={!!firmNameError} // Show error state for Firm Name field
+              helperText={firmNameError} // Display error message if any
+            />
+          </Grid>
+
+          {/* Other fields */}
+          {[
+            'Project Name',
+            'Project Address',
+            'Old Survey Number',
+            'New Survey Number',
+            'Village',
+            'Taluka',
+            'District',
+            'Sanction Authority',
+            'East',
+            'West',
+            'North',
+            'South',
+            'Latitude',
+            'Longitude',
+            'Landmark',
+          ].map((label, index) => (
+            <Grid item xs={6} key={index}>
+              <TextField
+                label={label}
+                fullWidth
+                variant="outlined"
+                value={formValues[label.toLowerCase().replace(/ /g, '')]} // Dynamically bind value
+                onChange={(e) => handleChange(e, label)} // Handle change for other fields
+              />
+            </Grid>
+          ))}
+        </Grid>
+    
 
     <Typography variant="h5" className="mt-4" gutterBottom>
       Phase Details
@@ -1416,12 +1553,56 @@ onClick={() => {
           </Select>
         </FormControl>
       </Grid>
-          <Grid item xs={4}><TextField label="Mobile No." fullWidth value={mobileNo}
-            onChange={handleMobileNoChange}/></Grid>
-          <Grid item xs={4}><TextField label="Landowner Name" fullWidth value={name} onChange={handleNameChange}/></Grid>
+          {/* <Grid item xs={4}><TextField label="Mobile No." fullWidth value={mobileNo}
+            onChange={handleMobileChange}
+            error={!!mobileError} // Show error state if there is a mobile error
+                helperText={mobileError}
+                /></Grid> */}
+
+
+                {/* Mobile No. with Validation */}
+                <Grid item xs={4}>
+      <TextField
+        label="Mobile No."
+        fullWidth
+        value={mobileNo}
+        onChange={handleMobileNoChange}
+        error={!!mobileError} // Show error if there is a mobileError
+        helperText={mobileError} // Display error message if any
+      />
+    </Grid>
+
+
+          <Grid item xs={4}><TextField label="Landowner Name" fullWidth value={name} onChange={handleNameChange}
+           error={!!error} // Show error if there is an error message
+           helperText={error}
+          /></Grid>
           <Grid item xs={4}><TextField type="number" label="Age" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="Occupation" fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="Mail ID" fullWidth /></Grid>
+          {/* <Grid item xs={4}><TextField label="Mail ID" fullWidth   onChange={handleEmailChange}/></Grid> */}
+
+          {/* <Grid item xs={4}>
+  <TextField
+    label="Mail ID"
+    fullWidth
+    value={email}
+    onChange={(e) => handleEmailChange(e)} // pass the correct index if needed
+    error={!!emailError} // Show error if there's an error message
+    helperText={emailError} // Display error message if any
+  />
+</Grid> */}
+<Grid item xs={4}>
+  <TextField
+    label="Mail ID"
+    fullWidth
+    // Bind the input value to the `email` state
+    onChange={handleEmailChange} // Trigger the handleEmailChange function on input change
+    error={!!emailError} // Show error if `emailError` is not an empty string
+    helperText={emailError} // Display the error message if there is one
+  />
+</Grid>
+
+
           <Grid item xs={4}><TextField label="Village" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="District" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="Taluka" fullWidth /></Grid>
@@ -1454,11 +1635,33 @@ onClick={() => {
       </Grid>
           <Grid item xs={4}><TextField label="Bank Address" fullWidth /></Grid>
           
-          <Grid item xs={4}><TextField label="Account No." fullWidth /></Grid>
-          <Grid item xs={4}><TextField label="IFSC Code" sx={{
+          {/* <Grid item xs={4}><TextField label="Account No." fullWidth /></Grid> */}
+          <Grid item xs={4}>
+  <TextField
+    label="Account No."
+    fullWidth
+    value={accountNo} // Bind the value of the account number state
+    onChange={handleAccountNoChange} // Trigger onChange handler
+    error={!!accountNoError} // Show error if there's an accountNoError
+    helperText={accountNoError} // Display error message if any
+  />
+</Grid>
+
+          {/* <Grid item xs={4}><TextField label="IFSC Code" sx={{
       marginTop: "13px",
       
-    }} fullWidth /></Grid>
+    }} fullWidth /></Grid> */}
+    <Grid item xs={4}>
+  <TextField
+    label="IFSC Code"
+    fullWidth
+    value={ifscCode} // Bind the state value for the IFSC code
+    onChange={handleIfscCodeChange} // Handle change and validation
+    error={!!ifscCodeError} // Show error if there's an error
+    helperText={ifscCodeError} // Display error message if any
+  />
+</Grid>
+
           {/* <Grid item xs={4}><TextField label="Aadhaar No." fullWidth /></Grid>
           <Grid item xs={4}><TextField label="Residential Address" fullWidth /></Grid>
           <Grid item xs={4}><TextField label="PAN No." fullWidth /></Grid>
@@ -1677,7 +1880,7 @@ Submit Landowner Info
         <Grid container spacing={2}>
           <Grid item xs={4}><TextField label="Project Name" fullWidth /></Grid>
           {/* <Grid item xs={4}><TextField label="Name" fullWidth /></Grid> */}
-          <Grid item xs={4}>
+          {/* <Grid item xs={4}>
         <TextField
           label="Name"
           fullWidth
@@ -1686,9 +1889,13 @@ Submit Landowner Info
           error={!!nameError}
           helperText={nameError}
         />
-      </Grid>
+      </Grid> */}
+        <Grid item xs={4}><TextField label="Landowner Name" fullWidth value={name} onChange={handleNameChange}
+           error={!!error} // Show error if there is an error message
+           helperText={error}
+          /></Grid>
           {/* <Grid item xs={4}><TextField label="Mobile No." fullWidth /></Grid> */}
-          <Grid item xs={4}>
+          {/* <Grid item xs={4}>
         <TextField
           label="Mobile No."
           fullWidth
@@ -1697,7 +1904,18 @@ Submit Landowner Info
           error={!!mobileNoError}
           helperText={mobileNoError}
         />
-      </Grid>
+      </Grid> */}
+
+<Grid item xs={4}>
+      <TextField
+        label="Mobile No."
+        fullWidth
+        value={mobileNo}
+        onChange={handleMobileNoChange}
+        error={!!mobileError} // Show error if there is a mobileError
+        helperText={mobileError} // Display error message if any
+      />
+    </Grid>
 
           <Grid item xs={4}><TextField type="number" label="No. of Flats Alloted" fullWidth /></Grid>
         </Grid>

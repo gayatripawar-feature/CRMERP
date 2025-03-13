@@ -113,32 +113,59 @@ const handleTabClick = (index) => {
     console.log("Selected Tab Before Update:", selectedTab);
     setExpandedSection(index);  
 
-    console.log("Clicked Section Index:", index);
-console.log("Sections Array:", sections);
-console.log("Label at index 3:", sections[3]?.label);
-console.log("Label length at index 3:", sections[3]?.label.length);
-console.log("Label at index 3:", `"${sections[3]?.label}"`);
+//     console.log("Clicked Section Index:", index);
+// console.log("Sections Array:", sections);
+// console.log("Label at index 3:", sections[3]?.label);
+// console.log("Label length at index 3:", sections[3]?.label.length);
+// console.log("Label at index 3:", `"${sections[3]?.label}"`);
 
-  if (sections[index].label === "Project Display") {
-    setSelectedTab("display");
-  } else if (sections[index].label === "Firm Display") {
-    setSelectedTab("firm");
-  } else if (sections[index].label === "LandOwner Display") {
-    setSelectedTab("landowner");
-  } else if (sections[index].label === "Flat Allotement Display") {
-    setExpandedSection(index);
-    setSelectedTab("allotement");
-  }else {
-    console.error("Unrecognized section label:", sections[index].label);
-  }
+//   if (sections[index].label === "Project Display") {
+//     setSelectedTab("display");
+//   } else if (sections[index].label === "Firm Display") {
+//     setSelectedTab("firm");
+//   } else if (sections[index].label === "LandOwner Display") {
+//     setSelectedTab("landowner");
+//   } else if (sections[index].label === "Flat Allotement Display") {
+//     setExpandedSection(index);
+//     setSelectedTab("allotement");
+//   }else {
+//     console.error("Unrecognized section label:", sections[index].label);
+//   }
 
 
   
-    setShowFirmForm(false);
-    setShowProjectForm(false); 
-    setShowLandownerForm(false); 
-    // setFlatAllotement(false);
-    setShowFlatForm(false);
+//     setShowFirmForm(false);
+//     setShowProjectForm(false); 
+//     setShowLandownerForm(false); 
+    
+//     setShowFlatForm(false);
+
+console.log("Clicked Section Index:", index);
+console.log("Sections Array:", sections);
+console.log("Label at index 3:", `"${sections[3]?.label}"`);
+console.log("Label length at index 3:", sections[3]?.label?.length);
+
+if (sections[index] && sections[index].label === "Project Display") {
+  setSelectedTab("display");
+} else if (sections[index] && sections[index].label === "Firm Display") {
+  setSelectedTab("firm");
+} else if (sections[index] && sections[index].label === "LandOwner Display") {
+  setSelectedTab("landowner");
+} else if (sections[index] && sections[index].label === "Flat Allotment Display") {
+  console.log("Flat Allotment Display matched at index:", index);
+  setExpandedSection(index);
+  setSelectedTab("allotement");
+  setShowFlatForm(true); // Ensure this is triggered to show the flat allotment table
+} else {
+  console.error("Unrecognized section label:", sections[index]?.label);
+}
+
+// Reset other forms
+setShowFirmForm(false);
+setShowProjectForm(false);
+setShowLandownerForm(false);
+setShowFlatForm(false); // Ensure this is not reset elsewhere if you want the table to show
+
   };
 
   const [newPhase, setNewPhase] = useState({
@@ -384,7 +411,7 @@ console.log("Label at index 3:", `"${sections[3]?.label}"`);
 )}
 
 
-
+{/* 
 {expandedSection === 3 && selectedTab === "allotement" && (
   <div className="content-container mt-3">
     {!showFlatForm ? (
@@ -414,86 +441,30 @@ console.log("Label at index 3:", `"${sections[3]?.label}"`);
           <FlatAllotment data={Flatdata} />
         </div>
       </>
-    ) : (
-      <div className="landowner-form mt-4 p-3 border rounded" style={{
-        backgroundColor: "#f8f9fa", 
-        border: "1px solid #ccc", 
-      }}>
-        <h5>Flat Allotement Display </h5>
-        <Grid container spacing={2}>
-          <Grid item xs={4}><TextField label="Project Name" fullWidth /></Grid>
-          {/* <Grid item xs={4}><TextField label="Name" fullWidth /></Grid> */}
-          <Grid item xs={4}>
-        <TextField
-          label="Name"
-          fullWidth
-          value={name}
-          onChange={handleNameChange}
-          error={!!nameError}
-          helperText={nameError}
-        />
-      </Grid>
-          {/* <Grid item xs={4}><TextField label="Mobile No." fullWidth /></Grid> */}
-          <Grid item xs={4}>
-        <TextField
-          label="Mobile No."
-          fullWidth
-          value={mobileNo}
-          onChange={handleMobileNoChange}
-          error={!!mobileNoError}
-          helperText={mobileNoError}
-        />
-      </Grid>
+    ) : null } 
 
-          <Grid item xs={4}><TextField type="number" label="No. of Flats Alloted" fullWidth /></Grid>
-        </Grid>
-        <h4 className="pt-3">Flat Details</h4>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ bgcolor: "primary.main" }}>
-                <TableCell  sx={{ color: "white", fontWeight: "bold" }}>RERA CARPET AREA (SQ FT)</TableCell>
-                <TableCell  sx={{ color: "white", fontWeight: "bold" }}>WING</TableCell>
-                <TableCell  sx={{ color: "white", fontWeight: "bold" }}>FLAT NO.</TableCell>
-                <TableCell  sx={{ color: "white", fontWeight: "bold" }}> TYPE OF FLAT</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            <TableRow>
-            <TableCell><TextField fullWidth variant="outlined" /></TableCell>
-        <TableCell><TextField fullWidth variant="outlined" /></TableCell>
-        <TableCell><TextField fullWidth variant="outlined" /></TableCell>
-        <TableCell><TextField fullWidth variant="outlined" /></TableCell>
-      </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-       
-
-<Button
-  variant="contained"
-  className="mt-3"
-  color="success"
-  onClick={() => {
-    setShowFirmForm(false);
-    toast.success("details are submitted!", { position: "top-right", autoClose: 3000 });
-  }}
->
-Submit Flat Allotement Info
-</Button>
-      </div>
-    )}
-  </div>
-)}
 
 
 
   </div>
   )
 }
-   
+    */}
  
+ {expandedSection === 3 && selectedTab === "allotement" && (
+  <div className="content-container mt-3">
+    {!showFlatForm ? (
+      <>
+        
+        <div className="mt-3">
+          <FlatAllotment data={Flatdata} /> 
+        </div>
+      </>
+    ) : null}
+  </div>
+)}
+</div>
+  )}
 
 
 export default SharedbyDeveloper;

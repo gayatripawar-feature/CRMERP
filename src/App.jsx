@@ -29,8 +29,9 @@ import { Calendar } from 'lucide-react';
 // import SalesCalendar from "./Components/SalesCalendar";
 import SalesDashboard from "./Components/Sales/SalesDashboard";
 import SalesSharespace from "./Components/Sales/SalesSharespace";
-
+import Leads from "./Components/Sales/Leads";
 import SharedbyDeveloper from "./Components/Sales/SharedbyDeveloper";
+import LeadsFollowUp from './Components/Sales/LeadsFollowup';
 import { toast ,ToastContainer} from "react-toastify";
 import Admin_SalesModule from './Components/Admin/Admin_SalesModule';
 const App = () => {
@@ -74,6 +75,9 @@ const App = () => {
 
         <Route path ="/sales/sharespace" element={< SalesSharespace/>} /> 
         <Route path = "/sales/sharedbydeveloper" element={<SharedbyDeveloper/>}  />
+
+        <Route path = "/sales/leads" element={<Leads/>}  />
+        <Route path = "/sales/leadsfollowup" element={<LeadsFollowUp/>}  />
         {/* <Route path ="/sales/salescalander" element={< SalesCalendar/>} />
         <Route path ="/sales/sharespace" element={< SalesSharespace/>} /> */}
          
