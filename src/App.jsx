@@ -32,6 +32,9 @@ import SalesSharespace from "./Components/Sales/SalesSharespace";
 import Leads from "./Components/Sales/Leads";
 import SharedbyDeveloper from "./Components/Sales/SharedbyDeveloper";
 import LeadsFollowUp from './Components/Sales/LeadsFollowup';
+import LostLeads from "./Components/Sales/LostLeads";
+import FirstVisits from "./Components/Sales/FirstVisits";
+import FirstVisitFollowup from "./Components/Sales/FirstVisitFollowup";
 import { toast ,ToastContainer} from "react-toastify";
 import Admin_SalesModule from './Components/Admin/Admin_SalesModule';
 const App = () => {
@@ -78,6 +81,9 @@ const App = () => {
 
         <Route path = "/sales/leads" element={<Leads/>}  />
         <Route path = "/sales/leadsfollowup" element={<LeadsFollowUp/>}  />
+        <Route path = "/sales/LostLeads" element ={<LostLeads />} />
+        <Route path = "/sales/firstvisits" element ={<FirstVisits />} />
+        <Route path="/sales/firstvisitfollowup" element={<FirstVisitFollowup/>} />
         {/* <Route path ="/sales/salescalander" element={< SalesCalendar/>} />
         <Route path ="/sales/sharespace" element={< SalesSharespace/>} /> */}
          

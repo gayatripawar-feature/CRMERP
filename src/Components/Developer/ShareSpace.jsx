@@ -459,8 +459,8 @@ const MenuProps = {
   <div className="mt-4">
     {/* Table */}
     <table className="table table-bordered table-sm">
-      <thead>
-        <tr>
+      <thead style={{ background:"#3621a9"}}>
+        <tr >
           <th className="fw-bold bg-primary text-center fs-5">Action</th>
           <th className="fw-bold bg-primary text-center fs-5">Timestamp</th>
           <th className="fw-bold bg-primary text-center fs-5">Share To</th>

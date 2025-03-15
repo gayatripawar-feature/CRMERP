@@ -8,27 +8,27 @@ const DisplayTable = ({ data }) => {
         <TableHead>
           {/* <TableRow sx={{ bgcolor: "primary.main" }}> */}
            <TableRow sx={{background:"#3621a9"}}>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>ACTION</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>FIRM NAME</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>TIMESTAMP</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>PROJECT NAME</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>PROJECT ADDRESS</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>OLD SURVEY NUMBER</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>NEW SURVEY NUMBER</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>VILLAGE</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>TALUKA</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>DISTRICT</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>SANCTION AUTHORITY</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>EAST</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>WEST</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>NORTH</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>SOUTH</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>LATITUDE</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>LONGITUDE</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>LANDMARK</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>PHASE NO</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>WING NO</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" }}>MAHARERA NO</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>ACTION</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>FIRM NAME</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>TIMESTAMP</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>PROJECT NAME</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>PROJECT ADDRESS</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>OLD SURVEY NUMBER</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>NEW SURVEY NUMBER</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>VILLAGE</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>TALUKA</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>DISTRICT</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>SANCTION AUTHORITY</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>EAST</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>WEST</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>NORTH</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>SOUTH</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>LATITUDE</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>LONGITUDE</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>LANDMARK</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>PHASE NO</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>WING NO</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>MAHARERA NO</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

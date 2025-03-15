@@ -1,0 +1,790 @@
+
+
+
+
+
+
+
+import React, { useState, useRef , useEffect } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Grid,FormControl,InputLabel,Select, MenuItem ,Box,Tooltip,IconButton} from '@mui/material';
+import { FaEye, FaFileCsv, FaUpload, FaPlus, FaTrash } from "react-icons/fa";
+import { Inventory } from '@mui/icons-material';
+import InventoryTable from './InventoryTable';
+// import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import NewLeads from './NewLeads';
+import DisplayEnquiryTable from './DisplayEnquiryTable';
+import {  FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { jsPDF } from "jspdf";
+
+
+// API Call Function
+const fetchLoansData = async () => {
+  const response = await fetch('/api/getOCRCollection');
+  return response.json();
+};
+
+// Dropdown Options
+const statusOptions = ["Approved", "Unapproved"];
+const owners = ["Landowner", "Developer", "Investor"];
+const configurations = ["1 BHK", "1.5 BHK", "2 BHK", "2.5 BHK", "3 BHK", "3.5 BHK", "4 BHK", "4.5 BHK", "Flat", "Shop"];
+const unitTypes = ["Actual Site", "Hoarding","Facebook","Instagram","Website","Print Media","Radio","Google add","Exhibition","Online Portal","Direct call","Pamphlet","Channel Partner","References","Other"];
+
+
+// // Sidebar Sections
+// const sections = [
+//   { label: "Display Leads", icon: <FaEye size={20} /> },
+//   { label: "Sample CSV", icon: <FaFileCsv size={20}/> },
+//   { label: "Upload Excel", icon: <FaUpload size={20}/> },
+// ];
+
+
+const sections = [
+    { label: "Display Enquiries", icon: <FaEye size={24} />, bgColor: "primary.main" },
+    { label: "Sample CSV", icon: <FaFileCsv size={24} />, bgColor: "success.main" },
+    { label: "Upload Excel", icon: <FaUpload size={24} />, bgColor: "secondary.main" },
+  ];
+
+const FirstVisits = () => {
+  const [loans, setLoans] = useState([]);
+  const [expandedSection, setExpandedSection] = useState(0);
+  const [showFirmForm, setShowFirmForm] = useState(false);
+  const [partners, setPartners] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [name, setName] = useState('');
+  const [error, setError] = useState('');
+  const [showFileInput, setShowFileInput] = useState(false);
+  const [leadNo, setLeadNo] = useState(''); 
+  const [salesExec, setSalesExec] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [email, setEmail] = useState('');
+  const [mobileError, setMobileError] = useState('');
+  const [interestedIn, setInterestedIn] = useState('');
+  const [planningToBuy, setPlanningToBuy] = useState('');
+  const [occupation, setOccupation] = useState('');
+  const [budget, setBudget] = useState('');
+  const [reasonForPurchase, setReasonForPurchase] = useState('');
+  const [emailError, setEmailError] = useState('')
+  useEffect(() => {
+    loadLoansData();
+  }, []);
+
+  const fileInputRef = useRef(null);
+
+  const [data, setData] = useState([
+   ]);
+
+
+  const handleInterestedInChange = (event) => {
+    setInterestedIn(event.target.value);
+  };
+// Handle the change for 'Budget'
+const handleBudgetChange = (event) => {
+    setBudget(event.target.value);
+  };
+
+  const loadLoansData = async () => {
+    const data = await fetchLoansData();
+    setLoans(data);
+  };
+
+ // Handle the change for 'Planning To Buy Within'
+ const handlePlanningToBuyChange = (event) => {
+    setPlanningToBuy(event.target.value);
+  };
+
+   // Handle the change for 'Occupation'
+   const handleOccupationChange = (event) => {
+    setOccupation(event.target.value); // Update occupation state
+  };
+
+  const handleReasonForPurchaseChange = (event) => {
+    setReasonForPurchase(event.target.value); // Update reasonForPurchase state
+  };
+
+  const handleToggleSection = (index) => {
+    if (index === 1) {
+      // Download Sample CSV
+      downloadSampleCsv();
+    } else if (index === 2) {
+      // Check if file input ref is defined before clicking
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+    } else {
+      setExpandedSection(index);
+      setShowFileInput(false);
+    }
+  };
+  
+  
+  const [inventoryData, setInventoryData] = useState([
+    {
+     
+    },
+    {
+     
+    },
+  ]);
+
+  // ✅ Function to handle deletion of a row
+  const handleDelete = (index) => {
+    setInventoryData(inventoryData.filter((_, i) => i !== index));
+  };
+
+
+  const downloadSampleCsv = () => {
+    const sampleData = "Name,Email,Phone\nJohn Doe,john@example.com,1234567890";
+    const blob = new Blob([sampleData], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "lead_template.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    
+  
+    const regex = /[\d\s]/;
+
+   
+    if (regex.test(value)) {
+      setError('Name should not contain digits or spaces');
+    } else {
+      setError(''); 
+    }
+
+    setName(value); 
+  };
+
+
+  const handleLeadNoChange = (event) => {
+    setLeadNo(event.target.value);
+    setError(''); // Clear error on change
+  };
+
+  // Handle change for Sales Executive Name
+  const handleSalesExecChange = (event) => {
+    setSalesExec(event.target.value);
+    setError(''); // Clear error on change
+  };
+ 
+  const validateMobile = (value) => {
+    const regex = /^[0-9]{10}$/;  // Only exactly 10 digits allowed
+    if (!regex.test(value)) {
+      setMobileError('Mobile number should contain exactly 10 digits');
+    } else {
+      setMobileError('');
+    }
+  };
+  
+
+  // Validate email format
+  const validateEmail = (value) => {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;  // Basic email regex
+    if (!regex.test(value)) {
+      setEmailError('Please enter a valid email address');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  // Handle change in mobile input
+  const handleMobileChange = (e) => {
+    const value = e.target.value;
+    setMobile(value);
+    validateMobile(value);
+  };
+
+  // Handle change in email input
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    validateEmail(value);
+  };
+
+
+
+  return (
+    <div className="main-content">
+      <h6>Sales Module / Lead Management</h6>
+
+    
+      <div className="d-flex align-items-center mb-3">
+       
+
+
+<div className="d-flex align-items-center mb-3">
+ 
+
+{sections.map((section, index) => (
+        <Tooltip key={index} title={section.label} arrow>
+          <IconButton
+            color="primary"
+         
+            onClick={() => handleToggleSection(index)}
+            sx={{
+              backgroundColor: section.bgColor,
+              padding: "10px",   
+           margin :"10px",
+              borderRadius: "50%",
+              color: "white",
+              fontSize: "24px",   
+            }}
+          >
+            {section.icon}
+          </IconButton>
+        </Tooltip>
+      ))}
+
+
+
+
+    
+</div>
+
+{/* File Upload Input */}
+{showFileInput && (
+  <div className="m-3">
+    <input type="file" accept=".csv, .xlsx" />
+  </div>
+)}
+
+ {/* Hidden file input element */}
+ <input
+        type="file"
+        accept=".csv, .xlsx"
+        ref={fileInputRef}
+        style={{ display: 'none' }} // Hidden input element
+        onChange={(e) => {
+          console.log('File selected:', e.target.files[0]);
+        }}
+      />
+
+
+
+      </div>
+
+      {/* Display Inventory Section */}
+      {expandedSection === 0 && (
+        <div className="content-container mt-3">
+          {!showFirmForm ? (
+            <>
+              <div className="button-container">
+                <Button variant="contained" color="primary" style={{ background: '#272ba8' }} onClick={() => setShowFirmForm(true)}>
+                  + New Enquiry
+                </Button>
+                {/* Pagination Buttons */}
+                <div className="right-buttons">
+                  <Button variant="contained" color="secondary"  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}>
+                    Previous
+                  </Button>
+                  <Button variant="contained" color="secondary"  onClick={() => setCurrentPage(prev => prev + 1)}>
+                    Next
+                  </Button>
+                </div>
+              </div>
+              <div className="mt-3">
+              {/* <InventoryTable inventoryData={inventoryData} handleDelete={handleDelete} /> */}
+              {/* <NewLeads inventoryData={inventoryData} handleDelete={handleDelete} /> */}
+              
+              <DisplayEnquiryTable data= {data} />
+           </div>
+            </>
+          ) : (
+ 
+
+<div
+  className="firm-form mt-4 p-3 border rounded"
+  style={{
+    maxHeight: "500px",
+    overflowY: "auto",
+    backgroundColor: "#f8f9fa",
+    border: "1px solid #ccc",
+  }}
+>
+  <Grid container spacing={2}>
+    {/* Lead No. Field */}
+    <Grid item xs={4}>
+      <FormControl fullWidth error={!!error}>
+        <InputLabel>Lead No.</InputLabel>
+        <Select value={leadNo} onChange={handleChange} label="Lead No.">
+          <MenuItem value="Lead 9">Lead 9</MenuItem>
+          <MenuItem value="Lead 16">Lead 16</MenuItem>
+          <MenuItem value="Lead 25">Lead 25</MenuItem>
+          <MenuItem value="Lead 26">Lead 26</MenuItem>
+          <MenuItem value="Lead 27">Lead 27</MenuItem>
+          <MenuItem value="Lead 4">Lead 4</MenuItem>
+          <MenuItem value="Lead 3">Lead 3</MenuItem>
+        </Select>
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
+    </Grid>
+
+    {/* Name Field */}
+    <Grid item xs={4}>
+      <TextField label="Name" fullWidth />
+    </Grid>
+
+    {/* Mobile No. Field */}
+    <Grid item xs={4}>
+      <TextField
+        label="Mobile No."
+        fullWidth
+        value={mobile}
+        onChange={handleMobileChange}
+        error={!!mobileError} // Show error if validation fails
+        helperText={mobileError} // Display error message
+      />
+    </Grid>
+
+    {/* Alternate Contact No. Field */}
+    <Grid item xs={4}>
+      <TextField
+        label="Alternate Contact No."
+        fullWidth
+        value={email}
+        onChange={handleEmailChange}
+        error={!!emailError} // Show error if validation fails
+        helperText={emailError} // Display error message
+      />
+    </Grid>
+
+    {/* WhatsApp No. Field */}
+    <Grid item xs={4}>
+      <TextField
+        type="text"
+        label="WhatsApp No"
+        fullWidth
+        inputProps={{ step: "0.01", min: "0.01" }}
+      />
+    </Grid>
+
+    {/* Email Field */}
+    <Grid item xs={4}>
+      <TextField label="Email" fullWidth />
+    </Grid>
+
+    {/* Address Field */}
+    <Grid item xs={4}>
+      <TextField label="Address" fullWidth />
+    </Grid>
+
+    {/* Company Field */}
+    <Grid item xs={4}>
+      <TextField label="Company" fullWidth />
+    </Grid>
+
+    {/* Reference by/Source Field */}
+    <Grid item xs={4}>
+      <TextField label="Reference by / Source" fullWidth />
+    </Grid>
+
+    {/* Name of CP (if Channel Partner) Field */}
+    <Grid item xs={4}>
+      <TextField label="Name of CP (if Channel Partner)" fullWidth />
+    </Grid>
+
+    {/* Sales Executive Name Field */}
+    <Grid item xs={4}>
+      <FormControl fullWidth error={!!error}>
+        <InputLabel>Sales Executive Name</InputLabel>
+        <Select
+          value={salesExec}
+          onChange={handleSalesExecChange}
+          label="Sales Executive Name"
+        >
+          <MenuItem value="Shilpha Mewada 1">Shilpha Mewada 1</MenuItem>
+          <MenuItem value="Tic Tac Toe Sohan">Tic Tac Toe Sohan</MenuItem>
+          <MenuItem value="Shilpha Mewada">Shilpha Mewada</MenuItem>
+          <MenuItem value="Vivek Tapkir">Vivek Tapkir</MenuItem>
+          <MenuItem value="Shubham Taware">Shubham Taware</MenuItem>
+          <MenuItem value="Ashwini Khot">Ashwini Khot</MenuItem>
+          <MenuItem value="Amol Pawar">Amol Pawar</MenuItem>
+          <MenuItem value="Sachin Awale">Sachin Awale</MenuItem>
+        </Select>
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
+    </Grid>
+
+    {/* Interested In Field */}
+    <Grid item xs={4}>
+      <FormControl fullWidth error={!!error}>
+        <InputLabel>Interested In</InputLabel>
+        <Select
+          value={interestedIn}
+          onChange={handleInterestedInChange}
+          label="Interested In"
+        >
+          <MenuItem value="2 BHK (Under construction)">2 BHK (Under construction)</MenuItem>
+          <MenuItem value="3 BHK (Under Construction)">3 BHK (Under Construction)</MenuItem>
+          <MenuItem value="2BHK">2BHK</MenuItem>
+          <MenuItem value="3BHK">3BHK</MenuItem>
+          <MenuItem value="Other">Other</MenuItem>
+        </Select>
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
+    </Grid>
+
+    {/* Budget Field */}
+    <Grid item xs={4}>
+      <FormControl fullWidth error={!!error}>
+        <InputLabel>Budget (Approx.)</InputLabel>
+        <Select value={budget} onChange={handleBudgetChange} label="Budget (Approx.)">
+          <MenuItem value="45 L - 50 L">45 L - 50 L</MenuItem>
+          <MenuItem value="51 L - 55 L">51 L - 55 L</MenuItem>
+          <MenuItem value="56 to 60 L">56 to 60 L</MenuItem>
+          <MenuItem value="61-65 L">61-65 L</MenuItem>
+          <MenuItem value="66 -70 L">66 - 70 L</MenuItem>
+          <MenuItem value="71L -75 L">71 L - 75 L</MenuItem>
+          <MenuItem value="Other">Other</MenuItem>
+        </Select>
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
+    </Grid>
+
+    {/* Planning to Buy Within Field */}
+    <Grid item xs={4}>
+      <FormControl fullWidth error={!!error}>
+        <InputLabel>Planning To Buy Within?</InputLabel>
+        <Select
+          value={planningToBuy}
+          onChange={handlePlanningToBuyChange}
+          label="Planning To Buy Within?"
+        >
+          <MenuItem value="Immediately">Immediately</MenuItem>
+          <MenuItem value="Within Week">Within Week</MenuItem>
+          <MenuItem value="Within 1 Month">Within 1 Month</MenuItem>
+        </Select>
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
+    </Grid>
+
+    {/* Occupation Field */}
+    <Grid item xs={4}>
+      <FormControl fullWidth error={!!error}>
+        <InputLabel>Occupation</InputLabel>
+        <Select value={occupation} onChange={handleOccupationChange} label="Occupation">
+          <MenuItem value="Service / Job">Service / Job</MenuItem>
+          <MenuItem value="Business / Self employed">Business / Self employed</MenuItem>
+          <MenuItem value="Professional">Professional</MenuItem>
+          <MenuItem value="Other">Other</MenuItem>
+        </Select>
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
+    </Grid>
+
+    {/* Reason For Purchase Field */}
+    <Grid item xs={4}>
+      <FormControl fullWidth error={!!error}>
+        <InputLabel>Reason For Purchase</InputLabel>
+        <Select
+          value={reasonForPurchase}
+          onChange={handleReasonForPurchaseChange}
+          label="Reason For Purchase"
+        >
+          <MenuItem value="End Use">End Use</MenuItem>
+          <MenuItem value="Investment">Investment</MenuItem>
+        </Select>
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
+    </Grid>
+
+    {/* Customer Feedback & Complete Followup Details Field */}
+    <Grid item xs={4}>
+      <TextField label="Customer Feedback & Complete Followup Details" fullWidth />
+    </Grid>
+  </Grid>
+
+  <Button
+    variant="contained"
+    className="mt-3"
+    color="success"
+    onClick={() => {
+      setShowFirmForm(false);
+      toast.success("Details are submitted!", { position: "top-right", autoClose: 3000 });
+    }}
+  >
+    Submit
+  </Button>
+</div>
+
+
+
+
+          )}
+        </div>
+      )}
+
+{expandedSection === 1 && (
+        <div className="content-container mt-3">
+          {!showFirmForm ? (
+            <>
+              <div className="button-container">
+                <Button variant="contained" color="primary" onClick={() => setShowFirmForm(true)}>
+                  
+                </Button>
+                {/* Pagination Buttons */}
+                <div className="right-buttons">
+                  <Button variant="contained" color="secondary" onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}>
+                    Previous
+                  </Button>
+                  <Button variant="contained" color="secondary" onClick={() => setCurrentPage(prev => prev + 1)}>
+                    Next
+                  </Button>
+                </div>
+              </div>
+              <div className="mt-3">
+              <InventoryTable inventoryData={inventoryData} handleDelete={handleDelete} />
+              {/* <NewLeads /> */}
+           </div>
+            </>
+          ) : (
+            <div className="firm-form mt-4 p-3 border rounded" 
+            style={{
+              backgroundColor: "#f8f9fa", 
+              border: "1px solid #ccc",
+            }}
+            >
+             
+              <Grid container spacing={2}>
+                <Grid item xs={4}><TextField label="Project Name" fullWidth /></Grid>
+                <Grid item xs={4}><TextField label="Wing" fullWidth /></Grid>
+                <Grid item xs={4}><TextField label="Floor" fullWidth /></Grid>
+                <Grid item xs={4}><TextField label="Flat No." fullWidth /></Grid>
+                <Grid item xs={4}><TextField type="number" label="RERA Carpet Area (Sq Mtr)" fullWidth 
+                inputProps={{ step: "0.01", min: "0.01" }}
+                /></Grid>
+                <Grid item xs={4}><TextField type="number" label="RERA Carpet Area (Sq Ft)" fullWidth inputProps={{ step: "0.01", min: "0.01" }}
+                /></Grid>
+                <Grid item xs={4}><TextField  type="number" label="Total Saleable Area (Sq. Fts)" fullWidth inputProps={{ step: "0.01", min: "0.01" }}
+                /></Grid>
+                <Grid item xs={4}><TextField  type="number" label="Saleable to Carpet Area Ratio (Sq. Fts)" fullWidth inputProps={{ step: "0.01", min: "0.01" }}/></Grid>
+
+                {/* Type of Units Dropdown */}
+                <Grid item xs={4}>
+                  <TextField select label="Type of Units" fullWidth>
+                    {unitTypes.map((type, idx) => (
+                      <MenuItem key={idx} value={type}>{type}</MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+
+                {/* Configuration Dropdown */}
+                <Grid item xs={4}>
+                  <TextField select label="Configuration" fullWidth>
+                    {configurations.map((config, idx) => (
+                      <MenuItem key={idx} value={config}>{config}</MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+
+                {/* Status Dropdown */}
+                <Grid item xs={4}>
+                  <TextField select label="Status" fullWidth>
+                    {statusOptions.map((status, idx) => (
+                      <MenuItem key={idx} value={status}>{status}</MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+
+                {/* Select Owner Dropdown */}
+                <Grid item xs={4}>
+                  <TextField select label="Select Owner" fullWidth>
+                    {owners.map((owner, idx) => (
+                      <MenuItem key={idx} value={owner}>{owner}</MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+
+                {/* <Grid item xs={4}><TextField type="number" label="ATT. Terrace Carpet Area (Sq Ft)" fullWidth /></Grid> */}
+                <Grid item xs={4}>
+  <TextField
+    type="number"
+    label="ATT. Terrace Carpet Area (Sq Ft)"
+    fullWidth
+    inputProps={{ step: "0.01", min: "0.01" }}
+  />
+</Grid>
+
+                <Grid item xs={4}><TextField type="number" label="Balcony Area/Sitout Carpet Area (Sq Ft)" fullWidth 
+                inputProps={{ step: "0.01", min: "0.01" }}/></Grid>
+                <Grid item xs={4}><TextField type="number" label="Porch Area (Sq Ft)" fullWidth 
+                inputProps={{ step: "0.01", min: "0.01" }}/></Grid>
+                <Grid item xs={4}><TextField  type="number" label="Top Terrace Carpet Area (Sq Ft)" fullWidth inputProps={{ step: "0.01", min: "0.01" }}
+                /></Grid>
+                <Grid item xs={4}><TextField type="number" label="Super Built-up Area (Sq Ft)" fullWidth inputProps={{ step: "0.01", min: "0.01" }}
+                /></Grid>
+                <Grid item xs={4}><TextField label="OPEN/ENCLOSED BALCONY AS SANCTIONED" fullWidth /></Grid>
+                <Grid item xs={4}><TextField label="PODIUM GARDE" fullWidth /></Grid>
+              </Grid>
+
+              {/* Partner Details */}
+           
+              {partners.map((_, index) => (
+                <Grid container spacing={2} key={index}>
+                  <Grid item xs={4}><TextField label="Name" fullWidth /></Grid>
+                  <Grid item xs={4}><TextField label="Age" fullWidth /></Grid>
+                  <Grid item xs={4}><TextField label="Occupation" fullWidth /></Grid>
+                  <Grid item xs={4}>
+                    <Button variant="contained" color="secondary" onClick={() => setPartners(partners.filter((_, i) => i !== index))}>
+                      <FaTrash />
+                    </Button>
+                  </Grid>
+                </Grid>
+              ))}
+
+             
+
+              <Button variant="contained" className="mt-3" color="success" onClick={() => setShowFirmForm(false)}>
+                Submit
+              </Button>
+             
+
+            </div> 
+
+
+
+
+          )}
+        </div>
+      )}
+
+
+{expandedSection === 2 && (
+        <div className="content-container mt-3">
+          {!showFirmForm ? (
+            <>
+              <div className="button-container">
+                <Button variant="contained" color="primary" onClick={() => setShowFirmForm(true)}>
+                  + Display Inventory
+                </Button>
+                {/* Pagination Buttons */}
+                <div className="right-buttons">
+                  <Button variant="contained" color="secondary" onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}>
+                    Previous
+                  </Button>
+                  <Button variant="contained" color="secondary" onClick={() => setCurrentPage(prev => prev + 1)}>
+                    Next
+                  </Button>
+                </div>
+              </div>
+              <div className="mt-3">
+              <InventoryTable inventoryData={inventoryData} handleDelete={handleDelete} />
+           </div>
+            </>
+          ) : (
+            <div className="firm-form mt-4 p-3 border rounded">
+              {/* <h5></h5> */}
+              <Grid container spacing={2}>
+                <Grid item xs={4}><TextField label="Project Name" fullWidth /></Grid>
+                <Grid item xs={4}><TextField label="Wing" fullWidth /></Grid>
+                <Grid item xs={4}><TextField label="Floor" fullWidth /></Grid>
+                <Grid item xs={4}><TextField label="Flat No." fullWidth /></Grid>
+                <Grid item xs={4}><TextField type="number" label="RERA Carpet Area (Sq Mtr)" fullWidth 
+                inputProps={{ step: "0.01", min: "0.01" }}
+                /></Grid>
+                <Grid item xs={4}><TextField type="number" label="RERA Carpet Area (Sq Ft)" fullWidth inputProps={{ step: "0.01", min: "0.01" }}
+                /></Grid>
+                <Grid item xs={4}><TextField  type="number" label="Total Saleable Area (Sq. Fts)" fullWidth inputProps={{ step: "0.01", min: "0.01" }}
+                /></Grid>
+                <Grid item xs={4}><TextField  type="number" label="Saleable to Carpet Area Ratio (Sq. Fts)" fullWidth inputProps={{ step: "0.01", min: "0.01" }}/></Grid>
+
+                {/* Type of Units Dropdown */}
+                <Grid item xs={4}>
+                  <TextField select label="Type of Units" fullWidth>
+                    {unitTypes.map((type, idx) => (
+                      <MenuItem key={idx} value={type}>{type}</MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+
+                {/* Configuration Dropdown */}
+                <Grid item xs={4}>
+                  <TextField select label="Configuration" fullWidth>
+                    {configurations.map((config, idx) => (
+                      <MenuItem key={idx} value={config}>{config}</MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+
+                {/* Status Dropdown */}
+                <Grid item xs={4}>
+                  <TextField select label="Status" fullWidth>
+                    {statusOptions.map((status, idx) => (
+                      <MenuItem key={idx} value={status}>{status}</MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+
+                {/* Select Owner Dropdown */}
+                <Grid item xs={4}>
+                  <TextField select label="Select Owner" fullWidth>
+                    {owners.map((owner, idx) => (
+                      <MenuItem key={idx} value={owner}>{owner}</MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+
+                {/* <Grid item xs={4}><TextField type="number" label="ATT. Terrace Carpet Area (Sq Ft)" fullWidth /></Grid> */}
+                <Grid item xs={4}>
+  <TextField
+    type="number"
+    label="ATT. Terrace Carpet Area (Sq Ft)"
+    fullWidth
+    inputProps={{ step: "0.01", min: "0.01" }}
+  />
+</Grid>
+
+                <Grid item xs={4}><TextField type="number" label="Balcony Area/Sitout Carpet Area (Sq Ft)" fullWidth 
+                inputProps={{ step: "0.01", min: "0.01" }}/></Grid>
+                <Grid item xs={4}><TextField type="number" label="Porch Area (Sq Ft)" fullWidth 
+                inputProps={{ step: "0.01", min: "0.01" }}/></Grid>
+                <Grid item xs={4}><TextField  type="number" label="Top Terrace Carpet Area (Sq Ft)" fullWidth inputProps={{ step: "0.01", min: "0.01" }}
+                /></Grid>
+                <Grid item xs={4}><TextField type="number" label="Super Built-up Area (Sq Ft)" fullWidth inputProps={{ step: "0.01", min: "0.01" }}
+                /></Grid>
+                <Grid item xs={4}><TextField label="OPEN/ENCLOSED BALCONY AS SANCTIONED" fullWidth /></Grid>
+                <Grid item xs={4}><TextField label="PODIUM GARDE" fullWidth /></Grid>
+              </Grid>
+
+              {/* Partner Details */}
+           
+              {partners.map((_, index) => (
+                <Grid container spacing={2} key={index}>
+                  <Grid item xs={4}><TextField label="Name" fullWidth /></Grid>
+                  <Grid item xs={4}><TextField label="Age" fullWidth /></Grid>
+                  <Grid item xs={4}><TextField label="Occupation" fullWidth /></Grid>
+                  <Grid item xs={4}>
+                    <Button variant="contained" color="secondary" onClick={() => setPartners(partners.filter((_, i) => i !== index))}>
+                      <FaTrash />
+                    </Button>
+                  </Grid>
+                </Grid>
+              ))}
+
+             
+
+              <Button variant="contained" className="mt-3" color="success" onClick={() => setShowFirmForm(false)}>
+                Submit
+              </Button>
+            </div> 
+
+
+
+
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default FirstVisits;

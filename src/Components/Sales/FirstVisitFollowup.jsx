@@ -14,13 +14,13 @@ import BookedTable from './BookedTable';
 const sections = [
     { label: "Pending Follow Up", icon: <FaBuilding size={20} />, createLabel: "Create Firm" },
     { label: "Follow Up History", icon: <FaBuilding size={20} />, createLabel: "Create Project" },
-    { label: "Undefined", icon: <FaBuilding size={20} />, createLabel: "Create Landowner Info" },
-    { label: "Visit Scheduled", icon: <FaBuilding size={20} />, createLabel: "Create Flat Allotment Info" },
+    { label: "Booked", icon: <FaBuilding size={20} />, createLabel: "Create Landowner Info" },
+    { label: "Undefined", icon: <FaBuilding size={20} />, createLabel: "Create Flat Allotment Info" },
  
   ];
   const tabNames = [ "firm", "display", "landowner","allotement"]; 
 
-const LeadsFollowUp = () => {
+const FirstvisitFollowup = () => {
 
 
      
@@ -44,10 +44,11 @@ const LeadsFollowUp = () => {
     const [nameError, setNameError] = useState('');
     const [mobileNoError, setMobileNoError] = useState('');
     const [panError, setPanError] = useState("");
-  
+    const [leadType, setLeadType] = useState('');
     const [firmName, setFirmName] = useState("");
     const [firmNameError, setFirmNameError] = useState("");
   
+  const [statusError, setStatusError] = useState('');
     const [mobileError, setMobileError] = useState("");
     const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState("");
@@ -121,7 +122,7 @@ const LeadsFollowUp = () => {
       setPartners(updatedPartners); // Update the state
     };
   
-    
+   
   
   
     const [partners, setPartners] = useState([
@@ -564,7 +565,7 @@ const LeadsFollowUp = () => {
         <Grid container spacing={2}>
     <Grid item xs={6}>
       <TextField
-        label="Lead No"
+        label="Enquiry No"
         fullWidth
         variant="outlined"
         value={firmName}
@@ -573,17 +574,9 @@ const LeadsFollowUp = () => {
         helperText={firmNameError} 
       />
     </Grid>
-    {/* <Grid item xs={6}>
-      <TextField
-        label="Closing Executive"
-        fullWidth
-        variant="outlined"
-      />
-       <Grid container spacing={3}>
-      {/* Closing Executive Field */}
-      <Grid item xs={6}>
+    <Grid item xs={6}>
         <FormControl fullWidth variant="outlined">
-          <InputLabel id="closing-executive-label">Closing Executive</InputLabel>
+          <InputLabel id="closing-executive-label">Sales Person</InputLabel>
           <Select
             labelId="closing-executive-label"
             id="closing-executive"
@@ -603,7 +596,7 @@ const LeadsFollowUp = () => {
           </Select>
         </FormControl>
       </Grid>
-    {/* </Grid> */}
+   
 
   
     <Grid item xs={6}>
@@ -620,7 +613,7 @@ const LeadsFollowUp = () => {
 
     <Grid item xs={6}>
       <TextField
-        label="status"
+        label="Name"
         fullWidth
         variant="outlined"
         value={firmPan}
@@ -629,6 +622,21 @@ const LeadsFollowUp = () => {
               helperText={firmPanError}
       />
     </Grid>
+
+    <Grid item xs={6}>
+      <TextField
+      type="date"
+        label="Next Follow Up"
+        fullWidth
+        variant="outlined"
+        value={firmPan}
+              onChange={handleFirmPanChange}
+              error={!!firmPanError}  // Show error if there is an error
+              helperText={firmPanError}
+      />
+    </Grid>
+
+  
     <Grid item xs={6}>
       <TextField
         label="Assign To"
@@ -638,24 +646,48 @@ const LeadsFollowUp = () => {
     </Grid>
     
     <Grid item xs={6}>
-      <TextField
-        label="Lead type"
-        fullWidth
-        variant="outlined"
-      />
+      <FormControl fullWidth variant="outlined">
+        <InputLabel>Lead Type</InputLabel>
+        <Select
+          value={leadType}
+          onChange={handleChange}
+          label="Lead Type"
+        >
+          <MenuItem value="hot">Hot</MenuItem>
+          <MenuItem value="warm">Warm</MenuItem>
+          <MenuItem value="cold">Cold</MenuItem>
+          <MenuItem value="lost">Lost</MenuItem>
+          <MenuItem value="booked">Booked</MenuItem>
+          <MenuItem value="undefined">Undefined</MenuItem>
+        </Select>
+      </FormControl>
     </Grid>
-
-
     <Grid item xs={6}>
-      <TextField
-      type="date"
-        label="
-
-"
-        fullWidth
-        variant="outlined"
-      />
+      <FormControl fullWidth variant="outlined" error={!!statusError}>
+        <InputLabel>Status</InputLabel>
+        <Select
+          value={status}
+          onChange={handleStatusChange}
+          label="Status"
+        >
+          <MenuItem value="follow_up">Follow up</MenuItem>
+          <MenuItem value="not_interested">Not interested</MenuItem>
+          <MenuItem value="callback_request">Callback request</MenuItem>
+          <MenuItem value="unreachable">Unreachable</MenuItem>
+          <MenuItem value="booked_property_other_project">Booked property in other project</MenuItem>
+          <MenuItem value="not_answer">Not answered</MenuItem>
+          <MenuItem value="invalid_number">Invalid number</MenuItem>
+          <MenuItem value="visit_scheduled">Visit scheduled</MenuItem>
+          <MenuItem value="visit_postponed">Visit postponed</MenuItem>
+          <MenuItem value="visit_cancelled">Visit cancelled</MenuItem>
+          <MenuItem value="re_scheduled">Re-scheduled</MenuItem>
+          <MenuItem value="visit_done">Visit done</MenuItem>
+        </Select>
+        {statusError && <FormHelperText>{statusError}</FormHelperText>}
+      </FormControl>
     </Grid>
+
+   
   </Grid>
   
   
@@ -1156,4 +1188,5 @@ const LeadsFollowUp = () => {
     
 
 
-export default LeadsFollowUp;
+export default FirstvisitFollowup;
+

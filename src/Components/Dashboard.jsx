@@ -339,7 +339,9 @@ const Dashboard = () => {
 {to : "/sales/sharedbydeveloper" , icon :<FaPeopleArrows />, label: "Shared By Developer" },
 {to : "/sales/leads" , icon :<FaPeopleArrows />, label: "Leads" },
 {to : "/sales/leadsfollowup" , icon :<FaPeopleArrows />, label: "Leads Follow Up" },
-
+{to : "/sales/lostleads" , icon :<FaPeopleArrows />, label: "Lost Leads" },
+{to : "/sales/firstvisits" , icon :<FaPeopleArrows />, label: "First Visit" },
+{to : "/sales/firstvisitfollowup" , icon :<FaPeopleArrows />, label: "First Visit Follow Up" },
         ]}
       />
 
