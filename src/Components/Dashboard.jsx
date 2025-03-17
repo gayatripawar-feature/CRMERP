@@ -343,6 +343,9 @@ const Dashboard = () => {
 {to : "/sales/firstvisits" , icon :<FaPeopleArrows />, label: "First Visit" },
 {to : "/sales/firstvisitfollowup" , icon :<FaPeopleArrows />, label: "First Visit Follow Up" },
 {to : "/sales/firstvisitsteps" , icon :<FaPeopleArrows />, label: "First Visit Steps" },
+{to : "/sales/saleslostvisits" , icon :<FaPeopleArrows />, label: "Lost Visits" },
+{to : "/sales/salestemplates" , icon :<FaPeopleArrows />, label: "Templates" },
+{to : "/sales/bookingform" , icon :<FaPeopleArrows />, label: "Booking Form" },
         ]}
       />
 
