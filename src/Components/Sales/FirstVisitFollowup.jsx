@@ -11,6 +11,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import FollowupHistoryTable from './FollowupHistoryTable';
 import UndefinedTable from './UndefinedTable';
 import BookedTable from './BookedTable';
+// import FirstvisitfollowupbookedTable from './FirstvisitfollowupUndefinedTable';
+import FirstvisitfollowupUndefinedTable from './FirstvisitfollowupUndefinedTable';
+import FirstvisitfollowupbookedTable from './FirstvisitfollowupbookedTable';
+
 const sections = [
     { label: "Pending Follow Up", icon: <FaBuilding size={20} />, createLabel: "Create Firm" },
     { label: "Follow Up History", icon: <FaBuilding size={20} />, createLabel: "Create Project" },
@@ -151,6 +155,10 @@ const FirstvisitFollowup = () => {
     };
   
   
+
+    
+
+
     const handleToggleSection = (index) => {
       if (sections[index].label === "Download PDF") {
         handleDownloadPDF();
@@ -165,9 +173,9 @@ const FirstvisitFollowup = () => {
       setSelectedTab("display");
   } else if (sections[index].label === "Pending Follow Up") {
       setSelectedTab("firm");
-  } else if (sections[index].label === "Undefined") {
+  } else if (sections[index].label === "Booked") {
       setSelectedTab("landowner");
-  } else if (sections[index].label === "Visit Scheduled") {
+  } else if (sections[index].label === "Undefined") {
       setSelectedTab("allotement");
   }
   
@@ -178,6 +186,8 @@ const FirstvisitFollowup = () => {
       // setFlatAllotement(false);
       setShowFlatForm(false);
     };
+
+
   
     const [newPhase, setNewPhase] = useState({
       phaseNo: '',
@@ -190,9 +200,19 @@ const FirstvisitFollowup = () => {
      {selectedTab === "firm" && <FirmTable />}
     //  {selectedTab === "display" && <DisplayTable />}
     {selectedTab === "display" && <FollowupHistoryTable />}
-     {selectedTab === "landowner" && <LandownerTable />}
-     {selectedTab === "allotement" && <FlatAllotement/>}
+    //  {selectedTab === "landowner" && <LandownerTable />}
+     {selectedTab === "landowner" && <UndefinedTable/>}
+    //  {selectedTab === "allotement" && <FlatAllotement/>}
+
+    {selectedTab === "allotement" && <BookedTable />}
   
+
+    {/* Table Section */}
+{selectedTab === "firm" && <FirmTable />}
+{selectedTab === "display" && <FollowupHistoryTable />}
+{selectedTab === "landowner" && <UndefinedTable />}
+{selectedTab === "allotement" && <BookedTable />}
+
     const handleDownloadPDF = () => {
       const link = document.createElement("a");
       link.href = "/path/to/demand_letter.pdf";
@@ -769,307 +789,21 @@ const FirstvisitFollowup = () => {
   <div className='mt-3'>
   {/* <LandownerTable data={projectData} /> */}
   {/* <BookedTable data ={projectData} /> */}
-  <UndefinedTable data= {Flatdata} />
-  </div>
+  {/* <UndefinedTable data= {Flatdata} /> */}
+  {/* <Firstvisitfollowupvookedtable data = {projectData} /> */}
+
+  {/* <FirstvisitFollowupbookedTable data = {projectData}/> */}
+  <FirstvisitfollowupbookedTable data ={projectData} />
+  
+
+   </div>
   </>
   
       ) : (
         <div>
 
         </div>
-  //       <div
-  //         className="landowner-form mt-4 p-3 border rounded"
-         
-  //         style={{
-  //           maxHeight: "500px",
-  //           overflowY: "auto",
-  //           backgroundColor: "#f8f9fa", 
-  //           border: "1px solid #ccc", 
-  //         }}
-  //       >
-  //         <h5>Landowner Details</h5>
-  //         <Grid container spacing={2}>
-           
-  //           <Grid item xs={4}>
-  //         <FormControl fullWidth variant="outlined">
-  //           <InputLabel id="project-name-label">Project Name</InputLabel>
-  //           <Select
-  //             labelId="project-name-label"
-  //             id="project-name-select"
-  //             value={selectedProject}
-  //             onChange={handleChange}
-  //             label="Project Name"
-  //           >
-  //             <MenuItem value="Project Name 1">Project Name 1</MenuItem>
-  //             <MenuItem value="Project Name 121">Project Name 121</MenuItem>
-  //             <MenuItem value="11">11</MenuItem>
-  //             <MenuItem value="PROJECT NAME">PROJECT NAME</MenuItem>
-  //             <MenuItem value="Shubh Elara">Shubh Elara</MenuItem>
-  //             <MenuItem value="Sohan Enterprised">Sohan Enterprised</MenuItem>
-  //           </Select>
-  //         </FormControl>
-  //       </Grid>
-           
-  //                 <Grid item xs={4}>
-  //       <TextField
-  //         label="Mobile No."
-  //         fullWidth
-  //         value={mobileNo}
-  //         onChange={handleMobileNoChange}
-  //         error={!!mobileError} 
-  //         helperText={mobileError} 
-  //       />
-  //     </Grid>
   
-  
-  //           <Grid item xs={4}><TextField label="Landowner Name" fullWidth value={name} onChange={handleNameChange}
-  //            error={!!error} 
-  //            helperText={error}
-  //           /></Grid>
-  //           <Grid item xs={4}><TextField type="number" label="Age" fullWidth /></Grid>
-  //           <Grid item xs={4}><TextField label="Occupation" fullWidth /></Grid>
-       
-  
-           
-  // <Grid item xs={4}>
-  //   <TextField
-  //     label="Mail ID"
-  //     fullWidth
-      
-  //     onChange={handleEmailChange} 
-  //     error={!!emailError} 
-  //     helperText={emailError} 
-  //   />
-  // </Grid>
-  
-  
-  //           <Grid item xs={4}><TextField label="Village" fullWidth /></Grid>
-  //           <Grid item xs={4}><TextField label="District" fullWidth /></Grid>
-  //           <Grid item xs={4}><TextField label="Taluka" fullWidth /></Grid>
-  //           {/* <Grid item xs={4}><TextField label="Name of Bank" fullWidth /></Grid> */}
-  //           <Grid item xs={4}>
-  //         <FormControl fullWidth variant="outlined">
-  //           <InputLabel id="bank-name-label">Name of Bank</InputLabel>
-  //           <Select
-  //             labelId="bank-name-label"
-  //             id="bank-name-select"
-  //             value={selectedBank}
-  //             onChange={handleBankChange}
-  //             label="Name of Bank"
-  //           >
-  //             <MenuItem value="SBI Bank">SBI Bank</MenuItem>
-  //             <MenuItem value="Bank Of Baroda">Bank Of Baroda</MenuItem>
-  //             <MenuItem value="Canara Bank">Canara Bank</MenuItem>
-  //             <MenuItem value="Axis Bank">Axis Bank</MenuItem>
-  //             <MenuItem value="Bank of India">Bank of India</MenuItem>
-  //             <MenuItem value="ICICI Bank">ICICI Bank</MenuItem>
-  //             <MenuItem value="HDFC Bank">HDFC Bank</MenuItem>
-  //             <MenuItem value="Bank of Maharashtra">Bank of Maharashtra</MenuItem>
-  //             <MenuItem value="Central Bank of India">Central Bank of India</MenuItem>
-  //             <MenuItem value="Punjab National Bank">Punjab National Bank</MenuItem>
-  //             <MenuItem value="Bandhan Bank">Bandhan Bank</MenuItem>
-  //             <MenuItem value="Indian Bank">Indian Bank</MenuItem>
-  //             <MenuItem value="IDBI Bank">IDBI Bank</MenuItem>
-  //           </Select>
-  //         </FormControl>
-  //       </Grid>
-  //           <Grid item xs={4}><TextField label="Bank Address" fullWidth /></Grid>
-            
-  //           {/* <Grid item xs={4}><TextField label="Account No." fullWidth /></Grid> */}
-  //           <Grid item xs={4}>
-  //   <TextField
-  //     label="Account No."
-  //     fullWidth
-  //     value={accountNo} // Bind the value of the account number state
-  //     onChange={handleAccountNoChange} // Trigger onChange handler
-  //     error={!!accountNoError} // Show error if there's an accountNoError
-  //     helperText={accountNoError} // Display error message if any
-  //   />
-  // </Grid>
-  
-  //           {/* <Grid item xs={4}><TextField label="IFSC Code" sx={{
-  //       marginTop: "13px",
-        
-  //     }} fullWidth /></Grid> */}
-  //     <Grid item xs={4}>
-  //   <TextField
-  //     label="IFSC Code"
-  //     fullWidth
-  //     value={ifscCode} // Bind the state value for the IFSC code
-  //     onChange={handleIfscCodeChange} // Handle change and validation
-  //     error={!!ifscCodeError} // Show error if there's an error
-  //     helperText={ifscCodeError} // Display error message if any
-  //   />
-  // </Grid>
-  
-  //           {/* <Grid item xs={4}><TextField label="Aadhaar No." fullWidth /></Grid>
-  //           <Grid item xs={4}><TextField label="Residential Address" fullWidth /></Grid>
-  //           <Grid item xs={4}><TextField label="PAN No." fullWidth /></Grid>
-  //           <Grid item xs={4}><TextField label="Light Bill" fullWidth /></Grid> */}
-  //           {/* <Grid item xs={4}>
-  //             <TextField type="file" accept="image/*" />
-  //           </Grid> */}
-  
-  // <Grid item xs={4}>
-  //             <Typography variant="body2" gutterBottom>
-  //               Aadhaar No.
-  //             </Typography>
-  //             <label>
-  //               <Input
-  //                 type="file"
-  //                 style={{ display: "none" }} // Hide the default input
-  //                 id="file-input-aadhaar" // Unique ID for the file input
-  //                 onChange={(e) => handleFileChange(e, "aadhaarFile")} // Handle file selection
-  //               />
-  //               <Button
-  //                 variant="contained"
-  //                 color="light"
-  //                 component="span"
-  //                 // onClick={() => document.getElementById("file-input-aadhaar").click()} // Trigger the file input
-  //               >
-  //                 Choose File
-  //               </Button>
-  //             </label>
-  //             {fileNames.aadhaarFile && (
-  //               <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
-  //                 {fileNames.aadhaarFile} {/* Display the selected file name */}
-  //               </Typography>
-  //             )}
-  //           </Grid>
-  
-  
-  
-  //           <Grid item xs={4}>
-  //             <Typography variant="body2" gutterBottom>
-  //             Photo
-  //             </Typography>
-  //             <label>
-  //               <Input
-  //                 type="file"
-  //                 accept="image/*"
-  //                 style={{ display: "none" }} // Hide the default input
-  //                 id="file-input-image" // Unique ID for the file input
-  //                 onChange={(e) => handleFileChange(e, "imageFile")} // Handle file selection
-  //               />
-  //               <Button
-  //                 variant="contained"
-  //                 color="light"
-  //                 component="span"
-  //                 // onClick={() => document.getElementById("file-input-image").click()} // Trigger the file input
-  //               >
-  //                 Choose File
-  //               </Button>
-  //             </label>
-  //             {fileNames.imageFile && (
-  //               <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
-  //                 {fileNames.imageFile} {/* Display the selected file name */}
-  //               </Typography>
-  //             )}
-  //           </Grid>
-  
-  
-  //           <Grid item xs={4} sx={{ marginTop: "6px"}}>
-  //             <Typography variant="body2" gutterBottom>
-  //               Residential Address
-  //             </Typography>
-  //             <label>
-  //               <Input
-  //                 type="file"
-  //                 style={{ display: "none" }}
-  //                 id="file-input-address"
-  //                 onChange={(e) => handleFileChange(e, "addressFile")}
-  //               />
-  //               <Button
-  //                 variant="contained"
-  //                 color="light"
-  //                 component="span"
-                 
-  //               >
-  //                 Choose File
-  //               </Button>
-  //             </label>
-  //             {fileNames.addressFile && (
-  //               <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
-  //                 {fileNames.addressFile}
-  //               </Typography>
-  //             )}
-  //           </Grid>
-  
-  //           {/* PAN No. File Upload */}
-  //           <Grid item xs={4} sx={{ marginTop: "6px"}}>
-  //             <Typography variant="body2" gutterBottom>
-  //               PAN No.
-  //             </Typography>
-  //             <label>
-  //               <Input
-  //                 type="file"
-  //                 style={{ display: "none" }}
-  //                 id="file-input-pan"
-  //                 onChange={(e) => handleFileChange(e, "panFile")}
-  //               />
-  //               <Button
-  //                 variant="contained"
-  //                 color="light"
-  //                 component="span"
-  //                 // onClick={() => document.getElementById("file-input-pan").click()}
-  //               >
-  //                 Choose File
-  //               </Button>
-  //             </label>
-  //             {fileNames.panFile && (
-  //               <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
-  //                 {fileNames.panFile}
-  //               </Typography>
-  //             )}
-  //           </Grid>
-  
-  //           {/* Light Bill File Upload */}
-  //           <Grid item xs={4} sx={{ marginTop: "6px"}}>
-  //             <Typography variant="body2" gutterBottom>
-  //               Light Bill
-  //             </Typography>
-  //             <label>
-  //               <Input
-  //                 type="file"
-  //                 style={{ display: "none" }}
-  //                 id="file-input-lightbill"
-  //                 onChange={(e) => handleFileChange(e, "lightBillFile")}
-  //               />
-  //               <Button
-  //                 variant="contained"
-  //                 color="light"
-  //                 component="span"
-  //                 // onClick={() => document.getElementById("file-input-lightbill").click()}
-  //               >
-  //                 Choose File
-  //               </Button>
-  //             </label>
-  //             {fileNames.lightBillFile && (
-  //               <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
-  //                 {fileNames.lightBillFile}
-  //               </Typography>
-  //             )}
-  //           </Grid>
-  
-          
-  //         </Grid>
-  
-     
-  
-         
-          
-  // <Button
-  //   variant="contained"
-  //   className="mt-3"
-  //   color="success"
-  //   onClick={() => {
-  //     setShowFirmForm(false);
-  //     toast.success("details are submitted!", { position: "top-right", autoClose: 3000 });
-  //   }}
-  // >
-  // Submit Landowner Info
-  // </Button>
-  //       </div>
       )}
     </div>
   )}
@@ -1082,21 +816,7 @@ const FirstvisitFollowup = () => {
         
           
           <div className="button-container">
-{/*    
-      <Button variant="contained" color="primary" style={{ background: '#272ba8' }} className='fw-bold'
-      onClick={() => setShowFlatForm(true)}>
-        + Flat Allotment Info
-      </Button> */}
-  
-  
-      {/* <div className="right-buttons">
-        <Button variant="contained" color="secondary" onClick={handlePrevious}>
-          Previous
-        </Button>
-        <Button variant="contained" color="secondary" onClick={handleNext}>
-          Next
-        </Button>
-      </div> */}
+
     </div>
   
   
@@ -1104,76 +824,16 @@ const FirstvisitFollowup = () => {
             {/* <FlatAllotment data={Flatdata} /> */}
             {/* <UndefinedTable data= {Flatdata} /> */} 
 
-            <BookedTable data ={projectData} />
+            {/* <BookedTable data ={projectData} /> */}
+
+           { <FirstvisitfollowupUndefinedTable data = {projectData} /> }
           </div>
         </>
       ) : (
         <div>
 
         </div>
-  //       <div className="landowner-form mt-4 p-3 border rounded" style={{
-  //         backgroundColor: "#f8f9fa", 
-  //         border: "1px solid #ccc", 
-  //       }}>
-  //         <h5>Flat Allotement Display </h5>
-  //         <Grid container spacing={2}>
-  //           <Grid item xs={4}><TextField label="Project Name" fullWidth /></Grid>
-          
-  //         <Grid item xs={4}><TextField label="Landowner Name" fullWidth value={name} onChange={handleNameChange}
-  //            error={!!error}
-  //            helperText={error}
-  //           /></Grid>
-            
-  
-  // <Grid item xs={4}>
-  //       <TextField
-  //         label="Mobile No."
-  //         fullWidth
-  //         value={mobileNo}
-  //         onChange={handleMobileNoChange}
-  //         error={!!mobileError} 
-  //         helperText={mobileError} 
-  //       />
-  //     </Grid>
-  
-  //           <Grid item xs={4}><TextField type="number" label="No. of Flats Alloted" fullWidth /></Grid>
-  //         </Grid>
-  //         <h4 className="pt-3">Flat Details</h4>
-  //         <TableContainer component={Paper}>
-  //           <Table>
-  //             <TableHead>
-  //               <TableRow sx={{ bgcolor: "primary.main" }}>
-  //                 <TableCell  sx={{ color: "white", fontWeight: "bold" }}>RERA CARPET AREA (SQ FT)</TableCell>
-  //                 <TableCell  sx={{ color: "white", fontWeight: "bold" }}>WING</TableCell>
-  //                 <TableCell  sx={{ color: "white", fontWeight: "bold" }}>FLAT NO.</TableCell>
-  //                 <TableCell  sx={{ color: "white", fontWeight: "bold" }}> TYPE OF FLAT</TableCell>
-  //               </TableRow>
-  //             </TableHead>
-  //             <TableBody>
-  //             <TableRow>
-  //             <TableCell><TextField fullWidth variant="outlined" /></TableCell>
-  //         <TableCell><TextField fullWidth variant="outlined" /></TableCell>
-  //         <TableCell><TextField fullWidth variant="outlined" /></TableCell>
-  //         <TableCell><TextField fullWidth variant="outlined" /></TableCell>
-  //       </TableRow>
-  //             </TableBody>
-  //           </Table>
-  //         </TableContainer>
-  
-         
-  
-  // <Button
-  //   variant="contained"
-  //   className="mt-3"
-  //   color="success"
-  //   onClick={() => {
-  //     setShowFirmForm(false);
-  //     toast.success("details are submitted!", { position: "top-right", autoClose: 3000 });
-  //   }}
-  // >
-  // Submit Flat Allotement Info
-  // </Button>
-  //       </div>
+      
       )}
     </div>
   )}

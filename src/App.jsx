@@ -37,6 +37,7 @@ import FirstVisits from "./Components/Sales/FirstVisits";
 import FirstVisitFollowup from "./Components/Sales/FirstVisitFollowup";
 import { toast ,ToastContainer} from "react-toastify";
 import Admin_SalesModule from './Components/Admin/Admin_SalesModule';
+import FirstVisitSteps from './Components/Sales/FirstVisitSteps';
 const App = () => {
 
   useEffect(() => {
@@ -84,6 +85,7 @@ const App = () => {
         <Route path = "/sales/LostLeads" element ={<LostLeads />} />
         <Route path = "/sales/firstvisits" element ={<FirstVisits />} />
         <Route path="/sales/firstvisitfollowup" element={<FirstVisitFollowup/>} />
+        <Route path ="/sales/FirstVisitSteps" element={<FirstVisitSteps/>} />
         {/* <Route path ="/sales/salescalander" element={< SalesCalendar/>} />
         <Route path ="/sales/sharespace" element={< SalesSharespace/>} /> */}
          

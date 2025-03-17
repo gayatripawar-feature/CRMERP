@@ -342,6 +342,7 @@ const Dashboard = () => {
 {to : "/sales/lostleads" , icon :<FaPeopleArrows />, label: "Lost Leads" },
 {to : "/sales/firstvisits" , icon :<FaPeopleArrows />, label: "First Visit" },
 {to : "/sales/firstvisitfollowup" , icon :<FaPeopleArrows />, label: "First Visit Follow Up" },
+{to : "/sales/firstvisitsteps" , icon :<FaPeopleArrows />, label: "First Visit Steps" },
         ]}
       />
 
