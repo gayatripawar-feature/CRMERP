@@ -273,11 +273,11 @@ import { Link } from 'react-router-dom';
 
 const Template = () => {
   const templates = [
-    { id: 1, title: 'At The Time of Visit',formtype : 'visit' },
-    { id: 2, title: 'At The Time of Booking' ,formtype:"Display"},
-    { id: 3, title: 'Rate Approval Form' },
-    { id: 4, title: 'Negotiation Calculation (PACKAGE WISE)' },
-    { id: 5, title: 'Negotiation Calculation (AGREEMENT VALUE WISE)' },
+    { id: 1, title: 'At The Time of Visit' },
+    { id: 2, title: 'At The Time of Booking' ,formtype : 'visit'},
+    { id: 3, title: 'Rate Approval Form' ,formtype:"Display"},
+    { id: 4, title: 'Negotiation Calculation (PACKAGE WISE)' ,formtype:"Package"},
+    { id: 5, title: 'Negotiation Calculation (AGREEMENT VALUE WISE)'  ,formtype : "Agreement",}
   ];
 
   const [openModal, setOpenModal] = useState(false);
@@ -472,10 +472,10 @@ const Template = () => {
 
       
 
-{modalContent === 'Form' && (
+{/* {modalContent === 'Form' && ( */}
 
 
-
+{modalContent === 'visit' && (
 
 
 <Modal open={openModal} onClose={handleCloseModal}>
@@ -602,96 +602,592 @@ const Template = () => {
 
 
 
+
 {modalContent === 'Display' && (
-  <Box sx={{ padding: 3 }}>
-    <Typography variant="h6" gutterBottom>
-      Display Content for {modalContent}
-    </Typography>
-
-    {/* Display Form Fields with Read-Only Content */}
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-
-      {/* First Row */}
-      <div style={{ display: "flex", gap: "20px" }}>
-        <FormControl fullWidth>
-          <InputLabel>Project Name</InputLabel>
-          <Typography variant="body1">{formData.projectName || "Not Selected"}</Typography>
-        </FormControl>
-
-        <FormControl fullWidth>
-          <InputLabel>Wing</InputLabel>
-          <Typography variant="body1">{formData.wing || "Not Selected"}</Typography>
-        </FormControl>
+  <Modal open={openModal} onClose={handleCloseModal}>
+    <Box
+      sx={{
+        width: 900, // Adjust the width to add more space
+        bgcolor: "background.paper",
+        borderRadius: 2,
+        p: 4,
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        boxShadow: 24,
+      }}
+    >
+      {/* Modal Header */}
+      <div
+        style={{
+          backgroundColor: "#1976d2",
+          padding: "8px 16px",
+          marginBottom: "10px",
+          borderRadius: "5px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h5 style={{ margin: 0, color: "#fff" }}>Rate Approval Form</h5>
+        <Button
+          onClick={handleCloseModal}
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+            fontWeight: "bold",
+            minWidth: "auto",
+          }}
+        >
+          ✖
+        </Button>
       </div>
 
-      {/* Second Row */}
-      <div style={{ display: "flex", gap: "20px" }}>
-        <FormControl fullWidth>
-          <InputLabel>Flat No</InputLabel>
-          <Typography variant="body1">{formData.flatNo || "Not Selected"}</Typography>
-        </FormControl>
+      {/* Form Fields */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <Grid container spacing={3}>
+          {/* Project Name, Wing, Flat No */}
+          <Grid item xs={12} sm={4}>
+            <FormControl fullWidth>
+              <InputLabel>Project Name</InputLabel>
+              <Select
+                value={formData.projectName || ""}
+                onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
+                label="Project Name"
+              >
+                <MenuItem value="Project "></MenuItem>
+               
+              </Select>
+            </FormControl>
+          </Grid>
 
-        <FormControl fullWidth>
-          <InputLabel>Type</InputLabel>
-          <Typography variant="body1">{formData.type || "Not Selected"}</Typography>
-        </FormControl>
-      </div>
+          <Grid item xs={12} sm={4}>
+            <FormControl fullWidth>
+              <InputLabel>Wing</InputLabel>
+              <Select
+                value={formData.wing || ""}
+                onChange={(e) => setFormData({ ...formData, wing: e.target.value })}
+                label="Wing"
+              >
+              
+              </Select>
+            </FormControl>
+          </Grid>
 
-      {/* Third Row */}
-      <div style={{ display: "flex", gap: "20px" }}>
-        <Typography variant="body1">{formData.date || "Not Selected"}</Typography>
-      </div>
+          <Grid item xs={12} sm={4}>
+            <FormControl fullWidth>
+              <InputLabel>Flat No</InputLabel>
+              <Select
+                value={formData.flatNo || ""}
+                onChange={(e) => setFormData({ ...formData, flatNo: e.target.value })}
+                label="Flat No"
+              >
+                
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
 
-      {/* Facing (Direction) Row */}
-      <div style={{ display: "flex", gap: "20px" }}>
-        <Typography variant="body1">{formData.facing || "Not Selected"}</Typography>
-      </div>
+        <Grid container spacing={3}>
+          {/* Type, Date, Facing */}
+          <Grid item xs={12} sm={4}>
+            <FormControl fullWidth>
+              <InputLabel>Type</InputLabel>
+              <Select
+                value={formData.type || ""}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                label="Type"
+              >
+               
+              </Select>
+            </FormControl>
+          </Grid>
 
-      {/* Broker Name and Basic Rate Row */}
-      <div style={{ display: "flex", gap: "20px" }}>
-        <Typography variant="body1">{formData.brokerName || "Not Provided"}</Typography>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.date || ""}
+              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              label="Date"
+              variant="outlined"
+              type="date"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </Grid>
 
-        <Typography variant="body1">{formData.basicRate || "Not Selected"}</Typography>
-      </div>
+          <Grid item xs={12} sm={4}>
+            <FormControl fullWidth>
+              <InputLabel>Facing</InputLabel>
+              <Select
+                value={formData.facing || ""}
+                onChange={(e) => setFormData({ ...formData, facing: e.target.value })}
+                label="Facing"
+              >
+                <MenuItem value="East">East</MenuItem>
+                <MenuItem value="West">West</MenuItem>
+                <MenuItem value="South">South</MenuItem>
+                <MenuItem value="North">North</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
 
-      {/* Premium Facing, Floor Rise, Discount Row */}
-      <div style={{ display: "flex", gap: "20px" }}>
-        <Typography variant="body1">{formData.premiumFacing || "Not Selected"}</Typography>
+        <Grid container spacing={3}>
+          {/* Broker Name, Basic Rate, Premium Facing */}
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.brokerName || ""}
+              onChange={(e) => setFormData({ ...formData, brokerName: e.target.value })}
+              label="Broker Name"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
 
-        <Typography variant="body1">{formData.floorRise || "Not Provided"}</Typography>
-      </div>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.basicRate || ""}
+              onChange={(e) => setFormData({ ...formData, basicRate: e.target.value })}
+              label="Basic Rate"
+              variant="outlined"
+              type="number"
+              fullWidth
+              InputProps={{
+                inputProps: {
+                  step: 0.01,
+                  min: 0,
+                },
+              }}
+            />
+          </Grid>
 
-      {/* Discount, Add Disc. Ref. By Row */}
-      <div style={{ display: "flex", gap: "20px" }}>
-        <Typography variant="body1">{formData.discount || "Not Selected"}</Typography>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.premiumFacing || ""}
+              onChange={(e) => setFormData({ ...formData, premiumFacing: e.target.value })}
+              label="Premium Facing"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+        </Grid>
 
-        <Typography variant="body1">{formData.addDiscRefBy || "Not Provided"}</Typography>
-      </div>
+        <Grid container spacing={3}>
+          {/* Floor Rise, Discount, Add Disc Ref. By */}
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.floorRise || ""}
+              onChange={(e) => setFormData({ ...formData, floorRise: e.target.value })}
+              label="Floor Rise"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
 
-      {/* Remark, Infrastructure, Total Consideration Row */}
-      <div style={{ display: "flex", gap: "20px" }}>
-        <Typography variant="body1">{formData.remark || "Not Provided"}</Typography>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.discount || ""}
+              onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
+              label="Discount"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
 
-        <Typography variant="body1">{formData.infrastructure || "Not Provided"}</Typography>
-      </div>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.addDiscRefBy || ""}
+              onChange={(e) => setFormData({ ...formData, addDiscRefBy: e.target.value })}
+              label="Add Disc Ref. By"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+        </Grid>
 
-      {/* Total Consideration and Brokerage Amount Row */}
-      <div style={{ display: "flex", gap: "20px" }}>
-        <Typography variant="body1">{formData.totalConsideration || "Not Selected"}</Typography>
+        <Grid container spacing={3}>
+          {/* Remark, Infrastructure, Total Consideration */}
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.remark || ""}
+              onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+              label="Remark"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
 
-        <Typography variant="body1">{formData.brokerageAmount || "Not Selected"}</Typography>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.infrastructure || ""}
+              onChange={(e) => setFormData({ ...formData, infrastructure: e.target.value })}
+              label="Infrastructure"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.totalConsideration || ""}
+              onChange={(e) => setFormData({ ...formData, totalConsideration: e.target.value })}
+              label="Total Consideration"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3}>
+          {/* Brokerage Amount */}
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.brokerageAmount || ""}
+              onChange={(e) => setFormData({ ...formData, brokerageAmount: e.target.value })}
+              label="Brokerage Amount"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+        </Grid>
       </div>
 
       {/* Action Buttons */}
       <div style={{ textAlign: "right", marginTop: 24 }}>
         <Button variant="outlined" color="secondary" onClick={handleCloseModal}>
-          Close
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSave}
+          style={{ marginLeft: 10 }}
+        >
+          Submit
         </Button>
       </div>
-    </div>
-  </Box>
+    </Box>
+  </Modal>
 )}
 
+{/* 
+{modalContent === 'Package' && (
+  <Modal open={openModal} onClose={handleCloseModal}>
+    <Box
+      sx={{
+        width: 900, // Adjust the width to add more space
+        bgcolor: "background.paper",
+        borderRadius: 2,
+        p: 4,
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        boxShadow: 24,
+      }}
+    >
+      
+      <div
+        style={{
+          backgroundColor: "#1976d2",
+          padding: "8px 16px",
+          marginBottom: "10px",
+          borderRadius: "5px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h5 style={{ margin: 0, color: "#fff" }}>Rate Approval Form</h5>
+        <Button
+          onClick={handleCloseModal}
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+            fontWeight: "bold",
+            minWidth: "auto",
+          }}
+        >
+          ✖
+        </Button>
+      </div>
+
+     
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <Grid container spacing={3}>
+     
+        
+
+
+        <Grid container spacing={3}>
+         
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.remark || ""}
+              onChange={(e) => setFormData({ ...formData, remark: e.target.value })}
+              label="Remark"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.infrastructure || ""}
+              onChange={(e) => setFormData({ ...formData, infrastructure: e.target.value })}
+              label="Infrastructure"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.totalConsideration || ""}
+              onChange={(e) => setFormData({ ...formData, totalConsideration: e.target.value })}
+              label="Total Consideration"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3}>
+         
+          <Grid item xs={12} sm={4}>
+            <TextField
+              value={formData.brokerageAmount || ""}
+              onChange={(e) => setFormData({ ...formData, brokerageAmount: e.target.value })}
+              label="Brokerage Amount"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+        </Grid>
+      </div>
+
+  
+      <div style={{ textAlign: "right", marginTop: 24 }}>
+        <Button variant="outlined" color="secondary" onClick={handleCloseModal}>
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSave}
+          style={{ marginLeft: 10 }}
+        >
+          Submit
+        </Button>
+      </div>
+    </Box>
+  </Modal>
+)} */}
+
+
+{modalContent === 'Package' && (
+  <Modal open={openModal} onClose={handleCloseModal}>
+    <Box
+      sx={{
+        width: 900, 
+        bgcolor: "background.paper",
+        borderRadius: 2,
+        p: 4,
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        boxShadow: 24,
+      }}
+    >
+      {/* Modal Header */}
+      <div
+        style={{
+          backgroundColor: "#1976d2",
+          padding: "8px 16px",
+          marginBottom: "10px",
+          borderRadius: "5px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h5 style={{ margin: 0, color: "#fff" }}>Negotiation Calculation (PACKAGE) Form</h5>
+        <Button
+          onClick={handleCloseModal}
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+            fontWeight: "bold",
+            minWidth: "auto",
+          }}
+        >
+          ✖
+        </Button>
+      </div>
+
+      {/* Form Fields */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <Grid container spacing={3}>
+          {/* Package Field */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              value={formData.package || ""}
+              onChange={(e) => setFormData({ ...formData, package: e.target.value })}
+              label="Package"
+              variant="outlined"
+              type="number"
+              fullWidth
+              InputProps={{
+                inputProps: {
+                  step: 1,
+                  min: 0,
+                },
+              }}
+            />
+          </Grid>
+
+          {/* Carpet Area Field */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              value={formData.carpetArea || ""}
+              onChange={(e) => setFormData({ ...formData, carpetArea: e.target.value })}
+              label="Carpet Area"
+              variant="outlined"
+              type="number"
+              fullWidth
+              InputProps={{
+                inputProps: {
+                  step: 1,
+                  min: 0,
+                },
+              }}
+            />
+          </Grid>
+        </Grid>
+      </div>
+
+      {/* Action Buttons */}
+      <div style={{ textAlign: "right", marginTop: 24 }}>
+        <Button variant="outlined" color="secondary" onClick={handleCloseModal}>
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSave}
+          style={{ marginLeft: 10 }}
+        >
+          Submit
+        </Button>
+      </div>
+    </Box>
+  </Modal>
+)}
+
+
+{modalContent === 'Agreement' && (
+  <Modal open={openModal} onClose={handleCloseModal}>
+    <Box
+      sx={{
+        width: 900, 
+        bgcolor: "background.paper",
+        borderRadius: 2,
+        p: 4,
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        boxShadow: 24,
+      }}
+    >
+      {/* Modal Header */}
+      <div
+        style={{
+          backgroundColor: "#1976d2",
+          padding: "8px 16px",
+          marginBottom: "10px",
+          borderRadius: "5px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h5 style={{ margin: 0, color: "#fff" }}>Negotiation Calculation (AGREEMENT) Form </h5>
+        <Button
+          onClick={handleCloseModal}
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+            fontWeight: "bold",
+            minWidth: "auto",
+          }}
+        >
+          ✖
+        </Button>
+      </div>
+
+      {/* Form Fields */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <Grid container spacing={3}>
+          {/* Package Field */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              value={formData.package || ""}
+              onChange={(e) => setFormData({ ...formData, package: e.target.value })}
+              label="Agreement Value"
+              variant="outlined"
+              type="number"
+              fullWidth
+              InputProps={{
+                inputProps: {
+                  step: 1,
+                  min: 0,
+                },
+              }}
+            />
+          </Grid>
+
+          {/* Carpet Area Field */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              value={formData.carpetArea || ""}
+              onChange={(e) => setFormData({ ...formData, carpetArea: e.target.value })}
+              label="Agreement Carpet Area"
+              variant="outlined"
+              type="number"
+              fullWidth
+              InputProps={{
+                inputProps: {
+                  step: 1,
+                  min: 0,
+                },
+              }}
+            />
+          </Grid>
+        </Grid>
+      </div>
+
+      {/* Action Buttons */}
+      <div style={{ textAlign: "right", marginTop: 24 }}>
+        <Button variant="outlined" color="secondary" onClick={handleCloseModal}>
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSave}
+          style={{ marginLeft: 10 }}
+        >
+          Submit
+        </Button>
+      </div>
+    </Box>
+  </Modal>
+)}
 
       {modalContent === 'PDF' && (
         <Box>

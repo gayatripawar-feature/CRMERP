@@ -6,8 +6,13 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, TextField } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, TextField ,Tooltip,IconButton} from '@mui/material';
 import { FaEye } from 'react-icons/fa'; 
+import EditIcon from '@mui/icons-material/Edit';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import EmailIcon from '@mui/icons-material/Email';
+
+
 
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
@@ -50,6 +55,9 @@ const CRM = () => {
   };
 
   
+
+
+
 
   const getFilterOptions = (type) => {
     switch (type) {
@@ -120,63 +128,146 @@ const CRM = () => {
   const start = (currentPage - 1) * rowsPerPage;
   const end = Math.min(start + rowsPerPage, filteredLoans.length);
 
-  const displayLoans = () => {
-    return filteredLoans.slice(start, end).map((loan, index) => (
-    
-      <TableRow key={loan.flatNo}>
-  <TableCell>{loan.action}</TableCell> {/* New column */}
-  <TableCell>{loan.timestamp}</TableCell> {/* New column */}
-  <TableCell>{loan.enquiryNo}</TableCell> {/* New column */}
-  <TableCell>{loan.projectName}</TableCell> {/* New column */}
-  <TableCell>{loan.dateOfFlatBooking}</TableCell> {/* New column */}
-  <TableCell>{loan.nameOfAllotee}</TableCell>
-  <TableCell>{loan.sourceName}</TableCell> {/* New column */}
-  <TableCell>{loan.dateOfBirth}</TableCell> {/* New column */}
-  <TableCell>{loan.occupation}</TableCell> {/* New column */}
-  <TableCell>{loan.panNo}</TableCell> {/* New column */}
-  <TableCell>{loan.aadharNo}</TableCell> {/* New column */}
-  <TableCell>{loan.mobileNo}</TableCell>
-  <TableCell>{loan.alternateMobileNo}</TableCell> {/* New column */}
-  <TableCell>{loan.whatsappNo}</TableCell>
-  <TableCell>{loan.emailId}</TableCell>
-  <TableCell>{loan.address}</TableCell> {/* New column */}
-  <TableCell>{loan.nameOfCoAllotee}</TableCell>
-  <TableCell>{loan.dobCoAllotee}</TableCell> {/* New column */}
-  <TableCell>{loan.occupationCoAllotee}</TableCell> {/* New column */}
-  <TableCell>{loan.panNoCoAllotee}</TableCell> {/* New column */}
-  <TableCell>{loan.aadharNoCoAllotee}</TableCell> {/* New column */}
-  <TableCell>{loan.mobileEmailCoAllotee}</TableCell> {/* New column */}
-  <TableCell>{loan.flatNo}</TableCell>
-  <TableCell>{loan.type}</TableCell>
-  <TableCell>{loan.wing}</TableCell> {/* New column */}
-  <TableCell>{loan.soldRate}</TableCell> {/* New column */}
-  <TableCell>{loan.carpetArea}</TableCell> {/* New column */}
-  <TableCell>{loan.enclosedBalcony}</TableCell> {/* New column */}
-  <TableCell>{loan.openBalcony}</TableCell> {/* New column */}
-  <TableCell>{loan.terrace}</TableCell> {/* New column */}
-  <TableCell>{loan.parking}</TableCell>
-  <TableCell>{loan.floor}</TableCell>
-  <TableCell>{loan.totalConsideration}</TableCell> {/* New column */}
-  <TableCell>{loan.bookingAmount}</TableCell> {/* New column */}
-  <TableCell>{loan.stampDuty}</TableCell> {/* New column */}
-  <TableCell>{loan.registrationFee}</TableCell> {/* New column */}
-  <TableCell>{loan.gstAmount}</TableCell> {/* New column */}
-  <TableCell>{loan.panCard}</TableCell> {/* New column */}
-  <TableCell>{loan.aadharCard}</TableCell> {/* New column */}
-  <TableCell>{loan.marriageCertificate}</TableCell> {/* New column */}
-  <TableCell>{loan.passportSizePhoto}</TableCell> {/* New column */}
-  <TableCell>{loan.anyOther}</TableCell> {/* New column */}
-  <TableCell>{loan.bookingAmount}</TableCell>
-  <TableCell>{loan.paymentMode}</TableCell> {/* New column */}
-  <TableCell>{loan.chequeTrnNo}</TableCell> {/* New column */}
-  <TableCell>{loan.chequeTrnDate}</TableCell> {/* New column */}
-  <TableCell>{loan.bankName}</TableCell>
-  <TableCell>{loan.bankDetails}</TableCell> {/* New column */}
-</TableRow>
 
-    ));
+const displayLoans = () => {
+  return filteredLoans.slice(start, end).map((loan, index) => (
+    <TableRow key={loan.flatNo}>
+      <TableCell>{loan.action}</TableCell> {/* New column */}
+      <TableCell>{loan.timestamp}</TableCell> {/* New column */}
+      <TableCell>{loan.enquiryNo}</TableCell> {/* New column */}
+      <TableCell>{loan.projectName}</TableCell> {/* New column */}
+      <TableCell>{loan.dateOfFlatBooking}</TableCell> {/* New column */}
+      <TableCell>{loan.nameOfAllotee}</TableCell>
+      <TableCell>{loan.sourceName}</TableCell> {/* New column */}
+      <TableCell>{loan.dateOfBirth}</TableCell> {/* New column */}
+      <TableCell>{loan.occupation}</TableCell> {/* New column */}
+      <TableCell>{loan.panNo}</TableCell> {/* New column */}
+      <TableCell>{loan.aadharNo}</TableCell> {/* New column */}
+      <TableCell>{loan.mobileNo}</TableCell>
+      <TableCell>{loan.alternateMobileNo}</TableCell> {/* New column */}
+      <TableCell>{loan.whatsappNo}</TableCell>
+      <TableCell>{loan.emailId}</TableCell>
+      <TableCell>{loan.address}</TableCell> {/* New column */}
+      <TableCell>{loan.nameOfCoAllotee}</TableCell>
+      <TableCell>{loan.dobCoAllotee}</TableCell> {/* New column */}
+      <TableCell>{loan.occupationCoAllotee}</TableCell> {/* New column */}
+      <TableCell>{loan.panNoCoAllotee}</TableCell> {/* New column */}
+      <TableCell>{loan.aadharNoCoAllotee}</TableCell> {/* New column */}
+      <TableCell>{loan.mobileEmailCoAllotee}</TableCell> {/* New column */}
+      <TableCell>{loan.flatNo}</TableCell>
+      <TableCell>{loan.type}</TableCell>
+      <TableCell>{loan.wing}</TableCell> {/* New column */}
+      <TableCell>{loan.soldRate}</TableCell> {/* New column */}
+      <TableCell>{loan.carpetArea}</TableCell> {/* New column */}
+      <TableCell>{loan.enclosedBalcony}</TableCell> {/* New column */}
+      <TableCell>{loan.openBalcony}</TableCell> {/* New column */}
+      <TableCell>{loan.terrace}</TableCell> {/* New column */}
+      <TableCell>{loan.parking}</TableCell>
+      <TableCell>{loan.floor}</TableCell>
+      <TableCell>{loan.totalConsideration}</TableCell> {/* New column */}
+      <TableCell>{loan.bookingAmount}</TableCell> {/* New column */}
+      <TableCell>{loan.stampDuty}</TableCell> {/* New column */}
+      <TableCell>{loan.registrationFee}</TableCell> {/* New column */}
+      <TableCell>{loan.gstAmount}</TableCell> {/* New column */}
+      <TableCell>{loan.panCard}</TableCell> {/* New column */}
+      <TableCell>{loan.aadharCard}</TableCell> {/* New column */}
+      <TableCell>{loan.marriageCertificate}</TableCell> {/* New column */}
+      <TableCell>{loan.passportSizePhoto}</TableCell> {/* New column */}
+      <TableCell>{loan.anyOther}</TableCell> {/* New column */}
+      <TableCell>{loan.bookingAmount}</TableCell>
+      <TableCell>{loan.paymentMode}</TableCell> {/* New column */}
+      <TableCell>{loan.chequeTrnNo}</TableCell> {/* New column */}
+      <TableCell>{loan.chequeTrnDate}</TableCell> {/* New column */}
+      <TableCell>{loan.bankName}</TableCell>
+      <TableCell>{loan.bankDetails}</TableCell> {/* New column */}
+      
+     <TableCell>
+        <div style={{ display: "flex", gap: "5px" }}>
+          <Tooltip title="Edit" arrow>
+            <IconButton 
+              color="primary" 
+              onClick={() => handleEdit(loan)} 
+              sx={{
+                backgroundColor: "primary.main", 
+                padding: "5px",  
+                borderRadius: "50%", 
+                color: "white", 
+                fontSize: "18px"
+              }}
+            >
+              <FaEdit />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="WhatsApp" arrow>
+            <IconButton 
+              color="success" 
+              onClick={() => window.open(`https://wa.me/${loan.mobileNo}`, "_blank")}
+              sx={{
+                backgroundColor: "success.main", 
+                padding: "5px",  
+                borderRadius: "50%", 
+                color: "white", 
+                fontSize: "18px"
+              }}
+            >
+              <FaWhatsapp />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Email" arrow>
+            <IconButton 
+              color="primary" 
+              onClick={() => window.location.href = `mailto:${loan.emailId}`}
+              sx={{
+                backgroundColor: "primary.main", 
+                padding: "5px",  
+                borderRadius: "50%", 
+                color: "white", 
+                fontSize: "18px"
+              }}
+            >
+              <FaEnvelope />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Assign To" arrow>
+            <IconButton 
+              color="secondary" 
+              onClick={() => console.log("Assign To clicked")}
+              sx={{
+                backgroundColor: "#FFD700", 
+                padding: "5px",  
+                borderRadius: "50%", 
+                color: "white", 
+                fontSize: "18px"
+              }}
+            >
+              <FaUserCircle />
+            </IconButton>
+          </Tooltip>
+        </div>
+      </TableCell> 
+   
+
+    </TableRow>
+  ));
+};
+
+
+  const handleEdit = (item) => {
+    console.log("Edit item:", item);
+  };
+  
+  const handleWhatsapp = (item) => {
+    console.log("Whatsapp item:", item);
+  };
+  
+  const handleEmail = (item) => {
+    console.log("Email item:", item);
   };
 
+  
   const updateLoanStatus = (flatNo, newStatus) => {
   
     console.log(`Updating loan ${flatNo} status to ${newStatus}`);
@@ -185,6 +276,62 @@ const CRM = () => {
   const handleCollapseToggle = () => {
     setIsCollapsed(prev => !prev);
   };
+
+
+
+  
+const loansData = [
+  {
+    enquiryNo: "ENQ001",
+    timestamp: "2025-03-18",
+    projectName: "Project A,Prohect b ",
+    flatBookingDate: "2025-03-15",
+    aloteeName: "John Doe",
+    sourceName: "Source 1, suiopvhujghuuygbb",
+    dob: "1990-01-01",
+    occupation: "Engineer",
+    panNo: "ABCD1234",
+    aadharNo: "1234-5678-9101",
+    mobileNo: "9876543210",
+    alternateMobileNo: "9876543211",
+    whatsappNo: "9876543212",
+    email: "johndoe@email.com",
+    address: "123 Street, City",
+    coAloteeName: "Jane Doe",
+    coAloteeDob: "1992-05-10",
+    coAloteeOccupation: "Teacher",
+    coAloteePanNo: "XYZ9876",
+    coAloteeAadharNo: "9876-5432-1098",
+    coAloteeMobileEmail: "9876543213 / jane@email.com",
+    flatNo: "F-101",
+    type: "2BHK",
+    wing: "A",
+    soldRate: "5000",
+    carpetArea: "800",
+    enclosedBalcony: "50",
+    openBalcony: "30",
+    terrace: "20",
+    parking: "1",
+    floor: "1st",
+    totalConsideration: "1000000",
+    bookingAmount: "50000",
+    stampDuty: "70000",
+    registrationFee: "10000",
+    gstAmount: "18000",
+    panCard: "Available",
+    aadharCard: "Available",
+    marriageCertificate: "Not Available",
+    passportPhoto: "Available",
+    otherDocuments: "None",
+    paymentMode: "Cheque",
+    chequeNo: "CH12345",
+    chequeDate: "2025-03-17",
+    bankName: "Bank ABC",
+    bankDetails: "Branch XYZ",
+  },
+  
+];
+
 
   return (
     <div className="main-content">
@@ -283,7 +430,7 @@ const CRM = () => {
   
 
       
-            {/* <TableRow sx={{ background: "linear-gradient(180deg, #3621a9 0%,rgb(139, 115, 243) 100%)" }}> */}
+          
        <TableRow sx={{background:"#3621a9"}}>
         <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>ACTION</TableCell>
         <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>TIMESTAMP</TableCell>
@@ -336,9 +483,295 @@ const CRM = () => {
       </TableRow>
     </TableHead>
 
-    <TableBody>
+    {/* <TableBody>
       {displayLoans()}
-    </TableBody>
+    </TableBody> */}
+{/* <TableBody>
+  {displayLoans().map((item, index) => (
+    <TableRow key={index}>
+     
+      <TableCell>
+       
+        <EditIcon sx={{ cursor: 'pointer', marginRight: 1 }} onClick={() => handleEdit(item)} />
+        <WhatsAppIcon sx={{ cursor: 'pointer', marginRight: 1 }} onClick={() => handleWhatsapp(item)} />
+        <EmailIcon sx={{ cursor: 'pointer' }} onClick={() => handleEmail(item)} />
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody> */}
+
+
+{/* 
+<TableBody>
+      {loansData.map((item, index) => (
+        <TableRow key={index}>
+         
+          <TableCell>
+          
+            <div style={{ display: 'flex', gap: '', justifyContent: 'flex-start' }}>
+              <Tooltip title="Edit" arrow>
+                <IconButton 
+                  sx={{ color: 'primary.main', fontSize: '18px' }} 
+                  onClick={() => handleEdit(item)}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="WhatsApp" arrow>
+                <IconButton 
+                  sx={{ color: 'success.main', fontSize: '18px' }} 
+                  onClick={() => handleWhatsapp(item)}
+                >
+                  <WhatsAppIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Email" arrow>
+                <IconButton 
+                  sx={{ color: 'primary.main', fontSize: '18px' }} 
+                  onClick={() => handleEmail(item)}
+                >
+                  <EmailIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          </TableCell>
+
+          
+          <TableCell>{item.timestamp}</TableCell>
+
+          
+          <TableCell>{item.enquiryNo}</TableCell>
+
+          
+          <TableCell>{item.projectName}</TableCell>
+
+          
+          <TableCell>{item.bookingDate}</TableCell>
+
+        
+          <TableCell>{item.aloteeName}</TableCell>
+
+          <TableCell>{item.sourceName}</TableCell>
+
+      
+          <TableCell>{item.dob}</TableCell>
+
+          <TableCell>{item.occupation}</TableCell>
+
+          <TableCell>{item.panNo}</TableCell>
+
+          <TableCell>{item.aadharNo}</TableCell>
+
+          
+          <TableCell>{item.mobileNo}</TableCell>
+
+          
+          <TableCell>{item.alternateMobileNo}</TableCell>
+
+        
+          <TableCell>{item.whatsappNo}</TableCell>
+
+        
+          <TableCell>{item.emailId}</TableCell>
+
+          
+          <TableCell>{item.address}</TableCell>
+
+          <TableCell>{item.coAloteeName}</TableCell>
+
+         
+          <TableCell>{item.coAloteeDob}</TableCell>
+
+        
+          <TableCell>{item.coAloteeOccupation}</TableCell>
+
+       
+          <TableCell>{item.coAloteePanNo}</TableCell>
+
+         
+          <TableCell>{item.coAloteeAadharNo}</TableCell>
+
+          
+          <TableCell>{item.coAloteeContact}</TableCell>
+
+     
+          <TableCell>{item.flatNo}</TableCell>
+
+         
+          <TableCell>{item.flatType}</TableCell>
+
+          <TableCell>{item.wing}</TableCell>
+
+         
+          <TableCell>{item.soldRate}</TableCell>
+
+          
+          <TableCell>{item.carpetArea}</TableCell>
+
+        
+          <TableCell>{item.enclosedBalcony}</TableCell>
+
+          
+          <TableCell>{item.openBalcony}</TableCell>
+
+     
+          <TableCell>{item.terrace}</TableCell>
+
+       
+          <TableCell>{item.parking}</TableCell>
+
+          
+          <TableCell>{item.floor}</TableCell>
+
+        
+          <TableCell>{item.totalConsideration}</TableCell>
+
+          <TableCell>{item.bookingAmount}</TableCell>
+
+        
+          <TableCell>{item.stampDuty}</TableCell>
+
+        
+          <TableCell>{item.registrationFee}</TableCell>
+
+      
+          <TableCell>{item.gstAmount}</TableCell>
+
+       
+          <TableCell>{item.panCard}</TableCell>
+
+        
+          <TableCell>{item.aadharCard}</TableCell>
+
+          
+          <TableCell>{item.marriageCertificate}</TableCell>
+
+          <TableCell>{item.passportSizePhoto}</TableCell>
+
+
+          <TableCell>{item.anyOther}</TableCell>
+
+          <TableCell>{item.paymentMode}</TableCell>
+
+         
+          <TableCell>{item.chequeTrnNo}</TableCell>
+
+      
+          <TableCell>{item.chequeTrnDate}</TableCell>
+
+          <TableCell>{item.bankName}</TableCell>
+
+        
+          <TableCell>{item.bankDetails}</TableCell>
+        </TableRow>
+      ))}
+    </TableBody> */}
+
+{/* 
+<TableBody>
+  {loansData.map((item, index) => (
+    <TableRow key={index}>
+    
+      <TableCell sx={{ whiteSpace: 'nowrap' }}> 
+       
+        <div style={{ display: 'flex', gap: '', justifyContent: 'flex-start' }}>
+          <Tooltip title="Edit" arrow>
+            <IconButton
+              sx={{ color: 'primary.main', fontSize: '18px' }}
+              onClick={() => handleEdit(item)}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="WhatsApp" arrow>
+            <IconButton
+              sx={{ color: 'success.main', fontSize: '18px' }}
+              onClick={() => handleWhatsapp(item)}
+            >
+              <WhatsAppIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Email" arrow>
+            <IconButton
+              sx={{ color: 'primary.main', fontSize: '18px' }}
+              onClick={() => handleEmail(item)}
+            >
+              <EmailIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
+      </TableCell>
+
+      
+      <TableCell>{item.timestamp}</TableCell>
+      <TableCell>{item.enquiryNo}</TableCell>
+      <TableCell>{item.projectName}</TableCell>
+      <TableCell>{item.bookingDate}</TableCell>
+      <TableCell>{item.aloteeName}</TableCell>
+      <TableCell>{item.sourceName}</TableCell>
+      <TableCell>{item.dob}</TableCell>
+      <TableCell>{item.occupation}</TableCell>
+      {
+    </TableRow>
+  ))}
+</TableBody> */}
+
+<TableBody>
+  {loansData.map((item, index) => (
+    <TableRow key={index}>
+      {/* ACTION Column */}
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>
+        {/* Icons for actions */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '0px', // Optionally adjust space between icons
+            justifyContent: 'flex-start',
+            flexWrap: 'nowrap', // Prevent wrapping of icons
+          }}
+        >
+          <Tooltip title="Edit" arrow>
+            <IconButton
+              sx={{ color: 'primary.main', fontSize: '18px' }}
+              onClick={() => handleEdit(item)}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="WhatsApp" arrow>
+            <IconButton
+              sx={{ color: 'success.main', fontSize: '18px' }}
+              onClick={() => handleWhatsapp(item)}
+            >
+              <WhatsAppIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Email" arrow>
+            <IconButton
+              sx={{ color: 'primary.main', fontSize: '18px' }}
+              onClick={() => handleEmail(item)}
+            >
+              <EmailIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
+      </TableCell>
+
+      {/* Other Data Columns */}
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.timestamp}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.enquiryNo}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.projectName}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.bookingDate}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.aloteeName}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.sourceName}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.dob}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      {/* ... Other data cells ... */}
+    </TableRow>
+  ))}
+</TableBody>
+
+
   </Table>
 </TableContainer>
 

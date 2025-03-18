@@ -210,6 +210,7 @@ import {
 } from "react-icons/fa";  
 import { useNavigate } from "react-router-dom";
 import { Outlet, Link } from "react-router-dom";
+import {  FaClipboardList, FaCalendarCheck, FaRegHandshake, FaRegClock, FaTasks, FaRegTimesCircle, FaClipboard, FaRegEdit } from 'react-icons/fa';
 
  
 
@@ -336,16 +337,31 @@ const Dashboard = () => {
           { to: "/sales/salesdashboard", icon: <FaTachometerAlt />, label: "Dashboard" }, 
 { to: "/sales/salescalander", icon: <FaCalendarAlt />, label: "Calendar" }, 
 { to: "/sales/sharespace", icon: <FaPeopleArrows />, label: "Share Space" } ,
-{to : "/sales/sharedbydeveloper" , icon :<FaPeopleArrows />, label: "Shared By Developer" },
-{to : "/sales/leads" , icon :<FaPeopleArrows />, label: "Leads" },
-{to : "/sales/leadsfollowup" , icon :<FaPeopleArrows />, label: "Leads Follow Up" },
-{to : "/sales/lostleads" , icon :<FaPeopleArrows />, label: "Lost Leads" },
-{to : "/sales/firstvisits" , icon :<FaPeopleArrows />, label: "First Visit" },
-{to : "/sales/firstvisitfollowup" , icon :<FaPeopleArrows />, label: "First Visit Follow Up" },
-{to : "/sales/firstvisitsteps" , icon :<FaPeopleArrows />, label: "First Visit Steps" },
-{to : "/sales/saleslostvisits" , icon :<FaPeopleArrows />, label: "Lost Visits" },
-{to : "/sales/salestemplates" , icon :<FaPeopleArrows />, label: "Templates" },
-{to : "/sales/bookingform" , icon :<FaPeopleArrows />, label: "Booking Form" },
+// {to : "/sales/sharedbydeveloper" , icon :<FaPeopleArrows />, label: "Shared By Developer" },
+// {to : "/sales/leads" , icon :<FaPeopleArrows />, label: "Leads" },
+// {to : "/sales/leadsfollowup" , icon :<FaPeopleArrows />, label: "Leads Follow Up" },
+// {to : "/sales/lostleads" , icon :<FaPeopleArrows />, label: "Lost Leads" },
+// {to : "/sales/firstvisits" , icon :<FaPeopleArrows />, label: "First Visit" },
+// {to : "/sales/firstvisitfollowup" , icon :<FaPeopleArrows />, label: "First Visit Follow Up" },
+// {to : "/sales/firstvisitsteps" , icon :<FaPeopleArrows />, label: "First Visit Steps" },
+// {to : "/sales/saleslostvisits" , icon :<FaPeopleArrows />, label: "Lost Visits" },
+// {to : "/sales/salestemplates" , icon :<FaPeopleArrows />, label: "Templates" },
+// {to : "/sales/bookingform" , icon :<FaPeopleArrows />, label: "Booking Form" },
+
+
+
+  { to: "/sales/sharedbydeveloper", icon: <FaUsers />, label: "Shared By Developer" },
+  { to: "/sales/leads", icon: <FaClipboardList />, label: "Leads" },
+  { to: "/sales/leadsfollowup", icon: <FaCalendarCheck />, label: "Leads Follow Up" },
+  { to: "/sales/lostleads", icon: <FaRegTimesCircle />, label: "Lost Leads" },
+  { to: "/sales/firstvisits", icon: <FaRegHandshake />, label: "First Visit" },
+  { to: "/sales/firstvisitfollowup", icon: <FaRegClock />, label: "First Visit Follow Up" },
+  { to: "/sales/firstvisitsteps", icon: <FaTasks />, label: "First Visit Steps" },
+  { to: "/sales/saleslostvisits", icon: <FaRegTimesCircle />, label: "Lost Visits" },
+  { to: "/sales/salestemplates", icon: <FaClipboard />, label: "Templates" },
+  { to: "/sales/bookingform", icon: <FaRegEdit />, label: "Booking Form" },
+
+
         ]}
       />
 
