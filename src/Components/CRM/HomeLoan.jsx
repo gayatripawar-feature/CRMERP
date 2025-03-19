@@ -335,25 +335,29 @@
 
 // -------------------
 
+
+
+// =================
+
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, TextField, IconButton,Select, InputAdornment,Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { FaEye } from 'react-icons/fa';
-// import AccountCircle from '@mui/icons-material/AccountCircle';
-// import EditIcon from '@mui/icons-material/Edit';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, TextField,Typography, IconButton,Select, InputAdornment,Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { FaEye} from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify';
 import AccountCircle from '@mui/icons-material/AccountCircle'; 
 const HomeLoan = () => {
   const [loansData, setLoansData] = useState([
     { 
-      id: 1, flatNo: "101", nameOfAllotee: "John Doe", nameOfCoAllotee: "Jane Doe", type: "2BHK", 
-      floor: "1", emailId: "johndoe@example.com", whatsappMobileNo: "+911234567890", rate: "₹5,00,000", 
-      agreementValue: "₹60,00,000", dateOfBooking: "2024-03-01", parking: "Parking 1", homeLoanApplicability: "Yes", 
-      bankName: "Bank A", bankerName: "Mr. A", mobileNo: "+911234567890", loanAccountNo: "123456789", 
-      loanAmount: "₹40,00,000", sanctionLetter: "Yes", homeLoanSanctionCertificateCollected: "No", 
+      id: 1, flatNo: "", nameOfAllotee: "", nameOfCoAllotee: "", type: "", 
+      floor: "1", emailId: "johndoe@example.com", whatsappMobileNo: "", rate: "", 
+      agreementValue: "₹60,00,000", dateOfBooking: "2024-03-01", parking: "", homeLoanApplicability: "Yes", 
+      bankName: "", bankerName: "", mobileNo: "", loanAccountNo: "", 
+      loanAmount: "", sanctionLetter: "Yes", homeLoanSanctionCertificateCollected: "", 
       bookingCancellationReason: "-", bookingConfirmationMailSent: "Yes"
     },
    
   ]);
   const [filteredLoans, setFilteredLoans] = useState(loansData);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
@@ -364,7 +368,22 @@ const HomeLoan = () => {
   const [isEditingBankName, setIsEditingBankName] = useState(false);
   const [bankName, setBankName] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  // const [editingLoan, setEditingLoan] = useState(null);
+  const [editingLoan, setEditingLoan] = useState({
+    flatNo: '',
+    nameOfAllotee: '',
+    mobileNo: '',
+    loanAccountNo: '',
+    loanAmount: '',
+    bankName: '',
+    bankerName: '',
+    errorFlatNo: '',
+    errorNameOfAllotee: '',
+    errorMobileNo: '',
+    selectedFileName: ''
+  });
+  
+  const [selectedFileName, setSelectedFileName] = useState(''); 
   useEffect(() => {
     setTotalPages(Math.ceil(filteredLoans.length / rowsPerPage));
   }, [filteredLoans, rowsPerPage]);
@@ -372,7 +391,7 @@ const HomeLoan = () => {
   useEffect(() => {
     let filtered = loansData;
 
-    // Filter by start and end date
+    
     if (startDate && endDate) {
       filtered = filtered.filter((loan) => {
         const bookingDate = new Date(loan.dateOfBooking);
@@ -380,18 +399,21 @@ const HomeLoan = () => {
       });
     }
 
-    // Filter by home loan applicability
+   
     if (filterValue) {
       filtered = filtered.filter((loan) => loan.homeLoanApplicability === filterValue);
     }
 
     setFilteredLoans(filtered);
-    setTotalPages(Math.ceil(filtered.length / rowsPerPage)); // Update total pages after filter
+    setTotalPages(Math.ceil(filtered.length / rowsPerPage)); 
   }, [startDate, endDate, filterValue, loansData, rowsPerPage]);
 
   const handlePagination = (event, newPage) => {
     setCurrentPage(newPage + 1);
   };
+
+
+
 
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -402,139 +424,627 @@ const HomeLoan = () => {
     setIsEditingBankName(!isEditingBankName);
   };
 
+  const handleLoanAmountChange = (e) => {
+    const { value } = e.target; 
+    setEditingLoan(prevState => ({
+      ...prevState, 
+      loanAmount: value, 
+    }));
+  };
+  
+  const handleOpenDialog = (loanId) => {
+    const loanToEdit = loansData.find(loan => loan.id === loanId);
+    setEditingLoan(loanToEdit);  
+    setIsDialogOpen(true);
+  };
+
+
+  const handleCollapseToggle = () => {
+        setIsCollapsed(prev => !prev);
+      };
+
+
+  const handleCloseDialog = () => {
+    resetForm();
+    setIsDialogOpen(false);
+    setEditingLoan(null);  
+  };
+
+  const handleInputChange = (e, field) => {
+    const { value } = e.target;
+    setEditingLoan(prevState => ({
+      ...prevState,
+      [field]: value
+    }));
+  };
+  
+  const handleLoanAccountChange = (e) => {
+    const { value } = e.target; 
+    setEditingLoan(prevState => ({
+      ...prevState,  
+      loanAccountNo: value,  
+    }));
+  };
+  
+  
+
+
+  const handleNameChange = (e) => {
+    const { value } = e.target;
+  
+    const isValid = /^[A-Za-z\s]*$/.test(value); 
+  
+    if (isValid) {
+      
+      setEditingLoan(prevState => ({
+        ...prevState,
+        nameOfAllotee: value,  
+        error: ''  
+      }));
+    } else {
+     
+      setEditingLoan(prevState => ({
+        ...prevState,
+        nameOfAllotee: value,  
+        error: 'Only letters and spaces are allowed'  
+      }));
+    }
+  };
+  
+  const handleSave = () => {
+    const updatedLoans = loansData.map(loan => {
+      if (loan.id === editingLoan.id) {
+        return editingLoan;  
+      }
+      return loan;
+    });
+    setLoansData(updatedLoans);
+    toast.success("Data submitted successfully!"); 
+    resetForm();
+    handleCloseDialog();
+  };
 
   const handleBankNameChange = (e) => {
-    setBankName(e.target.value);  // Update bank name as the user types
+    setBankName(e.target.value);  
+  };
+
+  const handleFlatNoChange = (e) => {
+    const { value } = e.target;
+  
+    
+    const isValid = /^[0-9]*$/.test(value); 
+  
+    if (isValid) {
+      setEditingLoan(prevState => ({
+        ...prevState,
+        flatNo: value, 
+      }));
+    } else {
+     
+      setEditingLoan(prevState => ({
+        ...prevState,
+        flatNo: value,
+        error: 'Only numbers allowed', 
+      }));
+    }
+  };
+
+  const handleMobileNoChange = (e) => {
+    const { value } = e.target;
+  
+    const isValid = /^[0-9]{0,10}$/.test(value); 
+  
+   
+    if (isValid) {
+      setEditingLoan(prevState => ({
+        ...prevState,
+        mobileNo: value,
+        errorMobileNo: '' 
+      }));
+    } else {
+      
+      setEditingLoan(prevState => ({
+        ...prevState,
+        mobileNo: value,
+        errorMobileNo: 'Only numbers are allowed and up to 10 digits' 
+      }));
+    }
+  };
+  
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]; 
+    if (file) {
+      setSelectedFileName(file.name);
+    }
+  };
+
+  const handleOpenDocument = (loanId) => {
+    const loan = loansData.find((loan) => loan.id === loanId);
+    if (loan && loan.sanctionLetter) {
+      window.open(loan.sanctionLetter, '_blank'); // Open the document in a new browser tab
+    }
+  };
+
+  const resetForm = () => {
+    setEditingLoan({
+      flatNo: '',
+      nameOfAllotee: '',
+      bankName: '',
+      bankerName: '',
+      mobileNo: '',
+      loanAccountNo: '',
+      loanAmount: '',
+      sanctionLetter: null,
+      error: '',  // Reset the error message as well
+      errorMobileNo: '',
+    });
+    setSelectedFileName(''); // Clear file name if required
   };
   const start = (currentPage - 1) * rowsPerPage;
   const end = Math.min(start + rowsPerPage, filteredLoans.length);
 
-  const displayLoans = () => {
-    return filteredLoans.slice(start, end).map((loan) => (
-      <TableRow key={loan.id} sx={{  }}>
-        <TableCell>{loan.flatNo}</TableCell>
-        <TableCell>{loan.nameOfAllotee}</TableCell>
-        <TableCell>{loan.nameOfCoAllotee}</TableCell>
-        <TableCell>{loan.type}</TableCell>
-        <TableCell>{loan.floor}</TableCell>
-        <TableCell>{loan.emailId}</TableCell>
-        <TableCell>{loan.whatsappMobileNo}</TableCell>
-        <TableCell>{loan.rate}</TableCell>
-        <TableCell>{loan.agreementValue}</TableCell>
-        <TableCell>{loan.dateOfBooking}</TableCell>
-        <TableCell>{loan.parking}</TableCell>
-        <TableCell>
-          <Select
-            value={loan.homeLoanApplicability}
-            onChange={(e) => handleHomeLoanApplicabilityChange(loan.id, e.target.value)}
-            variant="outlined"
-            size="small"
-            sx={{ width: '100px' }}
-          >
-            <MenuItem value="Yes">Yes</MenuItem>
-            <MenuItem value="No">No</MenuItem>
-          </Select>
-        </TableCell>
-{/*        
-  <TableCell>
-    {isEditingBankName ? (
-      <TextField
-        value={bankName}
-        onChange={(e) => setBankName(e.target.value)}
-        size="small"
-        variant="outlined"
-        sx={{ width: '100px' }}
-      />
-    ) : (
-      <span onClick={() => setIsEditingBankName(true)}>{loan.bankName || "Click to Edit"}</span>
-    )}
-    {isEditingBankName && (
-      <Button
-        size="small"
-        variant="contained"
-        color="primary"
-        onClick={() => saveBankName(loan.id)}
-        sx={{ ml: 1 }}
-      >
-        Save
-      </Button>
-    )}
-  </TableCell> */}
+//   const displayLoans = () => {
+//     return filteredLoans.slice(start, end).map((loan) => (
+//       <TableRow key={loan.id} sx={{  }}>
+//         <TableCell>{loan.flatNo}</TableCell>
+//         <TableCell>{loan.nameOfAllotee}</TableCell>
+//         <TableCell>{loan.nameOfCoAllotee}</TableCell>
+//         <TableCell>{loan.type}</TableCell>
+//         <TableCell>{loan.floor}</TableCell>
+//         <TableCell>{loan.emailId}</TableCell>
+//         <TableCell>{loan.whatsappMobileNo}</TableCell>
+//         <TableCell>{loan.rate}</TableCell>
+//         <TableCell>{loan.agreementValue}</TableCell>
+//         <TableCell>{loan.dateOfBooking}</TableCell>
+//         <TableCell>{loan.parking}</TableCell>
+//         <TableCell>
+//           <Select
+//             value={loan.homeLoanApplicability}
+//             onChange={(e) => handleHomeLoanApplicabilityChange(loan.id, e.target.value)}
+//             variant="outlined"
+//             size="small"
+//             sx={{ width: '100px' }}
+//           >
+//             <MenuItem value="Yes">Yes</MenuItem>
+//             <MenuItem value="No">No</MenuItem>
+//           </Select>
+//         </TableCell>
 
-<TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>
-    {isEditingBankName ? (
-      <>
-        
-        <TextField
-          value={bankName}
-          onChange={(e) => setBankName(e.target.value)}
-          size="small"
-          variant="outlined"
-          sx={{ width: '150px' }}
-        />
-        <Button
-          size="small"
-          variant="contained"
-          color="primary"
-          onClick={() => saveBankName(loan.id)}
-          sx={{ ml: 1 }}
-        >
-          Save
-        </Button>
-      </>
+//  <TableCell>
+//           <IconButton onClick={() => handleOpenDialog(loan.id)} color="primary">
+//             <AccountCircle fontSize="medium" />
+//           </IconButton>
+//         </TableCell>
+
+  
+
+// <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+//   <DialogTitle>Edit Loan Details</DialogTitle>
+//   <DialogContent>
+    
+// <TextField
+//     value={editingLoan?.flatNo || ''}
+//     onChange={handleFlatNoChange} 
+//     label="Flat No."
+//     variant="outlined"
+//     size="small"
+//     fullWidth
+//     error={editingLoan?.flatNo && !/^[0-9]*$/.test(editingLoan?.flatNo)} 
+//     helperText={editingLoan?.flatNo && !/^[0-9]*$/.test(editingLoan?.flatNo) ? 'Only numbers allowed' : ''} 
+//     sx={{ mb: 2 }}
+//   />
+
+    
+
+
+// <TextField
+//   value={editingLoan?.nameOfAllotee || ''}
+//   onChange={(e) => handleNameChange(e)}
+//   label="Name of Allotee"
+//   variant="outlined"
+//   size="small"
+//   fullWidth
+//   error={!!editingLoan?.error}  
+//   helperText={editingLoan?.error || ''}  
+//   sx={{ mb: 2 }}
+// />
+//     <div style={{ marginBottom: '8px' }}>Bank Name</div>
+//     <Select
+//       value={editingLoan?.bankName || ''}
+//       onChange={(e) => handleInputChange(e, 'bankName')}
+//       fullWidth
+//       size="small"
+//       sx={{ mb: 2 }} 
+//     >
+//       <MenuItem value="Loan Approved">Loan Approved</MenuItem>
+//       <MenuItem value="HDFC Bank">HDFC Bank</MenuItem>
+//       <MenuItem value="State Bank of India">State Bank of India</MenuItem>
+//       <MenuItem value="IDBI Bank">IDBI Bank</MenuItem>
+//       <MenuItem value="Axis Bank">Axis Bank</MenuItem>
+//       <MenuItem value="Bank of Maharashtra">Bank of Maharashtra</MenuItem>
+//     </Select>
+
+   
+//     <div style={{ marginBottom: '8px' }}>Banker Name</div>
+//     <Select
+//       value={editingLoan?.bankerName || ''}
+//       onChange={(e) => handleInputChange(e, 'bankerName')}
+//       fullWidth
+//       size="small"
+//       sx={{ mb: 2 }} 
+//     >
+     
+//     </Select>
+
+//     <TextField
+//   value={editingLoan?.mobileNo || ''}
+//   onChange={(e) => handleMobileNoChange(e)} 
+//   label="Mobile No."
+//   variant="outlined"
+//   size="small"
+//   fullWidth
+//   type="tel" 
+//   error={!!editingLoan?.errorMobileNo} 
+//   helperText={editingLoan?.errorMobileNo || ''} 
+//   sx={{ mb: 2 }} 
+// />
+
+
+   
+//     <TextField
+//       value={editingLoan?.loanAccountNo || ''}
+//       onChange={(e) => handleLoanAccountChange(e)} 
+//       label="Loan Account No."
+//       variant="outlined"
+//       size="small"
+//       fullWidth
+//       type="text"
+//       sx={{ mb: 2 }} 
+//     />
+
+   
+//     <TextField
+//       value={editingLoan?.loanAmount || ''}
+//       onChange={(e) => handleLoanAmountChange(e)} 
+//       label="Loan Amount"
+//       variant="outlined"
+//       size="small"
+//       fullWidth
+//       type="number"
+//       InputProps={{
+//         inputMode: 'numeric', 
+//         pattern: '[0-9]*', 
+//       }}
+//       sx={{ mb: 2 }} 
+//     />
+
+// <div style={{ marginBottom: '8px', fontWeight: '' }}>Sanction Letter</div>
+//     <Button
+//       variant="contained"
+//       color=""
+//       component="span"
+//       sx={{ mb: 2 }}
+//       onClick={() => document.getElementById('sanction-letter-input').click()} 
+//     >
+//       Choose File
+//     </Button>
+//     <input
+//       id="sanction-letter-input"
+//       type="file"
+//       onChange={(e) => handleFileChange(e)}
+//       style={{ display: 'none' }} 
+//     />
+      
+//       {selectedFileName && (
+//           <Typography variant="body2" sx={{ mt: 1 }}>
+//             Selected File: {selectedFileName}
+//           </Typography>
+//         )}
+//   </DialogContent>
+//   <DialogActions>
+//     <Button onClick={handleCloseDialog} color="secondary">
+//       Cancel
+//     </Button>
+//     <Button onClick={handleSave} color="primary" variant="contained">
+//       Save
+//     </Button>
+//   </DialogActions>
+// </Dialog>
+// <ToastContainer />
+
+
+
+
+//         <TableCell>{loan.bankerName}</TableCell>
+//         <TableCell>{loan.mobileNo}</TableCell>
+//         <TableCell>{loan.loanAccountNo}</TableCell>
+//         <TableCell>{loan.loanAmount}</TableCell>
+       
+ 
+      
+//         <TableCell>
+//             {loan.sanctionLetter ? (
+//               <IconButton
+//                 onClick={() => handleOpenDocument(loan.id)} 
+//                 color="primary"
+//               >
+//                 <FaEye fontSize="large" />
+//               </IconButton>
+//             ) : (
+//               <Typography variant="body2">No Document</Typography>
+//             )}
+//           </TableCell>
+
+//         <TableCell>{loan.homeLoanSanctionCertificateCollected}</TableCell>
+       
+//         <TableCell>{loan.bookingCancellationReason}</TableCell>
+//         <TableCell>{loan.bookingConfirmationMailSent}</TableCell>
+//       </TableRow>
+//     ));
+//   };
+
+
+const displayLoans = () => {
+  return filteredLoans.slice(start, end).map((loan) => (
+//     <TableRow key={loan.id}>
+//       <TableCell>{loan.flatNo}</TableCell>
+//       <TableCell>{loan.nameOfAllotee}</TableCell>
+//       <TableCell>{loan.nameOfCoAllotee}</TableCell>
+//       <TableCell>{loan.type}</TableCell>
+//       <TableCell>{loan.floor}</TableCell>
+//       <TableCell>{loan.emailId}</TableCell>
+//       <TableCell>{loan.whatsappMobileNo}</TableCell>
+//       <TableCell>{loan.rate}</TableCell>
+//       <TableCell>{loan.agreementValue}</TableCell>
+//       <TableCell>{loan.dateOfBooking}</TableCell>
+//       <TableCell>{loan.parking}</TableCell>
+//       {/* <TableCell>{loan.homeLoanApplicability}</TableCell> */}
+//       <TableCell>
+//            <Select 
+//             value={loan.homeLoanApplicability}
+//             onChange={(e) => handleHomeLoanApplicabilityChange(loan.id, e.target.value)}
+//             variant="outlined"
+//             size="small"
+//             sx={{ width: '100px' }}
+//           >
+//             <MenuItem value="Yes">Yes</MenuItem>
+//             <MenuItem value="No">No</MenuItem>
+//           </Select>
+//         </TableCell> 
+
+    
+//       {/* <TableCell>
+//            <IconButton onClick={() => handleOpenDialog(loan.id)} color="primary">
+//              <AccountCircle fontSize="medium" />
+//           </IconButton>
+//         </TableCell> */}
+// <TableCell>{loan.bankName}</TableCell>  {/* This is where Bank Name is shown */}
+// <TableCell>
+//   <IconButton onClick={() => handleOpenDialog(loan.id)} color="primary">
+//     <AccountCircle fontSize="medium" />
+//   </IconButton>
+// </TableCell>  {/* Icon Button in Bank Name Column */}
+
+  
+
+//  <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+//    <DialogTitle>Edit Loan Details</DialogTitle>
+//    <DialogContent>
+    
+// <TextField
+//     value={editingLoan?.flatNo || ''}
+//     onChange={handleFlatNoChange} 
+//     label="Flat No."
+//     variant="outlined"
+//     size="small"
+//     fullWidth
+//     error={editingLoan?.flatNo && !/^[0-9]*$/.test(editingLoan?.flatNo)} 
+//     helperText={editingLoan?.flatNo && !/^[0-9]*$/.test(editingLoan?.flatNo) ? 'Only numbers allowed' : ''} 
+//     sx={{ mb: 2 }}
+//   />
+
+    
+
+
+// <TextField
+//   value={editingLoan?.nameOfAllotee || ''}
+//   onChange={(e) => handleNameChange(e)}
+//   label="Name of Allotee"
+//   variant="outlined"
+//   size="small"
+//   fullWidth
+//   error={!!editingLoan?.error}  
+//   helperText={editingLoan?.error || ''}  
+//   sx={{ mb: 2 }}
+// />
+//     <div style={{ marginBottom: '8px' }}>Bank Name</div>
+//     <Select
+//       value={editingLoan?.bankName || ''}
+//       onChange={(e) => handleInputChange(e, 'bankName')}
+//       fullWidth
+//       size="small"
+//       sx={{ mb: 2 }} 
+//     >
+//       <MenuItem value="Loan Approved">Loan Approved</MenuItem>
+//       <MenuItem value="HDFC Bank">HDFC Bank</MenuItem>
+//       <MenuItem value="State Bank of India">State Bank of India</MenuItem>
+//       <MenuItem value="IDBI Bank">IDBI Bank</MenuItem>
+//       <MenuItem value="Axis Bank">Axis Bank</MenuItem>
+//       <MenuItem value="Bank of Maharashtra">Bank of Maharashtra</MenuItem>
+//     </Select>
+
+   
+//     <div style={{ marginBottom: '8px' }}>Banker Name</div>
+//     <Select
+//       value={editingLoan?.bankerName || ''}
+//       onChange={(e) => handleInputChange(e, 'bankerName')}
+//       fullWidth
+//       size="small"
+//       sx={{ mb: 2 }} 
+//     >
+     
+//     </Select>
+
+//     <TextField
+//   value={editingLoan?.mobileNo || ''}
+//   onChange={(e) => handleMobileNoChange(e)} 
+//   label="Mobile No."
+//   variant="outlined"
+//   size="small"
+//   fullWidth
+//   type="tel" 
+//   error={!!editingLoan?.errorMobileNo} 
+//   helperText={editingLoan?.errorMobileNo || ''} 
+//   sx={{ mb: 2 }} 
+// />
+
+
+   
+//     <TextField
+//       value={editingLoan?.loanAccountNo || ''}
+//       onChange={(e) => handleLoanAccountChange(e)} 
+//       label="Loan Account No."
+//       variant="outlined"
+//       size="small"
+//       fullWidth
+//       type="text"
+//       sx={{ mb: 2 }} 
+//     />
+
+   
+//     <TextField
+//       value={editingLoan?.loanAmount || ''}
+//       onChange={(e) => handleLoanAmountChange(e)} 
+//       label="Loan Amount"
+//       variant="outlined"
+//       size="small"
+//       fullWidth
+//       type="number"
+//       InputProps={{
+//         inputMode: 'numeric', 
+//         pattern: '[0-9]*', 
+//       }}
+//       sx={{ mb: 2 }} 
+//     />
+
+// <div style={{ marginBottom: '8px', fontWeight: '' }}>Sanction Letter</div>
+//     <Button
+//       variant="contained"
+//       color=""
+//       component="span"
+//       sx={{ mb: 2 }}
+//       onClick={() => document.getElementById('sanction-letter-input').click()} 
+//     >
+//       Choose File
+//     </Button>
+//     <input
+//       id="sanction-letter-input"
+//       type="file"
+//       onChange={(e) => handleFileChange(e)}
+//       style={{ display: 'none' }} 
+//     />
+      
+//       {selectedFileName && (
+//           <Typography variant="body2" sx={{ mt: 1 }}>
+//             Selected File: {selectedFileName}
+//           </Typography>
+//         )}
+//   </DialogContent>
+//   <DialogActions>
+//     <Button onClick={handleCloseDialog} color="secondary">
+//       Cancel
+//     </Button>
+//     <Button onClick={handleSave} color="primary" variant="contained">
+//       Save
+//     </Button>
+//   </DialogActions>
+// </Dialog>
+// <ToastContainer />
+
+//       <TableCell>{loan.bankerName}</TableCell>
+//       <TableCell>{loan.mobileNo}</TableCell>
+//       <TableCell>{loan.loanAccountNo}</TableCell>
+//       <TableCell>{loan.loanAmount}</TableCell>
+
+//       {/* Sanction Letter column with edit icon */}
+//       <TableCell>
+//         {loan.sanctionLetter ? (
+//           <IconButton onClick={() => handleOpenDocument(loan.id)} color="primary">
+//             <FaEye fontSize="large" /> {/* Edit Icon */}
+//           </IconButton>
+//         ) : (
+//           <Typography variant="body2">No Document</Typography> 
+//         )}
+//       </TableCell>
+
+//       <TableCell>{loan.homeLoanSanctionCertificateCollected}</TableCell>
+//       <TableCell>{loan.bookingCancellationReason}</TableCell>
+//       <TableCell>{loan.bookingConfirmationMailSent}</TableCell>
+//     </TableRow>
+
+<TableRow key={loan.id}>
+  {/* Other columns */}
+  <TableCell>{loan.flatNo}</TableCell>
+  <TableCell>{loan.nameOfAllotee}</TableCell>
+  <TableCell>{loan.nameOfCoAllotee}</TableCell>
+  <TableCell>{loan.type}</TableCell>
+  <TableCell>{loan.floor}</TableCell>
+  <TableCell>{loan.emailId}</TableCell>
+  <TableCell>{loan.whatsappMobileNo}</TableCell>
+  <TableCell>{loan.rate}</TableCell>
+  <TableCell>{loan.agreementValue}</TableCell>
+  <TableCell>{loan.dateOfBooking}</TableCell>
+  <TableCell>{loan.parking}</TableCell>
+
+  {/* Home Loan Applicability */}
+  <TableCell>
+    <Select
+      value={loan.homeLoanApplicability}
+      onChange={(e) => handleHomeLoanApplicabilityChange(loan.id, e.target.value)}
+      variant="outlined"
+      size="small"
+      sx={{ width: '100px' }}
+    >
+      <MenuItem value="Yes">Yes</MenuItem>
+      <MenuItem value="No">No</MenuItem>
+    </Select>
+  </TableCell>
+
+  {/* Bank Name Column */}
+  <TableCell>{loan.bankName}</TableCell>
+
+  {/* Icon Button for Bank Name */}
+  <TableCell>
+    <IconButton onClick={() => handleOpenDialog(loan.id)} color="primary">
+      <AccountCircle fontSize="medium" />
+    </IconButton>
+  </TableCell>
+
+  {/* Banker Name Column */}
+  <TableCell>{loan.bankerName}</TableCell>
+  <TableCell>{loan.mobileNo}</TableCell>
+  <TableCell>{loan.loanAccountNo}</TableCell>
+  <TableCell>{loan.loanAmount}</TableCell>
+
+  {/* Sanction Letter Column with Edit Icon */}
+  <TableCell>
+    {loan.sanctionLetter ? (
+      <IconButton onClick={() => handleOpenDocument(loan.id)} color="primary">
+        <FaEye fontSize="large" /> {/* Eye Icon for Viewing */}
+      </IconButton>
     ) : (
-      <>
-        {/* Profile Button (icon) */}
-        <IconButton onClick={() => setIsEditingBankName(true)} color="primary">
-          {/* <EditIcon /> */}
-          <AccountCircle fontSize="medium" />
-        </IconButton>
-        {/* Display Bank Name or a prompt to edit */}
-        <span>{loan.bankName || "Click to Edit"}</span>
-      </>
+      <Typography variant="body2">No Document</Typography> // If no document, show "No Document"
     )}
   </TableCell>
 
-  
-  <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
-        <DialogTitle>Edit Bank Name</DialogTitle>
-        <DialogContent>
-        
-          <TextField
-            value={bankName}
-            onChange={(e) => setBankName(e.target.value)}
-            size="small"
-            variant="outlined"
-            sx={{ width: '150px' }}
-            label="Bank Name"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
-            Cancel
-          </Button>
-          <Button
-            onClick={() => saveBankName(loan.id)}
-            color="primary"
-            variant="contained"
-          >
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+  {/* Other columns */}
+  <TableCell>{loan.homeLoanSanctionCertificateCollected}</TableCell>
+  <TableCell>{loan.bookingCancellationReason}</TableCell>
+  <TableCell>{loan.bookingConfirmationMailSent}</TableCell>
+</TableRow>
 
-
-        <TableCell>{loan.bankerName}</TableCell>
-        <TableCell>{loan.mobileNo}</TableCell>
-        <TableCell>{loan.loanAccountNo}</TableCell>
-        <TableCell>{loan.loanAmount}</TableCell>
-        <TableCell>{loan.sanctionLetter}</TableCell>
-        <TableCell>{loan.homeLoanSanctionCertificateCollected}</TableCell>
-        <TableCell>{loan.bookingCancellationReason}</TableCell>
-        <TableCell>{loan.bookingConfirmationMailSent}</TableCell>
-      </TableRow>
-    ));
-  };
+  ));
+};
 
   const handleHomeLoanApplicabilityChange = (loanId, value) => {
     const updatedLoans = filteredLoans.map((loan) => {
@@ -546,15 +1056,27 @@ const HomeLoan = () => {
     setFilteredLoans(updatedLoans);
   };
 
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false); // Close the dialog if user cancels
-  };
+ 
 
   
   return (
     <div className="main-content">
       <h6 className="mb-3">Sales Module / Home Loan Management</h6>
-      {/* Filter Controls */}
+  
+   {/* CRM Display Button */}
+      <div className="d-flex align-items-center mb-3">
+        <Button
+          onClick={handleCollapseToggle}
+          variant="outlined"
+          color="success"
+          className='m-3'
+          style={{ borderRadius: '20px' }}
+          startIcon={<FaEye size={20} color="#28a745" />}
+        >
+          {!isCollapsed && <span className="text-success">Home Loan </span>}
+        </Button>
+      </div> 
+
       <div className="pt-5" style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
         <TextField
           label="Start Date"
@@ -594,38 +1116,46 @@ const HomeLoan = () => {
       {/* Table */}
       <TableContainer component={Paper} sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
         <Table style={{ tableLayout: 'auto', width: '100%' }}>
-          <TableHead>
-            <TableRow sx={{ background: "#3621a9" }}>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Flat No.</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Name Of Allotee</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Name Of Co-Allotee</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Type</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Floor</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Email</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Whatsapp No.</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Rate</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Agreement Value</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Booking Date</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Parking</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Home Loan Applicability</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Bank Name</TableCell>
-             {/* Bank Name Column */}
-     
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Banker Name</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Mobile No</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Loan Acc No</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Loan Amount</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Sanction Letter</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Loan Cert</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Booking Cancellation Reason</TableCell>
-              <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Booking Confirmation Mail</TableCell>
-            </TableRow>
-          </TableHead>
+          
+
+
+
+
+<TableHead>
+  <TableRow sx={{ background: "#3621a9" }}>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Flat No.</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Name Of Allotee</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Name Of Co-Allotee</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Type</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Floor</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Email ID</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>WHATSAPP MOBILE NO.</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Rate</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Agreement Value</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>DATE OF BOOKING</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Parking</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Home Loan Applicability</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Bank Name</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Banker Name</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Mobile No</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>LOAN ACCOUNT NO.</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Loan Amount</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Sanction Letter</TableCell> 
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>HOME LOAN SANCTION CERTIFICATE COLLECTED</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>BOOKING CONFIRMATION</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>BOOKING CANCELATION REASON</TableCell>
+    <TableCell className="fs-6" sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>BOOKING CONFIRMATION MAIL SENT</TableCell>
+  </TableRow>
+</TableHead>
+
           <TableBody>
             {displayLoans()}
           </TableBody>
         </Table>
       </TableContainer>
+
+
+
     </div>
   );
 };

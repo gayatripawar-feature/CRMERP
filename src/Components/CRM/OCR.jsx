@@ -8,8 +8,14 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, Button, MenuItem, Select, InputLabel, FormControl, Box, Collapse, TextField } from '@mui/material';
+import { Table, TableBody, TableCell, Modal,TableContainer, TableHead, TableRow, TablePagination, Paper, Button, MenuItem,IconButton, Select, InputLabel, FormControl, Box, Collapse, TextField } from '@mui/material';
 import { FaEye } from 'react-icons/fa'; // Ensure you have the FaEye icon imported if you're using it
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import InputAdornment from "@mui/material/InputAdornment";
+
+
+
 
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
@@ -17,7 +23,17 @@ const fetchLoansData = async () => {
 };
 
 const OCR = () => {
-  const [loans, setLoans] = useState([]);
+  
+  const [loans, setLoans] = useState([
+    {
+      flatNo: '',
+      cashWithAV: '',
+    },
+    {
+      flatNo: '',
+      cashWithAV: '',
+    },
+  ]);
   const [filteredLoans, setFilteredLoans] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -37,6 +53,15 @@ const OCR = () => {
   const [isCollapsed, setIsCollapsed] = useState(false); // State for collapse toggle
   const [filterType, setFilterType] = useState(''); // For the filter selection
   const [filterValue, setFilterValue] = useState(''); // For the selected filter value
+
+  const [editingFlatNo, setEditingFlatNo] = useState(null); 
+  const [editingHistoryCashWithAV, setEditingHistoryCashWithAV] = useState('');
+
+  const [historyCashValues, setHistoryCashValues] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(null); // Add this in your state initialization
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     loadLoansData();
@@ -112,6 +137,66 @@ const OCR = () => {
     setCurrentPage(1); // Reset to first page whenever rows per page is changed
   };
 
+
+  // const handleEditClick = (flatNo, historyCashWithAV) => {
+  //   setEditingFlatNo(flatNo); // Start editing the selected flat
+  //   setEditingHistoryCashWithAV(historyCashWithAV); // Set the value to be edited
+  // };
+
+  // Handle change in History Cash With AV value
+  const handleHistoryCashWithAVChange = (flatNo, value) => {
+    setLoans((prevLoans) =>
+      prevLoans.map((loan) =>
+        loan.flatNo === flatNo ? { ...loan, historyCashWithAV: value } : loan
+      )
+    );
+    setEditingFlatNo(null); // Stop editing after change
+  };
+
+
+  const handleAddClick = () => {
+    setIsEditing(false);
+    setEditingHistoryCashWithAV("");
+    setModalOpen(true);
+  };
+
+ // Function to open the modal for editing
+const handleEditValue = (index) => {
+  setSelectedIndex(index); // Correctly setting selected index
+  setEditingHistoryCashWithAV(historyCashValues[index]); // Set the value of the selected index
+  setIsEditing(true); // Indicate that we are editing
+  setModalOpen(true); // Open the modal
+};
+
+
+// Function to save or update the value
+const handleSaveOrUpdate = () => {
+  if (isEditing) {
+    const updatedValues = [...historyCashValues];
+    updatedValues[selectedIndex] = editingHistoryCashWithAV; // Update the value at selected index
+    setHistoryCashValues(updatedValues);
+  } else {
+    // Add new value to the array (if it's not in editing mode)
+    setHistoryCashValues([...historyCashValues, editingHistoryCashWithAV]);
+  }
+
+  setModalOpen(false); // Close modal after saving
+  setIsEditing(false); // Reset editing mode
+};
+
+
+
+  const handleCashWithAVChange = (flatNo, value) => {
+    // Logic to update the state with the new value for the specific loan
+    setLoans((prevLoans) =>
+      prevLoans.map((loan) =>
+        loan.flatNo === flatNo ? { ...loan, cashWithAV: value } : loan
+      )
+    );
+  };
+
+  
+
   const displayLoans = () => {
     const start = (currentPage - 1) * rowsPerPage;
     const end = Math.min(start + rowsPerPage, filteredLoans.length);
@@ -141,11 +226,29 @@ const OCR = () => {
             <option value="Non Sanction">Non Sanction</option>
           </select>
         </TableCell>
+
+
         <TableCell>{loan.ocrAmount}</TableCell>
         <TableCell>{loan.ocrReceivedAmount}</TableCell>
         <TableCell>{loan.ocrBalance}</TableCell>
         <TableCell>{loan.online}</TableCell>
         <TableCell>{loan.cashWithAV}</TableCell>
+        {/* <TableCell>
+  <input
+    type="number"           
+    value={loan.cashWithAV} 
+    onChange={(e) => handleCashWithAVChange(loan.flatNo, e.target.value)} 
+    style={{
+      padding: '8px',               
+      backgroundColor: 'white',     
+      border: '1px solid black',    
+      borderRadius: '4px',          
+      fontSize: '14px',            
+      width: '100%'                
+    }}
+  />
+</TableCell> */}
+
         <TableCell>{loan.historyCashWithAV}</TableCell>
         <TableCell>{loan.balanceCashWithAV}</TableCell>
         <TableCell>{loan.cashWithoutAV}</TableCell>
@@ -297,54 +400,184 @@ const OCR = () => {
 
 
 
-      {/* Table Section */}
-      <TableContainer component={Paper}  sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
-        <Table style={{ tableLayout: 'auto', width: '100%' }}>
-          <TableHead>
-            {/* <TableRow sx={{ bgcolor: "primary.main" }}> */}
-                  {/* <TableRow sx={{ background: "linear-gradient(180deg, #3621a9 0%,rgb(139, 115, 243) 100%)" }}> */}
-                   <TableRow sx={{background:"#3621a9"}}>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Flat No.</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Name Of Allotee</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Name Of Co-Allotee</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Type</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Floor</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Email</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Whatsapp No.</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Rate</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Agreement Value</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Booking Date</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Parking</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Parking No</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Loan Status</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>OCR Amount</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>OCR Received</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>OCR Balance</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Online</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Cash With AV</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>History Cash With AV</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Balance Cash With AV</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Cash Without AV</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>History Cash Without AV</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Balance Cash Without AV</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Received As Per Stage</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Stamp Duty Total</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>Stamp Duty Received</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Stamp Duty Balance</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Reg Total</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Reg Received</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Reg Balance</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>GST Total</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>GST Received</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Balance GST</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>Legal Charges Received</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{displayLoans()}</TableBody>
-        </Table>
-      </TableContainer>
-
      
+    
+
+
+<TableContainer component={Paper} sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
+      <Table style={{ tableLayout: 'auto', width: '100%' }}>
+        <TableHead>
+          <TableRow sx={{ background: "#3621a9" }}>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Flat No.</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Name Of Allotee</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Name Of Co-Allotee</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Type</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Floor</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Email</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Whatsapp No.</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Rate</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Agreement Value</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Booking Date</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Parking</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Parking No</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Loan Status</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>OCR Amount</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>OCR Received</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>OCR Balance</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Online</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Cash With AV</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>History Cash With AV</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Balance Cash With AV</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Cash Without AV</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>History Cash Without AV</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Balance Cash Without AV</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Received As Per Stage</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Stamp Duty Total</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Stamp Duty Received</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Stamp Duty Balance</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Reg Total</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Reg Received</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Reg Balance</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>GST Total</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>GST Received</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Balance GST</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Legal Charges Received</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {loans.map((loan) => (
+            <TableRow key={loan.flatNo}>
+              <TableCell>{loan.flatNo}</TableCell>
+              <TableCell>John Doe</TableCell>
+              <TableCell>Jane Doe</TableCell>
+              <TableCell>3BHK</TableCell>
+              <TableCell>2nd Floor</TableCell>
+              <TableCell>johndoe@example.com</TableCell>
+              <TableCell>+91 9876543210</TableCell>
+              <TableCell>₹5000</TableCell>
+              <TableCell>₹50,00,000</TableCell>
+              <TableCell>2025-03-01</TableCell>
+              <TableCell>Yes</TableCell>
+              <TableCell>101</TableCell>
+              <TableCell>
+                <select
+                  style={{
+                    padding: '8px',
+                    backgroundColor: 'white',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                  }}
+                >
+                  <option value="">{'Select Status'}</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                  <option value="Non Sanction">Non Sanction</option>
+                </select>
+              </TableCell>
+              <TableCell>₹30,000</TableCell>
+              <TableCell>₹25,000</TableCell>
+              <TableCell>₹5,000</TableCell>
+              <TableCell>₹1,00,000</TableCell>
+              <TableCell>
+                <input
+                  type="number"
+                  value={loan.cashWithAV}
+                  onChange={(e) => handleCashWithAVChange(loan.flatNo, e.target.value)}
+                  style={{
+                    padding: '8px',
+                    backgroundColor: 'white',
+                    border: '1px solid black',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                    width: '100%',
+                  }}
+                />
+              </TableCell>
+             
+
+
+              <TableCell>
+  <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+    
+    <IconButton onClick={handleAddClick} style={{ marginBottom: "8px" }}>
+      <AddIcon />
+    </IconButton>
+    
+    {/* Show values in TextFields with Edit Icon */}
+    {historyCashValues.map((value, index) => (
+      <TextField
+        key={index}
+        type="number"
+        value={value} // Display value only
+        disabled // Make the TextField readonly (cannot edit directly)
+        style={{
+          marginBottom: "4px",
+          backgroundColor: "white",
+          border: "1px solid black",
+          borderRadius: "4px",
+          fontSize: "14px",
+          width: "100%",
+          padding: "4px",  // Reduced padding here
+          // padding: "2px 6px",  // Reduced padding for a smaller size
+          // height: "30px",
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={() => handleEditValue(index)}> 
+                <EditIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+    ))}
+  </div>
+
+  {/* Modal for adding/editing values */}
+  <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+    <Box
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: 300,
+        bgcolor: "white",
+        boxShadow: 24,
+        p: 3,
+        borderRadius: 2,
+      }}
+    >
+      <h2>{isEditing ? "Edit Amount" : "Add Amount"}</h2>
+      <TextField
+        fullWidth
+        type="number"
+        value={editingHistoryCashWithAV} // Display value for editing
+        onChange={(e) => setEditingHistoryCashWithAV(e.target.value)}
+        sx={{ mt: 2, padding: "4px" }}  // Reduced padding here as well
+      />
+      <div className="flex justify-end gap-2 mt-4">
+        <Button onClick={() => setModalOpen(false)} variant="outlined">
+          Cancel
+        </Button>
+        <Button onClick={handleSaveOrUpdate} variant="contained">
+          {isEditing ? "Update" : "Save"}
+        </Button>
+      </div>
+    </Box>
+  </Modal>
+</TableCell>
+
+
+
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+
 
       <div className="d-flex justify-content-between align-items-center">
               <Button style={{backgroundColor:"#800080"}} className="text-white mt-3" onClick={handlePagination} disabled={currentPage === 1}>Previous</Button>
