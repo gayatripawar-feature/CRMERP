@@ -8,12 +8,16 @@ import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, Select, InputLabel, FormControl, TextField, Modal, Box } from '@mui/material';
 import { Grid } from '@mui/material';
 // import { Modal, Container, Row, Col } from 'react-bootstrap';
-
-
+import dayjs from 'dayjs';
+import EditIcon from "@mui/icons-material/Edit";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { ToastContainer } from 'react-toastify';
 import { toast } from "react-toastify";
 import { jsPDF } from "jspdf";
-
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
   return response.json();
@@ -34,6 +38,53 @@ const getFilterOptions = (type) => {
   }
 };
 
+
+
+
+const currentData = [
+  {
+    flatNo: "101",
+    nameOfAllotee: "John Doe",
+    nameOfCoAllotee: "Jane Doe",
+    type: "2 BHK",
+    floor: "1st Floor",
+    emailId: "johndoe@example.com",
+    whatsappMobileNo: "+1234567890",
+    rate: "₹50,000",
+    agreementValue: "₹5,00,000",
+    dateOfBooking: "01/01/2023",
+    parking: "Yes",
+    agreementDraftGeneration: "Generated",
+    agreementStatus: "",
+    checklistBeforeAgreement: "",
+    addressOfAgreement: "123 Street, City, Country",
+    agreementDate: "", // Add this field for the date
+    time: "10:00:00",
+  },
+  {
+    flatNo: "102",
+    nameOfAllotee: "Alice Smith",
+    nameOfCoAllotee: "Bob Smith",
+    type: "3 BHK",
+    floor: "2nd Floor",
+    emailId: "alicesmith@example.com",
+    whatsappMobileNo: "+1987654321",
+    rate: "₹60,000",
+    agreementValue: "₹6,00,000",
+    dateOfBooking: "05/02/2023",
+    parking: "No",
+    agreementDraftGeneration: "Not Generated",
+    agreementStatus: "",
+    checklistBeforeAgreement: "",
+    addressOfAgreement: "456 Avenue, City, Country",
+    agreementDate: "", // Add this field for the date
+    time: "12:00:00",
+  },
+  // Add more rows as needed...
+];
+
+
+
 const Agreement = () => {
   const [loans, setLoans] = useState([]);
   const [filteredLoans, setFilteredLoans] = useState([]);
@@ -47,6 +98,10 @@ const Agreement = () => {
   // State for Modal
   const [openModal, setOpenModal] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
+
+  const [open, setOpen] = useState(false);
+  const [updatedChecklist, setUpdatedChecklist] = useState(loan.checklistBeforeAgreement || "");
+
 
 
   useEffect(() => {
@@ -117,11 +172,20 @@ const Agreement = () => {
     }
   };
   
+  const handleTimeChange = (newTime, index) => {
+    console.log("Selected Time:", newTime.format("HH:mm:ss")); // Handle update logic here
+  };
   
-  
-  
+  const handleDateChange = (newValue, index) => {
+    console.log("Selected Date:", newValue.format("YYYY-MM-DD")); // Handle update logic here
+  };
 
-
+  const handleStatusChange = (event, index) => {
+    const newStatus = event.target.value;
+    console.log("Selected Status:", newStatus);
+    // Handle update logic here
+  };
+  
 
   const filterLoans = () => {
     const filtered = loans.filter(loan => {
@@ -160,6 +224,10 @@ const Agreement = () => {
  
   handleCloseModal();
 };
+
+
+
+
 
 const generatePDF = () => {
  
@@ -211,6 +279,23 @@ const generatePDF = () => {
 
 
 
+  // Open & close modal
+  // const handleOpen = () => setOpen(true);
+  const handleOpen = (index) => {
+    // Set the current loan index and open the modal
+    setSelectedIndex(index); // Store the index of the current loan
+    setUpdatedChecklist(currentData[index].checklistBeforeAgreement); // Get the checklist data for the selected loan
+    setOpen(true); // Open the modal
+  };
+  
+  const handleClose = () => setOpen(false);
+
+  // Handle save action
+  const handleSave = () => {
+    handleChecklistUpdate(index, updatedChecklist); // Update parent state
+    handleClose();
+  };
+
 
 
   const resetFilters = () => {
@@ -234,7 +319,7 @@ const generatePDF = () => {
     <div className="main-content">
           {!openModal ? (
       <>
-      <h6>Sales Module / Agreement Management</h6>
+      <h6>CRM Module / Agreement Management</h6>
 
       <div className="d-flex align-items-center gap-3 my-3 pt-4 pb-3">
         {/* Button Section in One Row */}
@@ -313,15 +398,14 @@ const generatePDF = () => {
         </FormControl>
       </div>
 
-      <TableContainer component={Paper} className="mt-4" sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
+      {/* <TableContainer component={Paper} className="mt-4" sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
         <Table>
           <TableHead>
          
  
          
 
-      {/* <TableRow sx={{ background: "linear-gradient(180deg, #3621a9 0%,rgb(139, 115, 243) 100%)" }}> */}
-             <TableRow sx={{background:"#3621a9"}}>
+            <TableRow sx={{background:"#3621a9"}}>
               <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Flat No.</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Name Of Allotee</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Allotee Date Of Birth</TableCell>
@@ -354,7 +438,9 @@ const generatePDF = () => {
               <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Completion Of Internal Plaster</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Completion Of Lifts</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Possession</TableCell>
-            </TableRow>
+            </TableRow> 
+
+
           </TableHead>
           <TableBody>
             {currentRows.map((loan, index) => (
@@ -370,7 +456,162 @@ const generatePDF = () => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
+
+<TableContainer component={Paper} className="mt-4" sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
+  <Table>
+    <TableHead>
+      <TableRow sx={{ background: "#3621a9" }}>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Flat No.</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>Name Of Allotee</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>NAME OF CO-ALLOTEE</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>TYPE</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>FLOOR</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>EMAIL ID</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>WHATSAPP MOBILE NO.</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>RATE</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>AGREEMENT VALUE</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>DATE OF BOOKING</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>PARKING</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>AGGREMENT DRAFT GENERATION</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>AGREEMENT STATUS</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>CHECKLIST BEFORE AGREEMENT</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>ADDRESS OF AGREEMENT</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>AGREEMENT DATE</TableCell>
+        <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>TIME(00:00:00)</TableCell>
+      </TableRow>
+    </TableHead>
+    {/* <TableBody>
+      {currentRows.map((loan, index) => (
+        <TableRow key={index}>
+          <TableCell>{loan.flatNo}</TableCell>
+          <TableCell>{loan.nameOfAllotee}</TableCell>
+          <TableCell>{loan.nameOfCoAllotee}</TableCell>
+          <TableCell>{loan.type}</TableCell>
+          <TableCell>{loan.floor}</TableCell>
+          <TableCell>{loan.emailId}</TableCell>
+          <TableCell>{loan.whatsappMobileNo}</TableCell>
+          <TableCell>{loan.rate}</TableCell>
+          <TableCell>{loan.agreementValue}</TableCell>
+          <TableCell>{loan.dateOfBooking}</TableCell>
+          <TableCell>{loan.parking}</TableCell>
+          <TableCell>{loan.agreementDraftGeneration}</TableCell>
+          <TableCell>{loan.agreementStatus}</TableCell>
+          <TableCell>{loan.checklistBeforeAgreement}</TableCell>
+          <TableCell>{loan.addressOfAgreement}</TableCell>
+          
+        
+          <TableCell>
+            {loan.agreementDate
+              ? new Date(loan.agreementDate).toLocaleDateString("en-GB") // Formats as DD/MM/YYYY
+              : "-"}
+          </TableCell>
+
+          <TableCell>{loan.time}</TableCell>
+        </TableRow>
+      ))}
+    </TableBody> */}
+
+
+<TableBody>
+  {currentData.map((loan, index) => {
+    console.log("Loan Data:", loan); // Logs each row's data
+    return (
+      <TableRow key={index}>
+        <TableCell>{loan.flatNo}</TableCell>
+        <TableCell>{loan.nameOfAllotee}</TableCell>
+        <TableCell>{loan.nameOfCoAllotee}</TableCell>
+        <TableCell>{loan.type}</TableCell>
+        <TableCell>{loan.floor}</TableCell>
+        <TableCell>{loan.emailId}</TableCell>
+        <TableCell>{loan.whatsappMobileNo}</TableCell>
+        <TableCell>{loan.rate}</TableCell>
+        <TableCell>{loan.agreementValue}</TableCell>
+        <TableCell>{loan.dateOfBooking}</TableCell>
+        <TableCell>{loan.parking}</TableCell>
+        <TableCell>{loan.agreementDraftGeneration}</TableCell>
+        {/* <TableCell>{loan.agreementStatus}</TableCell> */}
+        <TableCell>
+  <FormControl fullWidth size="small">
+  <Select
+  value={loan.agreementStatus || ""}
+  onChange={(event) => handleStatusChange(event, index)}
+  displayEmpty
+  renderValue={(selected) => (selected ? selected : "Select Status")} // Ensure placeholder shows up
+  variant="outlined"
+>
+  <MenuItem disabled value="">
+    Select Status
+  </MenuItem>
+  <MenuItem value="Yes">Yes</MenuItem>
+  <MenuItem value="No">No</MenuItem>
+</Select>
+
+  </FormControl>
+</TableCell>
+        {/* <TableCell>{loan.checklistBeforeAgreement}</TableCell> */}
+        <TableCell>
+  {loan.checklistBeforeAgreement}
+  <IconButton onClick={() => handleOpen(index)} size="small">
+    <EditIcon />
+  </IconButton>
+</TableCell>
+
+
+      
+      {/* <Modal open={open} onClose={handleClose}>
+        <Box sx={{ width: 400, p: 3, bgcolor: "white", mx: "auto", mt: 10, borderRadius: 2 }}>
+          <h3>Edit Checklist</h3>
+          <TextField
+            fullWidth
+            size="small"
+            value={updatedChecklist}
+            onChange={(e) => setUpdatedChecklist(e.target.value)}
+          />
+          <Box mt={2} display="flex" justifyContent="flex-end">
+            <Button onClick={handleClose} sx={{ mr: 2 }}>
+              Cancel
+            </Button>
+            <Button variant="contained" onClick={handleSave}>
+              Save
+            </Button>
+          </Box>
+        </Box>
+      </Modal> */}
+        <TableCell>{loan.addressOfAgreement}</TableCell>
+       
+<TableCell>
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <DatePicker
+      value={loan.agreementDate ? dayjs(loan.agreementDate) : null}
+      onChange={(newValue) => handleDateChange(newValue, index)}
+      format="DD/MM/YYYY" // Set the format as needed
+      slotProps={{ textField: { variant: "outlined", size: "small" } }} // Makes it look like an input field
+    />
+  </LocalizationProvider>
+</TableCell>
+
+
+        {/* <TableCell>{loan.time}</TableCell> */}
+        <TableCell>
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <TimePicker
+      label="Select Time"
+      value={loan.time ? dayjs(loan.time, "HH:mm:ss") : null} // Parse existing time
+      onChange={(newTime) => handleTimeChange(newTime, index)}
+      ampm={false} // Uses 24-hour format, set to `true` for AM/PM format
+      slotProps={{ textField: { variant: "outlined", size: "small" } }} // Styled input
+    />
+  </LocalizationProvider>
+</TableCell>
+      </TableRow>
+    );
+  })}
+</TableBody>
+
+
+  </Table>
+</TableContainer>
 
       
       </>
@@ -380,8 +621,9 @@ const generatePDF = () => {
 
 
 
+
         <div
-  className="modal"
+  className="modal "
   style={{
     display: openModal ? "block" : "none",
     position: "fixed",
@@ -391,57 +633,69 @@ const generatePDF = () => {
     height: "100%",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     zIndex: 9999,
+    
   }}
 >
-  <div
-    className="modal-dialog modal-lg"
+ 
+   <div
+    className="modal-dialog pt-5"
     style={{
       position: "relative",
       margin: "auto",
       top: "50%",
       transform: "translateY(-50%)",
+      width: "90%",
+      maxWidth: "1200px", 
     }}
   >
-    <div
+    
+     <div
       className="modal-content p-3"
       style={{
         boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
         borderRadius: "10px",
+        width: "100%", 
       }}
     >
-      {/* Modal Header */}
       <div
-        className="modal-header"
+        className="modal-header "
         style={{
           backgroundColor: "#007bff",
           color: "#fff",
           borderTopLeftRadius: "10px",
           borderTopRightRadius: "10px",
+         
+          
         }}
       >
-        <h5 className="modal-title">Agreement Draft Generation</h5>
+        <h5 className="modal-title " >Agreement Draft Generation</h5>
+      
+ 
         <button
           type="button"
-          className="btn-close"
+          className="btn-close "
           onClick={handleCloseModal}
         ></button>
       </div>
 
-      {/* Modal Body */}
+   
       <div className="modal-body">
         <div className="container">
-          {/* Form Section */}
+        
           <div
             className="p-3"
             style={{
               border: "1px solid #ddd",
               borderRadius: "8px",
               backgroundColor: "#f9f9f9",
+              overflowY: "auto",
+              maxHeight: "70vh", 
+              
             }}
           >
-            {/* First Row */}
-            <div className="row mb-3">
-            <div className="col-md-4">
+          
+            <div className="row mb-4">
+            <div className="col-md-3">
     <label className="form-label">Date</label>
     <input
       type="date"
@@ -450,17 +704,9 @@ const generatePDF = () => {
       onChange={(e) => handleInputChange("date", e.target.value)} 
     />
   </div>
-  {/* <div className="col-md-4">
-    <label className="form-label">Flat No</label> 
-    <input
-      type="number"
-      className="form-control"
-      value={selectedLoan?.flatNo || ""}
-      onChange={(e) => handleInputChange("flatNo", e.target.value)} 
-    />
-  </div> */}
+  
 
-<div className="col-md-4">
+<div className="col-md-3">
       <label className="form-label">Flat No</label>
       <input
         type="number"
@@ -471,9 +717,9 @@ const generatePDF = () => {
     </div>
 
 
-             
-              <div className="col-md-4">
-  <label className="form-label">Allotee Name</label>
+{/*              
+              <div className="col-md-3">
+  <label className="form-label">Name Of Allotee</label>
   <input
     type="text"
     className="form-control"
@@ -482,170 +728,440 @@ const generatePDF = () => {
     pattern="[A-Za-z\s]+"  
     title="Only alphabets and spaces are allowed"
   />
+</div> */}
+
+<div className="col-md-3">
+  <label className="form-label">Name Of Allotee</label>
+  <div className="d-flex">
+    <select
+      className="form-control me-2"
+      style={{ width: "25%" }}
+      value={selectedLoan?.titleAllotee || ""}
+      onChange={(e) => handleInputChange("titleAllotee", e.target.value)}
+    >
+      <option value="">Select</option>
+      <option value="Mr.">Mr.</option>
+      <option value="Mrs.">Mrs.</option>
+      <option value="Miss">Miss</option>
+    </select>
+
+    <input
+      type="text"
+      className="form-control"
+      style={{ width: "75%" }}
+      value={selectedLoan?.nameOfAllotee || ""}
+      onChange={(e) => handleInputChange("nameOfAllotee", e.target.value)}
+      pattern="[A-Za-z\s]+"
+      title="Only alphabets and spaces are allowed"
+      placeholder="Enter Name"
+    />
+  </div>
 </div>
+
 
             </div>
 
-            {/* Second Row */}
-            <div className="row mb-3">
-  <div className="col-md-4">
-    <label className="form-label">Allotee DOB</label>
+          
+          
+            <div className="row mb-4">
+  <div className="col-md-3">
+    <label className="form-label">Allotee Date Of Birth</label>
     <input
       type="date"
       className="form-control"
       value={selectedLoan?.alloteeDOB || ""}
-      onChange={(e) => handleInputChange("alloteeDOB", e.target.value)} // Handle the input change
+      onChange={(e) => handleInputChange("alloteeDOB", e.target.value)}
     />
   </div>
-  <div className="col-md-4">
+
+  <div className="col-md-3">
     <label className="form-label">Allotee Age</label>
     <input
       type="number"
       className="form-control"
       value={selectedLoan?.alloteeAge || ""}
-      onChange={(e) => handleInputChange("alloteeAge", e.target.value)} // Handle the input change
+      onChange={(e) => handleInputChange("alloteeAge", e.target.value)}
     />
   </div>
-  <div className="col-md-4">
+
+  <div className="col-md-3">
     <label className="form-label">A1 Occupation</label>
     <input
       type="text"
       className="form-control"
       value={selectedLoan?.a1Occupation || ""}
-      onChange={(e) => handleInputChange("a1Occupation", e.target.value)} // Handle the input change
+      onChange={(e) => handleInputChange("a1Occupation", e.target.value)}
     />
   </div>
 
+  <div className="col-md-3 mb-4">
+    <label className="form-label">A1-Pan No.</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.a1PanNo || ""}
+      onChange={(e) => handleInputChange("a1PanNo", e.target.value)}
+      pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+      title="Enter a valid PAN number (e.g., ABCDE1234F)"
+    />
+  </div>
 
-            </div>
+  <div className="col-md-3">
+    <label className="form-label">A1- Aadhar No.</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.a1AadharNo || ""}
+      onChange={(e) => handleInputChange("a1AadharNo", e.target.value)}
+      pattern="\d{12}"
+      title="Enter a valid 12-digit Aadhar number"
+    />
+  </div>
 
-            <h6 className="mt-3">Co-Allotee Details</h6>
-            <div className="row mb-3">
-              <div className="col-md-2">
-                <label className="form-label">Title</label>
-                <select className="form-select" readOnly>
-                  <option>Mr.</option>
-                  <option>Mrs.</option>
-                  <option>Miss</option>
-                </select>
-              </div>
-              <div className="col-md-10">
-                <label className="form-label">Co-Allotee Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={selectedLoan?.coAlloteeName || ""}
-                  onChange={(e) => handleInputChange("coAlloteeName", e.target.value)} 
-                  pattern="[A-Za-z\s]+"  
-    title="Only alphabets and spaces are allowed"
-                />
-              </div>
-            </div>
+  {/* <div className="col-md-3">
+    <label className="form-label">Name Of Co-Allotee</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.nameOfCoAllotee || ""}
+      onChange={(e) => handleInputChange("nameOfCoAllotee", e.target.value)}
+      pattern="[A-Za-z\s]+"
+      title="Only alphabets and spaces are allowed"
+    />
+  </div> */}
 
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label className="form-label">Address</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={selectedLoan?.address || ""}
-                  onChange={(e) => handleInputChange("address", e.target.value)} 
-                />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">Contact</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={selectedLoan?.contact || ""}
-                  onChange={(e) => handleInputChange("contact", e.target.value)} 
-                />
-              </div>
-            </div>
 
-            <h6 className="mt-3">Payment Schedule</h6>
-            <div className="row mb-3">
-              <div className="col-md-4">
-                <label className="form-label">Booking</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={selectedLoan?.agreementValueInWords || ""}
-                  onChange={(e) => handleInputChange("agreementValueInWords", e.target.value)} 
-                />
-              </div>
-              <div className="col-md-4">
-  <label className="form-label">Execution Of Agreement</label>
-  <input
-    type="text"
-    className="form-control"
-    value={selectedLoan?.executionAgreement || ""} 
-    onChange={(e) => handleInputChange("executionAgreement", e.target.value)} 
-  />
-</div>
-<div className="col-md-4">
-  <label className="form-label">Completion Of Plinth</label>
-  <input
-    type="text"
-    className="form-control"
-    value={selectedLoan?.completionPlinth || ""} 
-    onChange={(e) => handleInputChange("completionPlinth", e.target.value)} 
-  />
+<div className="col-md-6">
+  <label className="form-label">Name Of Co-Allotee</label>
+  <div className="d-flex">
+    <select
+      className="form-control me-2"
+      style={{ width: "25%" }}
+      value={selectedLoan?.title || ""}
+      onChange={(e) => handleInputChange("title", e.target.value)}
+    >
+      <option value="">Select</option>
+      <option value="Mr.">Mr.</option>
+      <option value="Mrs.">Mrs.</option>
+      <option value="Miss">Miss</option>
+    </select>
+
+    <input
+      type="text"
+      className="form-control"
+      style={{ width: "75%" }}
+      value={selectedLoan?.nameOfCoAllotee || ""}
+      onChange={(e) => handleInputChange("nameOfCoAllotee", e.target.value)}
+      pattern="[A-Za-z\s]+"
+      title="Only alphabets and spaces are allowed"
+      placeholder="Enter Name"
+    />
+  </div>
 </div>
 
 
-            </div>
+
+  <div className="col-md-3 mb-4">
+    <label className="form-label">Co-Allotee Date Of Birth</label>
+    <input
+      type="date"
+      className="form-control"
+      value={selectedLoan?.coAlloteeDOB || ""}
+      onChange={(e) => handleInputChange("coAlloteeDOB", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3">
+    <label className="form-label">Co-Allotee Age</label>
+    <input
+      type="number"
+      className="form-control"
+      value={selectedLoan?.coAlloteeAge || ""}
+      onChange={(e) => handleInputChange("coAlloteeAge", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3">
+    <label className="form-label">Co-Occupation</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.coOccupation || ""}
+      onChange={(e) => handleInputChange("coOccupation", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3 mb-4">
+    <label className="form-label">Co-Pan No</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.coPanNo || ""}
+      onChange={(e) => handleInputChange("coPanNo", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3">
+    <label className="form-label">Co-Aadhar No.</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.coAadharNo || ""}
+      onChange={(e) => handleInputChange("coAadharNo", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3">
+    <label className="form-label">Address</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.address || ""}
+      onChange={(e) => handleInputChange("address", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3 mb-4">
+    <label className="form-label">Contact</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.contact || ""}
+      onChange={(e) => handleInputChange("contact", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3">
+    <label className="form-label">Floor</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.floor || ""}
+      onChange={(e) => handleInputChange("floor", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3">
+    <label className="form-label">Total Agreement Value</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.totalAgreementValue || ""}
+      onChange={(e) => handleInputChange("totalAgreementValue", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3 mb-4">
+    <label className="form-label">Booking Amount</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.bookingAmount || ""}
+      onChange={(e) => handleInputChange("bookingAmount", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3">
+    <label className="form-label">Carpet Area</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.carpetArea || ""}
+      onChange={(e) => handleInputChange("carpetArea", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3">
+    <label className="form-label">Open Balcony Area</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.openBalconyArea || ""}
+      onChange={(e) => handleInputChange("openBalconyArea", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3">
+    <label className="form-label">Enclose Balcony Area</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.encloseBalconyArea || ""}
+      onChange={(e) => handleInputChange("encloseBalconyArea", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3">
+    <label className="form-label">Parking</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.parking || ""}
+      onChange={(e) => handleInputChange("parking", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3 mt-4">
+    <label className="form-label">Booking Amount (In Words)</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.bookingAmountInWords || ""}
+      onChange={(e) => handleInputChange("bookingAmountInWords", e.target.value)}
+    />
+  </div>
+
+  <div className="col-md-3 mt-4">
+    <label className="form-label">Total Agreement Value (In Words)</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.totalAgreementValueInWords || ""}
+      onChange={(e) => handleInputChange("totalAgreementValueInWords", e.target.value)}
+    />
+  </div>
+</div>
+
+            <h5 className="mt-3 mt-3 mb-4">Payment Schedule</h5>
+<div className="row mb-3 mb-4">
+  <div className="col-md-3">
+    <label className="form-label">Booking</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.booking || ""}
+      onChange={(e) => handleInputChange("booking", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3 mb-4">
+    <label className="form-label">Execution Of Agreement</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.executionAgreement || ""}
+      onChange={(e) => handleInputChange("executionAgreement", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3">
+    <label className="form-label">Completion Of Plinth</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.completionPlinth || ""}
+      onChange={(e) => handleInputChange("completionPlinth", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3">
+    <label className="form-label">Completion Of 1st Slab</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.completion1stSlab || ""}
+      onChange={(e) => handleInputChange("completion1stSlab", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3 mb-4">
+    <label className="form-label">Completion Of 2nd Slab</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.completion2ndSlab || ""}
+      onChange={(e) => handleInputChange("completion2ndSlab", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3">
+    <label className="form-label">Completion Of 3rd Slab</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.completion3rdSlab || ""}
+      onChange={(e) => handleInputChange("completion3rdSlab", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3">
+    <label className="form-label">Completion Of 5th Slab</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.completion5thSlab || ""}
+      onChange={(e) => handleInputChange("completion5thSlab", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3">
+    <label className="form-label">Completion Of 7th Slab</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.completion7thSlab || ""}
+      onChange={(e) => handleInputChange("completion7thSlab", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3">
+    <label className="form-label">Completion Of 9th Slab</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.completion9thSlab || ""}
+      onChange={(e) => handleInputChange("completion9thSlab", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3">
+    <label className="form-label">Completion Of 10th Slab</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.completion10thSlab || ""}
+      onChange={(e) => handleInputChange("completion10thSlab", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3 mb-4">
+    <label className="form-label">Completion Of Walls</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.completionWalls || ""}
+      onChange={(e) => handleInputChange("completionWalls", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3">
+    <label className="form-label">Completion Of Internal Plaster</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.completionInternalPlaster || ""}
+      onChange={(e) =>
+        handleInputChange("completionInternalPlaster", e.target.value)
+      }
+    />
+  </div>
+  <div className="col-md-3">
+    <label className="form-label">Completion Of Lifts</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.completionLifts || ""}
+      onChange={(e) => handleInputChange("completionLifts", e.target.value)}
+    />
+  </div>
+  <div className="col-md-3">
+    <label className="form-label">Possession</label>
+    <input
+      type="text"
+      className="form-control"
+      value={selectedLoan?.possession || ""}
+      onChange={(e) => handleInputChange("possession", e.target.value)}
+    />
+  </div>
+</div>
+
+           
+
+            
           </div>
         </div>
       </div>
 
-      {/* Modal Footer */}
-      {/* <div
-        className="modal-footer"
-        style={{
-          borderTop: "1px solid #ddd",
-          borderBottomLeftRadius: "10px",
-          borderBottomRightRadius: "10px",
-        }}
-      >
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={handleCloseModal}
-        >
-          Close
-        </button>
-        <button type="button" className="btn btn-primary">
-          Generate PDF
-        </button>
-      </div> */}
-      {/* <ToastContainer />
-       <div
-      className="modal-footer"
-      style={{
-        borderTop: "1px solid #ddd",
-        borderBottomLeftRadius: "10px",
-        borderBottomRightRadius: "10px",
-      }}
-    >
-      <button
-        type="button"
-        className="btn btn-secondary"
-        onClick={handleCloseModal}
-      >
-        Close
-      </button>
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={generatePDF}
-      >
-        Generate PDF
-      </button>
-
-    </div>
     
-    </div> */}
     <ToastContainer />
 <div
   className="modal-footer"
@@ -674,6 +1190,8 @@ const generatePDF = () => {
 
   </div>
 </div>
+
+
 
       )}
 

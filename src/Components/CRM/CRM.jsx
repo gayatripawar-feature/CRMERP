@@ -7,11 +7,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, TextField ,Tooltip,IconButton} from '@mui/material';
-import { FaEye } from 'react-icons/fa'; 
+import { FaEye,FaEyeSlash } from 'react-icons/fa'; 
 import EditIcon from '@mui/icons-material/Edit';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EmailIcon from '@mui/icons-material/Email';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { MdDashboard } from 'react-icons/md';
 
 
 const fetchLoansData = async () => {
@@ -40,6 +41,13 @@ const CRM = () => {
   const [filterType, setFilterType] = useState(''); 
   const [filterValue, setFilterValue] = useState(''); 
 
+  
+    const [expanded, setExpanded] = useState(false); // For collapsing
+    const [editingIndex, setEditingIndex] = useState(null);
+    const [inputValue, setInputValue] = useState("");
+    const [isExpanded, setIsExpanded] = useState(true); 
+
+
   useEffect(() => {
     loadLoansData();
   }, []);
@@ -56,6 +64,10 @@ const CRM = () => {
 
   
 
+  const handleToggle = () => {
+    setIsExpanded((prev) => !prev);
+  };
+  
 
 
 
@@ -277,14 +289,17 @@ const displayLoans = () => {
     setIsCollapsed(prev => !prev);
   };
 
-
+  const handleOpenDocument = () => {
+    const documentUrl = "https://your-document-url.com"; // Replace with actual document URL
+    window.open(documentUrl, "_blank"); // Opens in a new tab
+  };
 
   
 const loansData = [
   {
     enquiryNo: "ENQ001",
     timestamp: "2025-03-18",
-    projectName: "Project A,Prohect b ",
+    projectName: " ",
     flatBookingDate: "2025-03-15",
     aloteeName: "John Doe",
     sourceName: "Source 1, suiopvhujghuuygbb",
@@ -303,25 +318,25 @@ const loansData = [
     coAloteePanNo: "XYZ9876",
     coAloteeAadharNo: "9876-5432-1098",
     coAloteeMobileEmail: "9876543213 / jane@email.com",
-    flatNo: "F-101",
-    type: "2BHK",
-    wing: "A",
-    soldRate: "5000",
-    carpetArea: "800",
+    flatNo: "",
+    type: "",
+    wing: "",
+    soldRate: "",
+    carpetArea: "",
     enclosedBalcony: "50",
     openBalcony: "30",
     terrace: "20",
     parking: "1",
     floor: "1st",
-    totalConsideration: "1000000",
-    bookingAmount: "50000",
-    stampDuty: "70000",
-    registrationFee: "10000",
-    gstAmount: "18000",
-    panCard: "Available",
-    aadharCard: "Available",
-    marriageCertificate: "Not Available",
-    passportPhoto: "Available",
+    totalConsideration: "",
+    bookingAmount: "",
+    stampDuty: "",
+    registrationFee: "",
+    gstAmount: "",
+    panCard: "",
+    aadharCard: "",
+    marriageCertificate: "",
+    passportPhoto: "",
     otherDocuments: "None",
     paymentMode: "Cheque",
     chequeNo: "CH12345",
@@ -329,6 +344,7 @@ const loansData = [
     bankName: "Bank ABC",
     bankDetails: "Branch XYZ",
   },
+  {},
   
 ];
 
@@ -338,7 +354,7 @@ const loansData = [
       <h6 className='mb-5'>Sales Module / CRM Display</h6>
 
   
-      <div className="d-flex align-items-center mb-3">
+      {/* <div className="d-flex align-items-center mb-3">
         <Button
           onClick={handleCollapseToggle}
           variant="outlined"
@@ -349,7 +365,56 @@ const loansData = [
         >
           {!isCollapsed && <span className="text-success">CRM Display</span>}
         </Button>
-      </div>
+      </div> */}
+
+<Button
+      variant="contained"
+      color="success"
+      sx={{
+        borderRadius: "20px",
+        transition: "width 0.3s ease, background 0.3s ease",
+        width: isExpanded ? "160px" : "50px",
+        minWidth: "50px",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        padding: "10px 15px",
+        marginTop: "20px",
+        marginBottom: "28px",
+        fontSize: "14px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textTransform: "none",
+        position: "relative",
+        // background: "linear-gradient(0deg, rgba(22,9,240,1) 0%, rgba(49,110,244,1) 100%)",
+        background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+        boxShadow:
+          "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+        "&:hover": {
+          // background: "linear-gradient(0deg, rgba(2,126,251,1) 0%, rgba(0,3,255,1) 100%)",
+          background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+        },
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(255, 255, 255, 0.2)",
+          transform: "scale(0.1)",
+          transition: "transform 0.3s ease",
+          zIndex: -1,
+        },
+        "&:hover::after": {
+          transform: "scale(1)",
+        },
+      }}
+      onClick={handleToggle}
+      startIcon={isExpanded ? <MdDashboard />: <MdDashboard />}
+    >
+      {isExpanded && "CRM Display"}
+    </Button>
 
       
       <div className="d-flex align-items-center justify-content-between mb-3">
@@ -470,6 +535,7 @@ const loansData = [
         <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>REGISTRATION FEE(1% OF AGREEMENT COST)</TableCell>
         <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>GST AMOUNT</TableCell>
         <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>PAN CARD(OF BOTH)</TableCell>
+       
         <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>AADHAR CARD(OF BOTH)</TableCell>
         <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>MARRIAGE CERTIFICATE (IF AVAILABLE)</TableCell>
         <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>PASSPORT SIZE PHOTO (OF BOTH)</TableCell>
@@ -716,18 +782,18 @@ const loansData = [
   ))}
 </TableBody> */}
 
-<TableBody>
+{/* <TableBody>
   {loansData.map((item, index) => (
     <TableRow key={index}>
-      {/* ACTION Column */}
+     
       <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {/* Icons for actions */}
+      
         <div
           style={{
             display: 'flex',
-            gap: '0px', // Optionally adjust space between icons
+            gap: '0px', 
             justifyContent: 'flex-start',
-            flexWrap: 'nowrap', // Prevent wrapping of icons
+            flexWrap: 'nowrap',
           }}
         >
           <Tooltip title="Edit" arrow>
@@ -757,7 +823,7 @@ const loansData = [
         </div>
       </TableCell>
 
-      {/* Other Data Columns */}
+     
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.timestamp}</TableCell>
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.enquiryNo}</TableCell>
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.projectName}</TableCell>
@@ -766,11 +832,223 @@ const loansData = [
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.sourceName}</TableCell>
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.dob}</TableCell>
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
-      {/* ... Other data cells ... */}
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+     
+      <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap", display: "flex", alignItems: "center" }}>
+  PAN CARD (OF BOTH)
+  <IconButton onClick={handleOpenDocument} sx={{ marginLeft: "8px", color: "white" }}>
+    <EditIcon />
+  </IconButton>
+</TableCell>
+
+    </TableRow>
+  ))}
+</TableBody> */}
+
+<TableBody>
+  {loansData.map((item, index) => (
+    <TableRow key={index}>
+      {/* ACTION Column */}
+      {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>
+        <div style={{ display: 'flex', gap: '4px', justifyContent: 'flex-start' }}>
+          <Tooltip title="Edit" arrow>
+            <IconButton sx={{ color: 'primary.main', fontSize: '18px' }} onClick={() => handleEdit(item)}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="WhatsApp" arrow>
+            <IconButton sx={{ color: 'success.main', fontSize: '18px' }} onClick={() => handleWhatsapp(item)}>
+              <WhatsAppIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Email" arrow>
+            <IconButton sx={{ color: 'primary.main', fontSize: '18px' }} onClick={() => handleEmail(item)}>
+              <EmailIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
+      </TableCell> */}
+<TableCell sx={{ whiteSpace: 'nowrap' }}>
+  <div style={{ display: 'flex', gap: '4px', justifyContent: 'flex-start' }}>
+    <Tooltip title="Edit" arrow>
+      <IconButton
+        sx={{
+          color: 'primary.main',
+          fontSize: '5px',
+          backgroundColor: 'rgba(0, 0, 0, 0.08)', // Light gray background for Edit
+          borderRadius: '50%', // Makes the icon rounded
+          padding: '5px',
+          '&:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.12)', // Darker gray on hover
+          },
+        }}
+        onClick={() => handleEdit(item)}
+      >
+        <EditIcon />
+      </IconButton>
+    </Tooltip>
+    <Tooltip title="WhatsApp" arrow>
+      <IconButton
+        sx={{
+          color: 'white', // Icon color white for contrast
+          fontSize: '5px',
+          backgroundColor: '#25D366', // WhatsApp green background
+          borderRadius: '50%', // Makes the icon rounded
+          padding: '5px',
+          '&:hover': {
+            backgroundColor: '#128C7E', // Darker green for WhatsApp on hover
+          },
+        }}
+        onClick={() => handleWhatsapp(item)}
+      >
+        <WhatsAppIcon />
+      </IconButton>
+    </Tooltip>
+    <Tooltip title="Email" arrow>
+      <IconButton
+        sx={{
+          color: 'white', // Icon color white for contrast
+          fontSize: '5px',
+          backgroundColor: '#007BFF', // Blue background for Email
+          borderRadius: '50%', // Makes the icon rounded
+          '&:hover': {
+            backgroundColor: '#0056b3', // Darker blue for Email on hover
+          },
+        }}
+        onClick={() => handleEmail(item)}
+      >
+        <EmailIcon />
+      </IconButton>
+    </Tooltip>
+  </div>
+</TableCell>
+
+
+      {/* Map the correct data fields */}
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.timestamp}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.enquiryNo}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.projectName}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.bookingDate}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.aloteeName}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.sourceName}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.dob}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.occupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.panNo}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.aadharNo}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.mobileNo}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.altMobileNo}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.whatsappNo}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.email}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.address}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.coAloteeName}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.coAloteeDob}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.coAloteeOccupation}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.coAloteePan}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.coAloteeAadhar}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.coAloteeMobileEmail}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.flatNo}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.type}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.wing}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.soldRate}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.carpetArea}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.enclosedBalcony}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.openBalcony}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.terrace}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.parking}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.floor}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.totalConsideration}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.bookingAmount}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.stampDuty}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.registrationFee}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.gstAmount}</TableCell>
+      
+     
+
+
+<TableCell sx={{ whiteSpace: 'nowrap', textAlign: 'center' }}>
+  <IconButton
+    onClick={() => window.open(item.panCard, '_blank')}
+    sx={{ color: 'blue' }}
+    color="inherit"
+  >
+    <VisibilityIcon />
+  </IconButton>
+</TableCell>
+
+<TableCell sx={{ whiteSpace: 'nowrap', textAlign: 'center' }}>
+  <IconButton
+    onClick={() => window.open(item.panCard, '_blank')}
+    sx={{ color:  'blue'  }} 
+    color="inherit"
+  >
+    <VisibilityIcon />
+  </IconButton>
+</TableCell>
+
+
+
+<TableCell sx={{ whiteSpace: 'nowrap', textAlign: 'center' }}>
+  <IconButton
+    onClick={() => window.open(item.panCard, '_blank')}
+    sx={{ color: 'blue' }} 
+    color="inherit"
+  >
+    <VisibilityIcon />
+  </IconButton>
+</TableCell>
+
+        
+<TableCell sx={{ whiteSpace: 'nowrap', textAlign: 'center' }}>
+  <span>{item.passportPhoto}</span>
+  <IconButton sx={{ color: 'blue', marginLeft: '8px' }} onClick={() => window.open(item.panCard, '_blank')}>
+    <VisibilityIcon />
+  </IconButton>
+</TableCell>
+
+<TableCell sx={{ whiteSpace: 'nowrap', textAlign: 'center' }}>
+  <span>{item.anyOther}</span>
+  <IconButton sx={{ color: 'blue', marginLeft: '8px' }} onClick={() => window.open(item.panCard, '_blank')}>
+    <VisibilityIcon />
+  </IconButton>
+</TableCell>
+
+
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.bookingAmount}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.paymentMode}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.chequeTrnNo}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.chequeTrnDate}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.bankName}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{item.bankDetails}</TableCell>
     </TableRow>
   ))}
 </TableBody>
-
 
   </Table>
 </TableContainer>

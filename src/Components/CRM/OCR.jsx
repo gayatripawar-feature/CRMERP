@@ -426,7 +426,7 @@ const handleToggle = () => {
         },
       }}
       onClick={handleToggle}
-      startIcon={isExpanded ? <FaEyeSlash /> : <FaEye />}
+      startIcon={isExpanded ? <FaEyeSlash /> : <FaEyeSlash />}
     >
       {isExpanded && "OCR Collection"}
     </Button>
@@ -773,8 +773,110 @@ const handleToggle = () => {
         </Collapse>
       </div>
     </TableCell>
+<TableCell></TableCell>
+  
+<TableCell>
+  <input
+    type="number"
+    placeholder=""
+    style={{
+      padding: "8px",
+      backgroundColor: "white",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+      fontSize: "14px",
+      width: "100%", // Adjust width as needed
+    }}
+  />
+</TableCell>
 
 
+
+<TableCell>
+      <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+       
+        <IconButton onClick={handleAddClick} style={{ marginBottom: "8px" }}>
+          <AddIcon />
+        </IconButton>
+
+        {historyCashValues.map((value, index) => (
+          <TextField
+            key={index}
+            type="number"
+            value={value}
+            disabled
+            style={{
+              marginBottom: "1px",
+              backgroundColor: "white",
+              borderRadius: "4px",
+              fontSize: "14px",
+              width: "80%",
+              padding: "0px",
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => handleEditValue(index)}>
+                    <EditIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        ))}
+
+       
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <div style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <TextField
+              fullWidth
+              type="number"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              sx={{ width: "80%", fontSize: "14px", padding: "0px", height: "20px",marginBottom: "3px" }}
+              InputProps={{
+                sx: { height: "28px", fontSize: "12px", padding: "5px" }, 
+              }}
+            />
+            <div style={{ display: "flex", justifyContent: "flex-start", gap: "8px" }}>
+              <Button onClick={() => setExpanded(false)} variant="outlined" size="small">
+                Cancel
+              </Button>
+              <Button onClick={handleSave} variant="contained" size="small">
+                {editingIndex !== null ? "Update" : "Save"}
+              </Button>
+            </div>
+          </div>
+        </Collapse>
+      </div>
+    </TableCell>
+
+<TableCell></TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell><TableCell></TableCell>
+
+<TableCell></TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell>
+
+<TableCell>
+  <input
+    type="number"
+    placeholder=""
+    style={{
+      padding: "8px",
+      backgroundColor: "white",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+      fontSize: "14px",
+      width: "100%", // Adjust width as needed
+    }}
+  />
+</TableCell>
             </TableRow>
           ))}
         </TableBody>
