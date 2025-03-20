@@ -9,7 +9,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, Modal,TableContainer, TableHead, TableRow, TablePagination, Paper, Button, MenuItem,IconButton, Select, InputLabel, FormControl, Box, Collapse, TextField } from '@mui/material';
-import { FaEye } from 'react-icons/fa'; // Ensure you have the FaEye icon imported if you're using it
+// import { FaEye } from 'react-icons/fa'; 
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import InputAdornment from "@mui/material/InputAdornment";
@@ -23,7 +25,7 @@ const fetchLoansData = async () => {
 };
 
 const OCR = () => {
-  
+  const [isExpanded, setIsExpanded] = useState(true);
   const [loans, setLoans] = useState([
     {
       flatNo: '',
@@ -62,7 +64,13 @@ const OCR = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
+
+
+  const [expanded, setExpanded] = useState(false); // For collapsing
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [inputValue, setInputValue] = useState("");
   useEffect(() => {
     loadLoansData();
   }, []);
@@ -154,36 +162,63 @@ const OCR = () => {
   };
 
 
-  const handleAddClick = () => {
-    setIsEditing(false);
-    setEditingHistoryCashWithAV("");
-    setModalOpen(true);
-  };
+//   const handleAddClick = () => {
+//     setIsEditing(false);
+//     setEditingHistoryCashWithAV("");
+//     setModalOpen(true);
+//   };
 
- // Function to open the modal for editing
+
+// const handleEditValue = (index) => {
+//   setSelectedIndex(index); // Correctly setting selected index
+//   setEditingHistoryCashWithAV(historyCashValues[index]); // Set the value of the selected index
+//   setIsEditing(true); // Indicate that we are editing
+//   setModalOpen(true); // Open the modal
+// };
+
+
+
+// const handleSaveOrUpdate = () => {
+//   if (isEditing) {
+//     const updatedValues = [...historyCashValues];
+//     updatedValues[selectedIndex] = editingHistoryCashWithAV; // Update the value at selected index
+//     setHistoryCashValues(updatedValues);
+//   } else {
+//     // Add new value to the array (if it's not in editing mode)
+//     setHistoryCashValues([...historyCashValues, editingHistoryCashWithAV]);
+//   }
+
+//   setModalOpen(false); // Close modal after saving
+//   setIsEditing(false); // Reset editing mode
+// };
+
+
+const handleAddClick = () => {
+  setEditingIndex(null); // Adding a new entry
+  setInputValue("");
+  setExpanded(true);
+};
+
 const handleEditValue = (index) => {
-  setSelectedIndex(index); // Correctly setting selected index
-  setEditingHistoryCashWithAV(historyCashValues[index]); // Set the value of the selected index
-  setIsEditing(true); // Indicate that we are editing
-  setModalOpen(true); // Open the modal
+  setEditingIndex(index);
+  setInputValue(historyCashValues[index]);
+  setExpanded(true);
 };
 
-
-// Function to save or update the value
-const handleSaveOrUpdate = () => {
-  if (isEditing) {
-    const updatedValues = [...historyCashValues];
-    updatedValues[selectedIndex] = editingHistoryCashWithAV; // Update the value at selected index
-    setHistoryCashValues(updatedValues);
+const handleSave = () => {
+  if (editingIndex === null) {
+    setHistoryCashValues([...historyCashValues, parseFloat(inputValue)]);
   } else {
-    // Add new value to the array (if it's not in editing mode)
-    setHistoryCashValues([...historyCashValues, editingHistoryCashWithAV]);
+    const updatedValues = [...historyCashValues];
+    updatedValues[editingIndex] = parseFloat(inputValue);
+    setHistoryCashValues(updatedValues);
   }
-
-  setModalOpen(false); // Close modal after saving
-  setIsEditing(false); // Reset editing mode
+  setExpanded(false);
 };
 
+const handleToggle = () => {
+  setIsExpanded((prev) => !prev);
+};
 
 
   const handleCashWithAVChange = (flatNo, value) => {
@@ -283,8 +318,8 @@ const handleSaveOrUpdate = () => {
     <div className="main-content">
       <h6 className='pt-3'>Sales Module / OCR Collection Management</h6>
 
-      {/* CRM Display Button */}
-      <div className="d-flex align-items-center mb-3">
+
+      {/* <div className="d-flex align-items-center mb-3">
         <Button
           onClick={handleCollapseToggle}
           variant="outlined"
@@ -295,12 +330,108 @@ const handleSaveOrUpdate = () => {
         >
           {!isCollapsed && <span className="text-success">OCR Collection</span>}
         </Button>
-      </div>
+      </div> */}
 
-     
+
+{/* <Button
+      variant="contained"
+      color="success"
+      sx={{
+        borderRadius: "20px",
+        transition: "width 0.3s ease, background 0.3s ease",
+        width: isHovered ? "160px" : "50px",
+        minWidth: "50px",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        padding: "10px 15px",
+        marginTop:"20px",
+        marginBottom:"28px",
+        fontSize: "14px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textTransform: "none",
+        position: "relative",
+        background: "linear-gradient(0deg, rgba(22,9,240,1) 0%, rgba(49,110,244,1) 100%)",
+        boxShadow:
+          "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+        "&:hover": {
+          background: "linear-gradient(0deg, rgba(2,126,251,1) 0%, rgba(0,3,255,1) 100%)",
+        },
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(255, 255, 255, 0.2)",
+          transform: "scale(0.1)",
+          transition: "transform 0.3s ease",
+          zIndex: -1,
+        },
+        "&:hover::after": {
+          transform: "scale(1)",
+        },
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      startIcon={<FaEye />}
+    >
+      {isHovered && "OCR Collection"}
+    </Button> */}
 
          
-         
+<Button
+      variant="contained"
+      color="success"
+      sx={{
+        borderRadius: "20px",
+        transition: "width 0.3s ease, background 0.3s ease",
+        width: isExpanded ? "160px" : "50px",
+        minWidth: "50px",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        padding: "10px 15px",
+        marginTop: "20px",
+        marginBottom: "28px",
+        fontSize: "14px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textTransform: "none",
+        position: "relative",
+        // background: "linear-gradient(0deg, rgba(22,9,240,1) 0%, rgba(49,110,244,1) 100%)",
+        background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+        boxShadow:
+          "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+        "&:hover": {
+          // background: "linear-gradient(0deg, rgba(2,126,251,1) 0%, rgba(0,3,255,1) 100%)",
+          background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+        },
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(255, 255, 255, 0.2)",
+          transform: "scale(0.1)",
+          transition: "transform 0.3s ease",
+          zIndex: -1,
+        },
+        "&:hover::after": {
+          transform: "scale(1)",
+        },
+      }}
+      onClick={handleToggle}
+      startIcon={isExpanded ? <FaEyeSlash /> : <FaEye />}
+    >
+      {isExpanded && "OCR Collection"}
+    </Button>
+
+
          <div className="d-flex align-items-center justify-content-between mb-3">
            <div className="d-flex align-items-center gap-3">
              <label>Filter By:</label>
@@ -497,30 +628,29 @@ const handleSaveOrUpdate = () => {
              
 
 
-              <TableCell>
+              {/* <TableCell>
   <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
     
     <IconButton onClick={handleAddClick} style={{ marginBottom: "8px" }}>
       <AddIcon />
     </IconButton>
     
-    {/* Show values in TextFields with Edit Icon */}
+    
     {historyCashValues.map((value, index) => (
       <TextField
         key={index}
         type="number"
-        value={value} // Display value only
-        disabled // Make the TextField readonly (cannot edit directly)
+        value={value}
+        disabled 
         style={{
-          marginBottom: "4px",
+          marginBottom: "1px",
           backgroundColor: "white",
-          border: "1px solid black",
+         
           borderRadius: "4px",
           fontSize: "14px",
-          width: "100%",
-          padding: "4px",  // Reduced padding here
-          // padding: "2px 6px",  // Reduced padding for a smaller size
-          // height: "30px",
+          width: "80%",
+          padding:"0px",
+          
         }}
         InputProps={{
           endAdornment: (
@@ -535,7 +665,7 @@ const handleSaveOrUpdate = () => {
     ))}
   </div>
 
-  {/* Modal for adding/editing values */}
+  
   <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
     <Box
       sx={{
@@ -550,14 +680,27 @@ const handleSaveOrUpdate = () => {
         borderRadius: 2,
       }}
     >
-      <h2>{isEditing ? "Edit Amount" : "Add Amount"}</h2>
-      <TextField
+      <h2>{isEditing ? "Update Amount" : "Add Amount"}</h2>
+      {/* <TextField
         fullWidth
         type="number"
         value={editingHistoryCashWithAV} // Display value for editing
         onChange={(e) => setEditingHistoryCashWithAV(e.target.value)}
         sx={{ mt: 2, padding: "4px" }}  // Reduced padding here as well
-      />
+      /> 
+
+
+      <TextField
+  fullWidth
+  type="number"
+  value={editingHistoryCashWithAV}
+  onChange={(e) => setEditingHistoryCashWithAV(e.target.value)}
+  sx={{ mt: 2 }}
+  InputProps={{
+    sx: { height: "30px", fontSize: "14px", padding: "0px" }, // Adjust height and font size
+  }}
+/>
+
       <div className="flex justify-end gap-2 mt-4">
         <Button onClick={() => setModalOpen(false)} variant="outlined">
           Cancel
@@ -568,8 +711,68 @@ const handleSaveOrUpdate = () => {
       </div>
     </Box>
   </Modal>
-</TableCell>
+</TableCell> */}
 
+
+<TableCell>
+      <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+        {/* Add Button */}
+        <IconButton onClick={handleAddClick} style={{ marginBottom: "8px" }}>
+          <AddIcon />
+        </IconButton>
+
+        {/* Display History Cash Values */}
+        {historyCashValues.map((value, index) => (
+          <TextField
+            key={index}
+            type="number"
+            value={value}
+            disabled
+            style={{
+              marginBottom: "1px",
+              backgroundColor: "white",
+              borderRadius: "4px",
+              fontSize: "14px",
+              width: "80%",
+              padding: "0px",
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => handleEditValue(index)}>
+                    <EditIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        ))}
+
+        {/* Collapsible Input for Adding/Editing */}
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <div style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <TextField
+              fullWidth
+              type="number"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              sx={{ width: "80%", fontSize: "14px", padding: "0px", height: "20px",marginBottom: "3px" }}
+              InputProps={{
+                sx: { height: "28px", fontSize: "12px", padding: "5px" }, 
+              }}
+            />
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
+              <Button onClick={() => setExpanded(false)} variant="outlined" size="small">
+                Cancel
+              </Button>
+              <Button onClick={handleSave} variant="contained" size="small">
+                {editingIndex !== null ? "Update" : "Save"}
+              </Button>
+            </div>
+          </div>
+        </Collapse>
+      </div>
+    </TableCell>
 
 
             </TableRow>
