@@ -6,7 +6,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, Select, InputLabel, FormControl, TextField, Modal, Box } from '@mui/material';
-import { Grid } from '@mui/material';
+import { Grid ,IconButton,Dialog, DialogTitle, 
+  DialogContent, DialogActions,FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 // import { Modal, Container, Row, Col } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import EditIcon from "@mui/icons-material/Edit";
@@ -18,6 +19,10 @@ import { ToastContainer } from 'react-toastify';
 import { toast } from "react-toastify";
 import { jsPDF } from "jspdf";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import CloseIcon from "@mui/icons-material/Close";
+
+
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
   return response.json();
@@ -92,6 +97,7 @@ const Agreement = () => {
   const [endDate, setEndDate] = useState('');
   const [filterType, setFilterType] = useState('');
   const [filterValue, setFilterValue] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
   
@@ -100,8 +106,46 @@ const Agreement = () => {
   const [selectedLoan, setSelectedLoan] = useState(null);
 
   const [open, setOpen] = useState(false);
-  const [updatedChecklist, setUpdatedChecklist] = useState(loan.checklistBeforeAgreement || "");
+  // const [updatedChecklist, setUpdatedChecklist] = useState(loan.checklistBeforeAgreement || "");
+  const [updatedChecklist, setUpdatedChecklist] = useState("");
 
+  const [checkedItems, setCheckedItems] = useState({
+    item1: false,
+    item2: false,
+    item3: false
+  });
+  const initialState = {
+    checkedItems: {
+      item1: false,  // Checking Draft Details Once
+      item2: false,  // Parking
+      item3: false,  // Sq. Ft (All Area)
+      item4: false,  // 7/12 (Latest Three Months)
+      item5: false,  // Attach Search and Title Report
+      item6: false,  // Attach Commencement Certificate
+      item7: false,  // Attach NA Order
+      item8: false,  // Attach RERA Certificate
+      item9: false,  // Stamp Approval (1st Page Sanction Plan)
+      item10: false, // Attach Mark Flat Layout on Draw
+      item11: false, // Company PAN
+      item12: false, // Promoter KYC
+      item13: false, // Customer KYC
+      item14: false, // Attach Photos - (Customer / Promoter)
+      item15: false  // Sign, Photo and Thumb (Customer and Promoter)
+    }
+  };
+  
+  
+  // useEffect(() => {
+  //   if (loan) {
+  //     setUpdatedChecklist(loan.checklistBeforeAgreement || "");
+  //   }
+  // }, [loan]);
+
+  // useEffect(() => {
+  //   if (loan) {
+  //     setUpdatedChecklist(loan.checklistBeforeAgreement || "");
+  //   }
+  // }, [loan]);
 
 
   useEffect(() => {
@@ -114,14 +158,15 @@ const Agreement = () => {
     setFilteredLoans(data);
   };
 
-  // const handleInputChange = (field, value) => {
-  //   // Update the selectedLoan or any other state here
-  //   setSelectedLoan((prev) => ({
-  //     ...prev,
-  //     [field]: value,
-  //   }));
-  // };
-
+  
+ 
+// Handle checkbox change
+const handleCheckboxChange = (event) => {
+  setCheckedItems({
+    ...checkedItems,
+    [event.target.name]: event.target.checked
+  });
+};
   const handleInputChange = (field, value) => {
     // Handle Age field validation
     if (field === "alloteeAge") {
@@ -170,6 +215,20 @@ const Agreement = () => {
         [field]: value,
       }));
     }
+  };
+  
+  const openChecklistDialog = (index) => {
+    setSelectedIndex(index); // Set the current index of the selected row
+    setOpen(true); // Open the dialog
+  };
+  
+  const closeChecklistDialog = () => {
+    setOpen(false); // Close the dialog
+    setSelectedIndex(null); // Reset the selected index when closing
+  };
+
+  const resetForm = () => {
+    setCheckedItems(initialState);
   };
   
   const handleTimeChange = (newTime, index) => {
@@ -290,13 +349,26 @@ const generatePDF = () => {
   
   const handleClose = () => setOpen(false);
 
-  // Handle save action
+  
+  // const handleSave = () => {
+  //   handleChecklistUpdate(index, updatedChecklist); // Update parent state
+  //   handleClose();
+  // };
+
+
+  // const handleSave = () => {
+  //   console.log("Data Submitted:", checkedItems); // Simulating save action
+  //   resetForm(); // Reset form
+  //   closeChecklistDialog(); // Close the dialog
+  // };
   const handleSave = () => {
-    handleChecklistUpdate(index, updatedChecklist); // Update parent state
-    handleClose();
+    console.log("Data Submitted:", checkedItems);
+    resetForm();
+    setTimeout(() => {
+      closeChecklistDialog(); // Ensuring dialog closes
+    }, 0);
   };
-
-
+  
 
   const resetFilters = () => {
     setStartDate('');
@@ -537,7 +609,7 @@ const generatePDF = () => {
   value={loan.agreementStatus || ""}
   onChange={(event) => handleStatusChange(event, index)}
   displayEmpty
-  renderValue={(selected) => (selected ? selected : "Select Status")} // Ensure placeholder shows up
+  renderValue={(selected) => (selected ? selected : "Select Status")} 
   variant="outlined"
 >
   <MenuItem disabled value="">
@@ -549,35 +621,211 @@ const generatePDF = () => {
 
   </FormControl>
 </TableCell>
-        {/* <TableCell>{loan.checklistBeforeAgreement}</TableCell> */}
-        <TableCell>
+       
+<TableCell>
   {loan.checklistBeforeAgreement}
-  <IconButton onClick={() => handleOpen(index)} size="small">
-    <EditIcon />
+
+  <IconButton onClick={() => openChecklistDialog(index)} size="small">
+    <AssignmentTurnedInIcon color="primary" />
   </IconButton>
 </TableCell>
 
 
+
       
-      {/* <Modal open={open} onClose={handleClose}>
-        <Box sx={{ width: 400, p: 3, bgcolor: "white", mx: "auto", mt: 10, borderRadius: 2 }}>
-          <h3>Edit Checklist</h3>
-          <TextField
-            fullWidth
-            size="small"
-            value={updatedChecklist}
-            onChange={(e) => setUpdatedChecklist(e.target.value)}
+
+
+<Dialog
+  open={open}
+  onClose={() => {
+    resetForm(); 
+    closeChecklistDialog(); 
+  }}
+>
+
+  <DialogTitle>
+    Before Agreement Checklist
+  
+    <IconButton
+      aria-label="close"
+      // onClick={closeChecklistDialog}
+      onClick={() => {
+        resetForm(); // Reset when dialog is closed
+        closeChecklistDialog();
+      }}
+      sx={{ position: "absolute", right: 8, top: 8 }}
+    >
+      <CloseIcon />
+    </IconButton>
+  </DialogTitle>
+
+  <DialogContent>
+    <FormGroup>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item1 || false}
+            onChange={handleCheckboxChange}
+            name="item1"
           />
-          <Box mt={2} display="flex" justifyContent="flex-end">
-            <Button onClick={handleClose} sx={{ mr: 2 }}>
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={handleSave}>
-              Save
-            </Button>
-          </Box>
-        </Box>
-      </Modal> */}
+        }
+        label="Checking Draft Details Once"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item2 || false}
+            onChange={handleCheckboxChange}
+            name="item2"
+          />
+        }
+        label="Parking"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item3 || false}
+            onChange={handleCheckboxChange}
+            name="item3"
+          />
+        }
+        label="Sq. Ft (All Area)"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item4 || false}
+            onChange={handleCheckboxChange}
+            name="item4"
+          />
+        }
+        label="7/12 (Latest Three Months)"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item5 || false}
+            onChange={handleCheckboxChange}
+            name="item5"
+          />
+        }
+        label="Attach Search and Title Report"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item6 || false}
+            onChange={handleCheckboxChange}
+            name="item6"
+          />
+        }
+        label="Attach Commencement Certificate"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item7 || false}
+            onChange={handleCheckboxChange}
+            name="item7"
+          />
+        }
+        label="Attach NA Order"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item8 || false}
+            onChange={handleCheckboxChange}
+            name="item8"
+          />
+        }
+        label="Attach RERA Certificate"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item9 || false}
+            onChange={handleCheckboxChange}
+            name="item9"
+          />
+        }
+        label="Stamp Approval (1st Page Sanction Plan)"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item10 || false}
+            onChange={handleCheckboxChange}
+            name="item10"
+          />
+        }
+        label="Attach Mark Flat Layout on Draw"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item11 || false}
+            onChange={handleCheckboxChange}
+            name="item11"
+          />
+        }
+        label="Company PAN"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item12 || false}
+            onChange={handleCheckboxChange}
+            name="item12"
+          />
+        }
+        label="Promoter KYC"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item13 || false}
+            onChange={handleCheckboxChange}
+            name="item13"
+          />
+        }
+        label="Customer KYC"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item14 || false}
+            onChange={handleCheckboxChange}
+            name="item14"
+          />
+        }
+        label="Attach Photos - (Customer / Promoter)"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkedItems.item15 || false}
+            onChange={handleCheckboxChange}
+            name="item15"
+          />
+        }
+        label="Sign, Photo and Thumb (Customer and Promoter)"
+      />
+    </FormGroup>
+  </DialogContent>
+
+  <DialogActions>
+ 
+    <Button
+      onClick={handleSave}
+      variant="contained"
+      color="primary"
+      className="btn btn-primary"
+    >
+      Save
+    </Button>
+  </DialogActions>
+</Dialog> 
         <TableCell>{loan.addressOfAgreement}</TableCell>
        
 <TableCell>
@@ -585,14 +833,13 @@ const generatePDF = () => {
     <DatePicker
       value={loan.agreementDate ? dayjs(loan.agreementDate) : null}
       onChange={(newValue) => handleDateChange(newValue, index)}
-      format="DD/MM/YYYY" // Set the format as needed
-      slotProps={{ textField: { variant: "outlined", size: "small" } }} // Makes it look like an input field
+      format="DD/MM/YYYY" 
+      slotProps={{ textField: { variant: "outlined", size: "small" } }} 
     />
   </LocalizationProvider>
 </TableCell>
 
 
-        {/* <TableCell>{loan.time}</TableCell> */}
         <TableCell>
   <LocalizationProvider dateAdapter={AdapterDayjs}>
     <TimePicker
