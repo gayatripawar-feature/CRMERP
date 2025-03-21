@@ -9,15 +9,25 @@
 
 
 
-import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, TextField } from '@mui/material';
-import { FaEye } from 'react-icons/fa'; 
+import React, { useState, useEffect ,useRef} from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, TextField ,IconButton,Dialog, DialogTitle, 
+  DialogContent, DialogActions,FormGroup,FormControlLabel , Box, Checkbox} from '@mui/material';
+import { FaEye,FaUpload,} from 'react-icons/fa'; 
+import { FaRegUser } from 'react-icons/fa';
+import EditIcon from "@mui/icons-material/Edit";
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import { Typography } from '@mui/material';
+
 
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
   return response.json();
 };
 
+import CloseIcon from "@mui/icons-material/Close";
+
+
+// import {  } from "@mui/material";
 
 
 const Registration = () => {
@@ -28,20 +38,35 @@ const Registration = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  
+  const [checkedItems, setCheckedItems] = useState({});
   // State for filter options
   const [flatType, setFlatType] = useState('');
   const [parking, setParking] = useState('');
   const [floor, setFloor] = useState('');
   const [rate, setRate] = useState('');
+  const [items, setItems] = useState([]);  // or any initial value
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [openModal, setOpenModal] = useState(false);  // For controlling modal visibility
   
+  const [open, setOpen] = useState(false);
+  // const [data, setData] = useState([]); // Ensure data is initialized
+
   // State to toggle filter visibility
   const [showFilters, setShowFilters] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false); 
   const [filterType, setFilterType] = useState(''); // For the filter selection
   const [filterValue, setFilterValue] = useState(''); // For the selected filter value
+ const [isExpanded, setIsExpanded] = useState(true);
+ const [isEditable, setIsEditable] = useState(false); 
+ const [registrationNumber, setRegistrationNumber] = useState("");
+ const [selectedFile, setSelectedFile] = useState(null);
+
+ const [activeChecklist, setActiveChecklist] = useState(null); // Track open checklist dialog
+  const [checklistData, setChecklistData] = useState({});
 
 
+ const fileInputRef = useRef(null);
   const sampleLoans = [
     {
       flatNo: "A101",
@@ -104,6 +129,99 @@ const Registration = () => {
   }, [filteredLoans, rowsPerPage]);
 
  
+  // const openChecklist = (index) => {
+  //   setActiveChecklist(index);
+  // };
+
+  const openChecklist = (index) => {
+    setActiveChecklist(index);
+    setChecklistData({}); // Reset checklist when opening again
+  };
+
+   // Close dialog
+   const closeChecklist = () => {
+    setActiveChecklist(null);
+  };
+
+  // // Close dialog
+  // const closeChecklist = () => {
+  //   setActiveChecklist(null);
+  // };
+// // Handle checkbox change
+// const updateChecklist = (event, index) => {
+//   const { name, checked } = event.target;
+//   setChecklistData((prevData) => ({
+//     ...prevData,
+//     [index]: { ...prevData[index], [name]: checked }
+//   }));
+// };
+
+
+// Handle checkbox selection
+const updateChecklist = (event, index) => {
+  const { name, checked } = event.target;
+  setChecklistData((prevData) => ({
+    ...prevData,
+    [name]: checked
+  }));
+};
+
+const saveChecklist = () => {
+  console.log("Checklist Data Saved:", checklistData);
+  closeChecklist();
+};
+
+
+  const openChecklistDialog = (index) => {
+    setSelectedIndex(index); 
+    setOpen(true); 
+  };
+  
+  const closeChecklistDialog = () => {
+    setOpen(false); 
+    setSelectedIndex(null); 
+    
+    
+    setDialogOpen(true);
+  };
+
+  const resetForm = () => {
+    setCheckedItems(initialState);
+  };
+  
+const handleToggle = () => {
+  setIsExpanded((prev) => !prev);
+};
+ 
+
+const handleEditClick = () => {
+  setIsEditable(!isEditable); // Toggle editable state on clicking the edit icon
+};
+
+
+const handleCheckboxChange = (event) => {
+  setCheckedItems({
+    ...checkedItems,
+    [event.target.name]: event.target.checked,
+  });
+};
+
+
+const openItemDetailsModal = (item) => {
+  setSelectedItem(item);  // Store the clicked item details
+  setOpenModal(true);      // Open the modal
+};
+
+
+
+const handleSave = () => {
+  console.log("Save button clicked");
+  // Add logic to save data
+  resetForm(); 
+  closeChecklistDialog(); 
+};
+
+
 
   const loadLoansData = async () => {
     try {
@@ -168,6 +286,30 @@ const Registration = () => {
     setFilterValue('');
   };
 
+  
+
+
+const handleUpload = (index) => {
+  console.log(`Uploading document for row ID: ${index}`);
+  if (fileInputRef.current) {
+    fileInputRef.current.click();  // Trigger the hidden file input
+  }
+};
+
+
+ 
+ const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    console.log("Selected file:", file.name);
+    setSelectedFile(file);  // Store the selected file in state
+  }
+};
+  const onUpload = (id) => {
+    console.log(`Uploading document for row ID: ${id}`);
+    // Your file upload logic goes here
+  };
+  
   const handlePagination = (event, newPage) => {
     setCurrentPage(newPage + 1);
   };
@@ -219,24 +361,60 @@ const Registration = () => {
     <div className="main-content">
       <h6 className='mb-3'>Sales Module / Registration Management</h6>
 
-      {/* CRM Display Button */}
-      <div className="d-flex align-items-center mb-3">
-        <Button
-          onClick={handleCollapseToggle}
-          variant="outlined"
-          color="success"
-          className='m-3'
-          style={{ borderRadius: '20px' }}
-          startIcon={<FaEye size={20} color="#28a745" />}
-        >
-          {!isCollapsed && <span className="text-success">Registration</span>}
-        </Button>
-      </div>
-
+     
+     
    
 
 
-
+     
+<Button
+      variant="contained"
+      color="success"
+      sx={{
+        borderRadius: "20px",
+        transition: "width 0.3s ease, background 0.3s ease",
+        width: isExpanded ? "160px" : "50px",
+        minWidth: "50px",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        padding: "10px 15px",
+        marginTop: "20px",
+        marginBottom: "28px",
+        fontSize: "14px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textTransform: "none",
+        position: "relative",
+        // background: "linear-gradient(0deg, rgba(22,9,240,1) 0%, rgba(49,110,244,1) 100%)",
+        background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+        boxShadow:
+          "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+        "&:hover": {
+          // background: "linear-gradient(0deg, rgba(2,126,251,1) 0%, rgba(0,3,255,1) 100%)",
+          background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+        },
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(255, 255, 255, 0.2)",
+          transform: "scale(0.1)",
+          transition: "transform 0.3s ease",
+          zIndex: -1,
+        },
+        "&:hover::after": {
+          transform: "scale(1)",
+        },
+      }}
+      onClick={handleToggle}
+      startIcon={isExpanded ? <FaRegUser/> : <FaRegUser />}
+    >
+      {isExpanded && "Registration"}
+    </Button>
 
 
 <div className="d-flex align-items-center justify-content-between mb-3">
@@ -340,8 +518,7 @@ const Registration = () => {
 <TableContainer component={Paper} sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
   <Table sx={{ tableLayout: 'auto', width: '100%' }}>
     <TableHead >
-      {/* <TableRow sx={{ bgcolor: "primary.main" }}> */}
-      {/* <TableRow sx={{ background: "linear-gradient(180deg, #3621a9 0%,rgb(139, 115, 243) 100%)" }}> */}
+    
  <TableRow sx={{background:"#3621a9"}}>
         <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"}}>FLAT NO.</TableCell>
         <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>NAME OF ALLOTEE</TableCell>
@@ -361,9 +538,252 @@ const Registration = () => {
       </TableRow>
     </TableHead>
 
-    <TableBody>
-      {displayLoans()}
-    </TableBody>
+    
+
+<TableBody>
+  {sampleLoans.map((item, index) => (
+    <TableRow key={index}>
+      {/* Other columns */}
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+
+      <TableCell sx={{ padding: 1, position: "relative", whiteSpace: "nowrap" }}>
+        {isEditable ? (
+          <TextField
+            value={registrationNumber}
+            onChange={(e) => setRegistrationNumber(e.target.value)}
+            placeholder="Enter Registration Number"
+            onBlur={() => setIsEditable(false)} 
+            sx={{
+              border: "none",
+              width: "100%",
+              paddingRight: "30px", 
+              whiteSpace: "nowrap", 
+              overflow: "hidden", 
+              textOverflow: "ellipsis", 
+            }}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={handleEditClick}
+                  sx={{
+                    position: "absolute",
+                    right: 10,
+                    top: "50%",
+                    transform: "translateY(-50%)", 
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              ),
+            }}
+          />
+        ) : (
+          <span style={{ display: 'inline-flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
+            {registrationNumber || "Enter Registration Number"}
+            <IconButton
+              onClick={handleEditClick}
+              sx={{
+                marginLeft: "8px",
+                color: "blue", 
+              }}
+            >
+              <EditIcon />
+            </IconButton>
+          </span>
+        )}
+      </TableCell>
+
+      <TableCell>
+  <IconButton onClick={() => openItemDetailsModal(index)} size="small">
+    <AssignmentTurnedInIcon color="primary" />
+  </IconButton>
+</TableCell>
+
+
+
+
+<Dialog open={openModal} onClose={() => setOpenModal(false)} fullWidth maxWidth="sm">
+ 
+
+<DialogTitle 
+    sx={{ 
+      display: "flex", 
+      justifyContent: "space-between", 
+      alignItems: "center",
+      backgroundColor: "#1976d2", 
+      color: "white", 
+      padding: "12px 16px",
+    }}
+  >
+    Before Agreement Checklist
+    <IconButton onClick={() => setOpenModal(false)} size="small">
+      <CloseIcon />
+    </IconButton>
+  </DialogTitle>
+  <DialogContent>
+    <Box>
+      <FormControlLabel
+        control={<Checkbox />}
+        label="Agreement with Signature"
+        sx={{ display: "block" }}
+      />
+      <FormControlLabel
+        control={<Checkbox />}
+        label="Agreement Receipt"
+        sx={{ display: "block" }}
+      />
+      <FormControlLabel
+        control={<Checkbox />}
+        label="Index II"
+        sx={{ display: "block" }}
+      />
+    </Box>
+  </DialogContent>
+  <DialogActions>
+  <Button 
+      variant="contained" 
+      color="primary" 
+      onClick={() => setOpenModal(false)}
+    >
+      Save
+    </Button>
+  </DialogActions>
+</Dialog>
+
+
+
+     
+
+
+<TableCell>
+           
+            <IconButton onClick={handleUpload}>
+              <FaUpload style={{ color: "blue" }} />
+            </IconButton>
+
+            {selectedFile && (
+              <IconButton onClick={() => window.open(URL.createObjectURL(selectedFile), "_blank")}>
+                <FaEye style={{ color: "green" }} />
+              </IconButton>
+            )}
+          </TableCell>
+
+        
+          <input
+            ref={fileInputRef}  
+            type="file"
+            style={{ display: "none" }}  
+            onChange={handleFileChange}  
+          />
+      <TableCell>
+
+      <IconButton onClick={() => openChecklist(index)} size="small">
+        <AssignmentTurnedInIcon color="primary" />
+      </IconButton>
+        {/* Checklist Dialog */}
+        <Dialog open={activeChecklist === index} onClose={closeChecklist} fullWidth maxWidth="sm">
+        <DialogTitle 
+          sx={{ 
+            display: "flex", justifyContent: "space-between", alignItems: "center", 
+            backgroundColor: "#1976d2", color: "white", padding: "12px 16px" 
+          }}
+        >
+          {/* Task Checklist - Row {index + 1} */}
+          Document Handover Checklist
+          <IconButton onClick={closeChecklist} size="small">
+            <CloseIcon style={{ color: "white" }} />
+          </IconButton>
+        </DialogTitle>
+        
+        <DialogContent>
+          <Box display="flex" flexDirection="column" gap={1}>  
+            <FormControlLabel control={<Checkbox checked={checklistData.taskOne || false} onChange={(e) => updateChecklist(e, index)} name="taskOne" />} label="Agreement with Signature" />
+            <FormControlLabel control={<Checkbox checked={checklistData.taskTwo || false} onChange={(e) => updateChecklist(e, index)} name="taskTwo" />} label="Agreement Receipt" />
+            <FormControlLabel control={<Checkbox checked={checklistData.taskThree || false} onChange={(e) => updateChecklist(e, index)} name="taskThree" />} label="Original Document" />
+            <FormControlLabel control={<Checkbox checked={checklistData.taskFour || false} onChange={(e) => updateChecklist(e, index)} name="taskFour" />} label="Payment Receipt" />
+            <FormControlLabel control={<Checkbox checked={checklistData.taskFive || false} onChange={(e) => updateChecklist(e, index)} name="taskFive" />} label="NOC" />
+            <FormControlLabel control={<Checkbox checked={checklistData.taskSix || false} onChange={(e) => updateChecklist(e, index)} name="taskSix" />} label="Demand Letter" />
+            <FormControlLabel control={<Checkbox checked={checklistData.taskSeven || false} onChange={(e) => updateChecklist(e, index)} name="taskSeven" />} label="GST Letter" />
+            <FormControlLabel control={<Checkbox checked={checklistData.taskEight || false} onChange={(e) => updateChecklist(e, index)} name="taskEight" />} label="Index 2" />
+            <FormControlLabel control={<Checkbox checked={checklistData.taskNine || false} onChange={(e) => updateChecklist(e, index)} name="taskNine" />} label="Document Receipt" />
+          </Box>
+        </DialogContent>
+
+        <DialogActions sx={{ justifyContent: "flex-end", padding: "12px 24px" }}>
+          <Button variant="contained" color="primary" onClick={saveChecklist}>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </TableCell>
+      
+
+
+        {/* Checklist Dialog */}
+        {/* <Dialog open={activeChecklist === index} onClose={closeChecklist} fullWidth maxWidth="sm">
+        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "#1976d2", color: "white", padding: "12px 16px" }}>
+          Task Checklist - Row {index + 1}
+          <IconButton onClick={closeChecklist} size="small">
+            <CloseIcon style={{ color: "white" }} />
+          </IconButton>
+        </DialogTitle>
+        
+        <DialogContent>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={checklistData[index]?.taskOne || false}
+                onChange={(e) => updateChecklist(e, index)}
+                name="taskOne"
+              />
+            }
+            label="Task 1: Agreement with Signature"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={checklistData[index]?.taskTwo || false}
+                onChange={(e) => updateChecklist(e, index)}
+                name="taskTwo"
+              />
+            }
+            label="Task 2: Agreement Receipt"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={checklistData[index]?.taskThree || false}
+                onChange={(e) => updateChecklist(e, index)}
+                name="taskThree"
+              />
+            }
+            label="Task 3: Index II"
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button variant="contained" color="primary" onClick={saveChecklist}>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog> */}
+
+       {/* Checklist Dialog */}
+       
+    </TableRow>
+  ))}
+</TableBody>
+
   </Table>
 </TableContainer> 
 

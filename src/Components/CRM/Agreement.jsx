@@ -7,7 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, Select, InputLabel, FormControl, TextField, Modal, Box } from '@mui/material';
 import { Grid ,IconButton,Dialog, DialogTitle, 
-  DialogContent, DialogActions,FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+  DialogContent, DialogActions,FormGroup, FormControlLabel, Checkbox} from '@mui/material';
 // import { Modal, Container, Row, Col } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import EditIcon from "@mui/icons-material/Edit";
@@ -19,9 +19,13 @@ import { ToastContainer } from 'react-toastify';
 import { toast } from "react-toastify";
 import { jsPDF } from "jspdf";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+// import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import DescriptionIcon from "@mui/icons-material/Description";
 import CloseIcon from "@mui/icons-material/Close";
+// import ContractIcon from '@mui/icons-material/Contract';
+import { FaFileSignature } from 'react-icons/fa';
 
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
@@ -99,6 +103,7 @@ const Agreement = () => {
   const [filterValue, setFilterValue] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+   const [isExpanded, setIsExpanded] = useState(true);
   const rowsPerPage = 10;
   
   // State for Modal
@@ -159,6 +164,10 @@ const Agreement = () => {
   };
 
   
+  
+const handleToggle = () => {
+  setIsExpanded((prev) => !prev);
+};
  
 // Handle checkbox change
 const handleCheckboxChange = (event) => {
@@ -393,6 +402,60 @@ const generatePDF = () => {
       <>
       <h6>CRM Module / Agreement Management</h6>
 
+
+
+         
+<Button
+      variant="contained"
+      color="success"
+      sx={{
+        borderRadius: "20px",
+        transition: "width 0.3s ease, background 0.3s ease",
+        width: isExpanded ? "160px" : "50px",
+        minWidth: "50px",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        padding: "10px 15px",
+        marginTop: "20px",
+        marginBottom: "28px",
+        fontSize: "14px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textTransform: "none",
+        position: "relative",
+        // background: "linear-gradient(0deg, rgba(22,9,240,1) 0%, rgba(49,110,244,1) 100%)",
+        background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+        boxShadow:
+          "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+        "&:hover": {
+          // background: "linear-gradient(0deg, rgba(2,126,251,1) 0%, rgba(0,3,255,1) 100%)",
+          background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+        },
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(255, 255, 255, 0.2)",
+          transform: "scale(0.1)",
+          transition: "transform 0.3s ease",
+          zIndex: -1,
+        },
+        "&:hover::after": {
+          transform: "scale(1)",
+        },
+      }}
+      onClick={handleToggle}
+      startIcon={isExpanded ? <FaFileSignature /> : <FaFileSignature />}
+    >
+      {isExpanded && "Agreement"}
+    </Button>
+
+
+
       <div className="d-flex align-items-center gap-3 my-3 pt-4 pb-3">
         {/* Button Section in One Row */}
         <Button variant="contained"  className="text-nowrap "
@@ -553,41 +616,11 @@ const generatePDF = () => {
         <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>TIME(00:00:00)</TableCell>
       </TableRow>
     </TableHead>
-    {/* <TableBody>
-      {currentRows.map((loan, index) => (
-        <TableRow key={index}>
-          <TableCell>{loan.flatNo}</TableCell>
-          <TableCell>{loan.nameOfAllotee}</TableCell>
-          <TableCell>{loan.nameOfCoAllotee}</TableCell>
-          <TableCell>{loan.type}</TableCell>
-          <TableCell>{loan.floor}</TableCell>
-          <TableCell>{loan.emailId}</TableCell>
-          <TableCell>{loan.whatsappMobileNo}</TableCell>
-          <TableCell>{loan.rate}</TableCell>
-          <TableCell>{loan.agreementValue}</TableCell>
-          <TableCell>{loan.dateOfBooking}</TableCell>
-          <TableCell>{loan.parking}</TableCell>
-          <TableCell>{loan.agreementDraftGeneration}</TableCell>
-          <TableCell>{loan.agreementStatus}</TableCell>
-          <TableCell>{loan.checklistBeforeAgreement}</TableCell>
-          <TableCell>{loan.addressOfAgreement}</TableCell>
-          
-        
-          <TableCell>
-            {loan.agreementDate
-              ? new Date(loan.agreementDate).toLocaleDateString("en-GB") // Formats as DD/MM/YYYY
-              : "-"}
-          </TableCell>
-
-          <TableCell>{loan.time}</TableCell>
-        </TableRow>
-      ))}
-    </TableBody> */}
-
+   
 
 <TableBody>
   {currentData.map((loan, index) => {
-    console.log("Loan Data:", loan); // Logs each row's data
+    console.log("Loan Data:", loan); 
     return (
       <TableRow key={index}>
         <TableCell>{loan.flatNo}</TableCell>
@@ -643,9 +676,19 @@ const generatePDF = () => {
   }}
 >
 
-  <DialogTitle>
+  {/* <DialogTitle>
+    Before Agreement Checklist */}
+    <DialogTitle 
+    sx={{ 
+      display: "flex", 
+      justifyContent: "space-between", 
+      alignItems: "center",
+      backgroundColor: "#1976d2", // Change this to any color you like
+      color: "white", // Text color
+      padding: "12px 16px",
+    }}
+  >
     Before Agreement Checklist
-  
     <IconButton
       aria-label="close"
       // onClick={closeChecklistDialog}
@@ -964,18 +1007,6 @@ const generatePDF = () => {
     </div>
 
 
-{/*              
-              <div className="col-md-3">
-  <label className="form-label">Name Of Allotee</label>
-  <input
-    type="text"
-    className="form-control"
-    value={selectedLoan?.nameOfAllotee || ""}
-    onChange={(e) => handleInputChange("nameOfAllotee", e.target.value)}
-    pattern="[A-Za-z\s]+"  
-    title="Only alphabets and spaces are allowed"
-  />
-</div> */}
 
 <div className="col-md-3">
   <label className="form-label">Name Of Allotee</label>
@@ -1065,17 +1096,7 @@ const generatePDF = () => {
     />
   </div>
 
-  {/* <div className="col-md-3">
-    <label className="form-label">Name Of Co-Allotee</label>
-    <input
-      type="text"
-      className="form-control"
-      value={selectedLoan?.nameOfCoAllotee || ""}
-      onChange={(e) => handleInputChange("nameOfCoAllotee", e.target.value)}
-      pattern="[A-Za-z\s]+"
-      title="Only alphabets and spaces are allowed"
-    />
-  </div> */}
+ 
 
 
 <div className="col-md-6">

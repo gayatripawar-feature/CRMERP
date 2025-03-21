@@ -9,7 +9,14 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { FaEye } from "react-icons/fa";
 import { jsPDF } from "jspdf";
 import { ToastContainer, toast } from 'react-toastify';
+import { MonetizationOn } from "@mui/icons-material";
 
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+// import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import { IconButton } from "@mui/material";
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
   return response.json();
@@ -19,6 +26,7 @@ const fetchLoansData = async () => {
 const Demand = () => {
   const [loans, setLoans] = useState([]);
   const [filteredLoans, setFilteredLoans] = useState([]);
+   const [isExpanded, setIsExpanded] = useState(true);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [filterType, setFilterType] = useState('');
@@ -27,13 +35,16 @@ const Demand = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 const [isCollapsed, setIsCollapsed] = useState(false);
 
+const [selectedDate, setSelectedDate] = useState(null);
+
+
 const [selectedTitle, setSelectedTitle] = useState("Mr."); 
   const rowsPerPage = 10;
   
   // State for Modal
   const [openModal, setOpenModal] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
-
+  const [selectedLevel, setSelectedLevel] = useState("");
   useEffect(() => {
     loadLoansData();
   }, []);
@@ -49,7 +60,9 @@ const [selectedTitle, setSelectedTitle] = useState("Mr.");
     setOpenModal(true);
   };
 
-
+  const handleDateChange = (date) => {
+    setSelectedDate(date); // Update state when date is selected
+  };
   
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -64,7 +77,9 @@ const [selectedTitle, setSelectedTitle] = useState("Mr.");
   const handleCollapseToggle = () => {
     setIsCollapsed((prev) => !prev);
   };
-
+  const handleChange = (event) => {
+    setSelectedLevel(event.target.value);
+  };
 
 
   const handlePageChange = (newPage) => {
@@ -98,6 +113,10 @@ const handleRowsPerPageChange = (e) => {
   }
 };
 
+ 
+const handleToggle = () => {
+  setIsExpanded((prev) => !prev);
+};
 
   const getFilterOptions = (type) => {
     switch (type) {
@@ -175,19 +194,55 @@ const handleRowsPerPageChange = (e) => {
         <>
       <h6>Sales Module / Demand Raised Management</h6>
 
-{/* CRM Display Button */}
-      <div className="d-flex align-items-center mb-3">
-        <Button
-          onClick={handleCollapseToggle}
-          variant="outlined"
-          color="success"
-          className='m-3'
-          style={{ borderRadius: '20px' }}
-          startIcon={<FaEye size={20} color="#28a745" />}
-        >
-          {!isCollapsed && <span className="text-success"> Demand Raised Management</span>}
-        </Button>
-      </div>
+
+      
+
+<Button
+  variant="contained"
+  color="success"
+  sx={{
+    borderRadius: "20px",
+    transition: "width 0.3s ease, background 0.3s ease",
+    width: isExpanded ? "160px" : "50px",
+    minWidth: "50px",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    padding: "10px 15px",
+    marginTop: "20px",
+    marginBottom: "12px", // Updated margin-bottom
+    fontSize: "14px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    textTransform: "none",
+    position: "relative",
+    background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+    boxShadow:
+      "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+    "&:hover": {
+      background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+    },
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(255, 255, 255, 0.2)",
+      transform: "scale(0.1)",
+      transition: "transform 0.3s ease",
+      zIndex: -1,
+    },
+    "&:hover::after": {
+      transform: "scale(1)",
+    },
+  }}
+  onClick={handleToggle}
+  startIcon={< MonetizationOn />}
+>
+  {isExpanded && "Demand Letter"}
+</Button>
 
 
       
@@ -298,12 +353,11 @@ const handleRowsPerPageChange = (e) => {
 </div>
 
 
-
+{/* 
       <TableContainer component={Paper} className="mt-4" sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
         <Table>
           <TableHead>
-            {/* <TableRow sx={{ bgcolor: "primary.main" }}> */}
-                    {/* <TableRow sx={{ background: "linear-gradient(180deg, #3621a9 0%,rgb(139, 115, 243) 100%)" }}> */}
+          
                     <TableRow sx={{background:"#3621a9"}}>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
               FLAT NO.</TableCell>
@@ -331,7 +385,156 @@ const handleRowsPerPageChange = (e) => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
+
+<TableContainer component={Paper} className="mt-4" sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
+      <Table >
+        <TableHead>
+        <TableRow sx={{background:"#3621a9"}}>
+            <TableCell  sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>FLAT NO.</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>NAME OF ALLOTEE</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>NAME OF CO-ALLOTEE</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>TYPE</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>FLOOR</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>EMAIL ID</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>WHATSAPP MOBILE NO.</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>RATE</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>AGREEMENT VALUE</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>DATE OF BOOKING</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>PARKING</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Date of Demand Raised</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Demand Level</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Demand Stage (In %)</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Demand Amount</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Received Against Agreement Value</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Total Received</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Due as per Work Stage</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Demand Letter</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Certificate For Engineer</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Certificate for Architect</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Demand Letter Mail Sent</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Expected Date of Demand Collection</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Balance Against Agreement Value</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+         <TableCell></TableCell>
+         <TableCell></TableCell>
+         <TableCell></TableCell>
+         <TableCell></TableCell>
+         <TableCell></TableCell>
+         <TableCell></TableCell>
+         <TableCell></TableCell>
+         <TableCell></TableCell>
+         <TableCell></TableCell>
+         <TableCell></TableCell>
+         <TableCell></TableCell>
+         <TableCell>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Select Date"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell>
+
+            <TableCell>
+  <FormControl fullWidth>
+    <InputLabel>Demand Level</InputLabel>
+    <Select value={selectedLevel} onChange={handleChange}>
+      <MenuItem value={10}>Booking Level (10%)</MenuItem>
+      <MenuItem value={20}>Agreement Level (20%)</MenuItem>
+      <MenuItem value={35}>Plinth Level (35%)</MenuItem>
+      <MenuItem value={40}>1st Slab Level (40%)</MenuItem>
+      <MenuItem value={45}>2nd Slab Level (45%)</MenuItem>
+      <MenuItem value={50}>3rd Slab Level (50%)</MenuItem>
+      <MenuItem value={55}>5th Slab Level (55%)</MenuItem>
+      <MenuItem value={60}>7th Slab Level (60%)</MenuItem>
+      <MenuItem value={65}>9th Slab Level (65%)</MenuItem>
+      <MenuItem value={70}>10th Slab Level (70%)</MenuItem>
+      <MenuItem value={75}>Brick Work Level (75%)</MenuItem>
+      <MenuItem value={80}>External Plaster Level (80%)</MenuItem>
+      <MenuItem value={90}>Staircase Level (90%)</MenuItem>
+      <MenuItem value={95}>Lift Level (95%)</MenuItem>
+      <MenuItem value={100}>Possession Level (100%)</MenuItem>
+    </Select>
+  </FormControl>
+</TableCell>
+<TableCell></TableCell>
+
+
+
+<TableCell>
+  <IconButton 
+    color="error" 
+    onClick={() => window.open('URL_TO_YOUR_PDF', '_blank')}
+  >
+    <PictureAsPdfIcon />
+  </IconButton>
+</TableCell>
+
+
+<TableCell>
+  <IconButton 
+    color="error" 
+    onClick={() => window.open('URL_TO_YOUR_PDF', '_blank')}
+  >
+    <PictureAsPdfIcon />
+  </IconButton>
+</TableCell>
+
+<TableCell>
+  <IconButton 
+    color="error" 
+    onClick={() => window.open('URL_TO_YOUR_PDF', '_blank')}
+  >
+    <PictureAsPdfIcon />
+  </IconButton>
+</TableCell>
+
+<TableCell></TableCell>
+<TableCell>
+  <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <DatePicker
+      label="Select Date"
+      value={selectedDate}
+      onChange={handleDateChange}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          InputProps={{
+            disableUnderline: true, // Removes the underline
+          }}
+          sx={{
+            "& .MuiInputBase-root": {
+              border: "none", // Removes any default border
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              display: "none", // Ensures no outline appears
+            },
+            "& .MuiInputBase-input": {
+              backgroundColor: "transparent", // Ensures background remains clear
+              padding: "8px 0", // Optional: Adjusts padding
+            },
+          }}
+        />
+      )}
+    />
+  </LocalizationProvider>
+</TableCell>
+
+
+        </TableBody>
+      </Table>
+    </TableContainer>
+
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
         <button 

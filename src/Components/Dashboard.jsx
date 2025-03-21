@@ -381,8 +381,9 @@ const Dashboard = () => {
         // { to: "/crm/Architect", icon: <FaUser />, label: "Engineer & Architect Letter" },
         // { to: "/crm/Demand", icon: <FaUser />, label: "Demand Raised" },
         { to: "/crm/sharespace", icon: <FaUsers />, label: "Share Space" },
-    { to: "/crm/crm", icon: <FaUserCheck />, label: "CRM" },
+   
     { to: "/crm/HomeLoan", icon: <FaHome />, label: "Home Loan Applicability" },
+    { to: "/crm/crm", icon: <FaUserCheck />, label: "CRM" },
     { to: "/crm/OCR", icon: <FaFileAlt />, label: "OCR Collection" },
     { to: "/crm/Agreement", icon: <FaFileSignature />, label: "Agreement" },
     { to: "/crm/registration", icon: <FaStamp />, label: "Registration" },

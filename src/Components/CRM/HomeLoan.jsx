@@ -344,6 +344,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { FaEye} from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import AccountCircle from '@mui/icons-material/AccountCircle'; 
+import { HomeIcon } from 'lucide-react';
 const HomeLoan = () => {
   const [loansData, setLoansData] = useState([
     { 
@@ -368,6 +369,7 @@ const HomeLoan = () => {
   const [isEditingBankName, setIsEditingBankName] = useState(false);
   const [bankName, setBankName] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+   const [isExpanded, setIsExpanded] = useState(true);
   // const [editingLoan, setEditingLoan] = useState(null);
   const [editingLoan, setEditingLoan] = useState({
     flatNo: '',
@@ -414,6 +416,10 @@ const HomeLoan = () => {
 
 
 
+  
+const handleToggle = () => {
+  setIsExpanded((prev) => !prev);
+};
 
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -1063,8 +1069,8 @@ const displayLoans = () => {
     <div className="main-content">
       <h6 className="mb-3">Sales Module / Home Loan Management</h6>
   
-   {/* CRM Display Button */}
-      <div className="d-flex align-items-center mb-3">
+  
+      {/* <div className="d-flex align-items-center mb-3">
         <Button
           onClick={handleCollapseToggle}
           variant="outlined"
@@ -1075,7 +1081,54 @@ const displayLoans = () => {
         >
           {!isCollapsed && <span className="text-success">Home Loan </span>}
         </Button>
-      </div> 
+      </div>  */}
+      
+      <Button
+        variant="contained"
+        color="success"
+        sx={{
+          borderRadius: "20px",
+          transition: "width 0.3s ease, background 0.3s ease",
+          width: isExpanded ? "160px" : "50px",
+          minWidth: "50px",
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          padding: "10px 15px",
+          marginTop: "20px",
+          marginBottom: "12px", // Updated margin-bottom
+          fontSize: "14px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          textTransform: "none",
+          position: "relative",
+          background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+          boxShadow:
+            "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+          "&:hover": {
+            background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+          },
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(255, 255, 255, 0.2)",
+            transform: "scale(0.1)",
+            transition: "transform 0.3s ease",
+            zIndex: -1,
+          },
+          "&:hover::after": {
+            transform: "scale(1)",
+          },
+        }}
+        onClick={handleToggle}
+        startIcon={< HomeIcon/>}
+      >
+        {isExpanded && "Home Loan"}
+      </Button>
 
       <div className="pt-5" style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
         <TextField

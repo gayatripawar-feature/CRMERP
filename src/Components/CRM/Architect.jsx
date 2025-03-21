@@ -7,6 +7,8 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Modal, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { FaEye } from "react-icons/fa";
+import FoundationIcon from '@mui/icons-material/Foundation';
+
 
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
@@ -22,7 +24,7 @@ const Architect = () => {
   const [filterType, setFilterType] = useState('');
   const [filterValue, setFilterValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  
+   const [isExpanded, setIsExpanded] = useState(true);
 const [isCollapsed, setIsCollapsed] = useState(false);
 
 
@@ -67,6 +69,12 @@ const [isCollapsed, setIsCollapsed] = useState(false);
   };
   
 
+   
+const handleToggle = () => {
+  setIsExpanded((prev) => !prev);
+};
+
+
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= Math.ceil(filteredLoans.length / rowsPerPage)) {
       setCurrentPage(newPage);
@@ -106,8 +114,8 @@ const [isCollapsed, setIsCollapsed] = useState(false);
         <>
       <h6>Letter Module / Engineer & Architect Letters</h6>
 
-{/* CRM Display Button */}
-      <div className="d-flex align-items-center mb-3">
+
+      {/* <div className="d-flex align-items-center mb-3">
         <Button
           onClick={handleCollapseToggle}
           variant="outlined"
@@ -118,7 +126,58 @@ const [isCollapsed, setIsCollapsed] = useState(false);
         >
           {!isCollapsed && <span className="text-success">Engineer & Architect Letter</span>}
         </Button>
-      </div>
+      </div> */}
+
+
+         
+
+<Button
+  variant="contained"
+  color="success"
+  sx={{
+    borderRadius: "20px",
+    transition: "width 0.3s ease, background 0.3s ease",
+    width: isExpanded ? "160px" : "50px",
+    minWidth: "50px",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    padding: "10px 15px",
+    marginTop: "20px",
+    marginBottom: "12px", // Updated margin-bottom
+    fontSize: "14px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    textTransform: "none",
+    position: "relative",
+    background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+    boxShadow:
+      "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+    "&:hover": {
+      background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+    },
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(255, 255, 255, 0.2)",
+      transform: "scale(0.1)",
+      transition: "transform 0.3s ease",
+      zIndex: -1,
+    },
+    "&:hover::after": {
+      transform: "scale(1)",
+    },
+  }}
+  onClick={handleToggle}
+  startIcon={<FoundationIcon />}
+>
+  {isExpanded && "Display Letters"}
+</Button>
+
 
       {/* {isCollapsed && (
         <> */}

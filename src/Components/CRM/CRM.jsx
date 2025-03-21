@@ -901,7 +901,7 @@ const loansData = [
       <IconButton
         sx={{
           color: 'primary.main',
-          fontSize: '5px',
+          fontSize: '2px',
           backgroundColor: 'rgba(0, 0, 0, 0.08)', // Light gray background for Edit
           borderRadius: '50%', // Makes the icon rounded
           padding: '5px',
@@ -918,7 +918,7 @@ const loansData = [
       <IconButton
         sx={{
           color: 'white', // Icon color white for contrast
-          fontSize: '5px',
+          fontSize: '2px',
           backgroundColor: '#25D366', // WhatsApp green background
           borderRadius: '50%', // Makes the icon rounded
           padding: '5px',
@@ -935,7 +935,7 @@ const loansData = [
       <IconButton
         sx={{
           color: 'white', // Icon color white for contrast
-          fontSize: '5px',
+          fontSize: '2px',
           backgroundColor: '#007BFF', // Blue background for Email
           borderRadius: '50%', // Makes the icon rounded
           '&:hover': {
