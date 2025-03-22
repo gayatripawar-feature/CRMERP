@@ -1,6 +1,9 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
+
+
+
 const FirmTable = ({ firms }) => {
   return (
     <TableContainer component={Paper}>
@@ -35,7 +38,82 @@ const FirmTable = ({ firms }) => {
       <TableBody>
         {firms.map((firm, index) => (
           <TableRow key={index} >
-            <TableCell >{firm.action}</TableCell>
+            {/* <TableCell >{firm.action}</TableCell> */}
+             <TableCell sx={{ padding: "15px" }}>
+                           
+            
+            
+            
+            <div style={{ display: "flex", gap: "5px" }}>
+                  
+                  <Tooltip title="Edit" arrow>
+                    <IconButton 
+                      color="primary" 
+                      onClick={() => console.log("Edit clicked")} 
+                      sx={{
+                        backgroundColor: "primary.main", 
+                        padding: "5px",  
+                        borderRadius: "50%", 
+                        color: "white", 
+                        fontSize: "18px" 
+                      }}
+                    >
+                      <FaEdit />
+                    </IconButton>
+                  </Tooltip>
+            
+                  <Tooltip title="WhatsApp" arrow>
+                    <IconButton 
+                      color="success" 
+                      onClick={() => window.open(`https://wa.me/${item.mobileNo}`, "_blank")}
+                      sx={{
+                        backgroundColor: "success.main", 
+                        padding: "5px",  
+                        borderRadius: "50%", 
+                        color: "white", 
+                        fontSize: "18px" 
+                      }}
+                    >
+                      <FaWhatsapp />
+                    </IconButton>
+                  </Tooltip>
+            
+               
+                  <Tooltip title="Email" arrow>
+                    <IconButton 
+                      color="primary" 
+                      onClick={() => window.location.href = `mailto:${item.email}`}
+                      sx={{
+                        backgroundColor: "primary.main", 
+                        padding: "5px",  
+                        borderRadius: "50%", 
+                        color: "white", 
+                        fontSize: "18px"
+                      }}
+                    >
+                      <FaEnvelope />
+                    </IconButton>
+                  </Tooltip>
+            
+               
+                  <Tooltip title="Assign To" arrow>
+                    <IconButton 
+                      color="secondary" 
+                      onClick={() => console.log("Assign To clicked")}
+                      sx={{
+                        backgroundColor: "#FFD700", 
+                        padding: "5px",  
+                        borderRadius: "50%", 
+                        color: "white", 
+                        fontSize: "18px"
+                      }}
+                    >
+                      <FaUserCircle />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+                  </TableCell>
+            
             <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.timestamp}</TableCell>
             <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.name}</TableCell>
             <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.address}</TableCell>

@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import FollowupHistoryTable from './FollowupHistoryTable';
 import UndefinedTable from './UndefinedTable';
 import BookedTable from './BookedTable';
+import PendingFollowuptable from './PendingFollowuptable';
 const sections = [
     { label: "Pending Follow Up", icon: <FaBuilding size={20} />, createLabel: "Create Firm" },
     { label: "Follow Up History", icon: <FaBuilding size={20} />, createLabel: "Create Project" },
@@ -186,8 +187,9 @@ const LeadsFollowUp = () => {
   
     
      {/* Table Section */}
-     {selectedTab === "firm" && <FirmTable />}
+    //  {selectedTab === "firm" && <FirmTable />}
     //  {selectedTab === "display" && <DisplayTable />}
+    {selectedTab  === "firm" && <PendingFollowuptable/>}
     {selectedTab === "display" && <FollowupHistoryTable />}
      {selectedTab === "landowner" && <LandownerTable />}
      {selectedTab === "allotement" && <FlatAllotement/>}
@@ -547,7 +549,8 @@ const LeadsFollowUp = () => {
           </div>
   
           <div className="mt-3">
-            <FirmTable firms={loans} />
+            {/* <FirmTable firms={loans} /> */}
+            <PendingFollowuptable firms={loans} />
           </div>
         </>
       ) : (

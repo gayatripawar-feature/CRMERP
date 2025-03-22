@@ -11,8 +11,9 @@ import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import { ToastContainer, toast } from 'react-toastify';
 import { FaArrowRight } from 'react-icons/fa'; 
-
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import EditIcon from "@mui/icons-material/Edit";
+import PersonIcon from "@mui/icons-material/Person";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper ,IconButton,Button} from '@mui/material';
 
 
 const SalesSharespace = () => {
@@ -21,6 +22,10 @@ const SalesSharespace = () => {
   const [showProjectTable, setShowProjectTable] = useState(true); 
   const [rows, setRows] = useState([{}]);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null); // Assuming it's from state
+  const [isEditing, setIsEditing] = useState(false);
+const [expanded, setExpanded] = useState(false); // For collapsing
+const [isExpanded, setIsExpanded] = useState(false);
   const [sharedWithMeRows, setSharedWithMeRows] = useState([
     {
       sharedFrom: "Sales",
@@ -62,6 +67,14 @@ const SalesSharespace = () => {
     }
   };
 
+  const handleRowSelect = (row) => {
+    setSelectedRow(row);
+}
+
+// const handleToggle = () => {
+//   setIsExpanded((prev) => !prev);
+// };
+
   const handleCancel = () => {
     setShowForm(false); 
     setShowProjectTable(true); 
@@ -100,6 +113,13 @@ const SalesSharespace = () => {
     },
   };
 
+
+  // Function to handle edit button click
+  const handleEdit = () => {
+    setShowForm(true); // Show form when clicking the edit button
+    setIsEditing(true);
+    setSelectedRow(row);
+  };
   // Handle file change
   const handleFileChange = (e, index) => {
     const newRows = [...rows];
@@ -151,14 +171,64 @@ const SalesSharespace = () => {
             cursor: 'pointer',
             borderRadius: '20px',
             background: activeIcon === 'project' ? '#f8f9fa' : 'transparent',
+            //  here just changed the buttons style..
           }}
         >
          
           <div className="d-flex justify-content-center align-items-center rounded-circle bg-white p-2 shadow">
-  <FaEye size={26} color="#ff5733" />  
+  <FaEye size={26} color="#28a745" />  
 </div>
           {activeIcon === 'project' && <span>Out Share Display</span>}
         </div>
+        
+{/* <Button
+      variant="contained"
+      color="success"
+      sx={{
+        borderRadius: "20px",
+        transition: "width 0.3s ease, background 0.3s ease",
+        width: isExpanded ? "160px" : "50px",
+        minWidth: "50px",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        padding: "10px 15px",
+        marginTop: "20px",
+        marginBottom: "28px",
+        fontSize: "14px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textTransform: "none",
+        position: "relative",
+        // background: "linear-gradient(0deg, rgba(22,9,240,1) 0%, rgba(49,110,244,1) 100%)",
+        background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+        boxShadow:
+          "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+        "&:hover": {
+          // background: "linear-gradient(0deg, rgba(2,126,251,1) 0%, rgba(0,3,255,1) 100%)",
+          background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+        },
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(255, 255, 255, 0.2)",
+          transform: "scale(0.1)",
+          transition: "transform 0.3s ease",
+          zIndex: -1,
+        },
+        "&:hover::after": {
+          transform: "scale(1)",
+        },
+      }}
+      onClick={handleToggle}
+      startIcon={isExpanded ? <PersonIcon />: <PersonIcon />}
+    >
+      {isExpanded && "Share Space"}
+    </Button> */}
 
         <div
           className="d-flex align-items-center gap-2 p-2"
@@ -178,22 +248,27 @@ const SalesSharespace = () => {
       </div>
 
      
-      <div className="d-flex justify-content-between align-items-center mt-4">
-        {activeIcon !== 'shared' && (
-          <button className="btn btn-primary" onClick={handleOutShare}>Out Share</button>
-        )}
-
-      </div>
-
       
+<div className="d-flex justify-content-between align-items-center mt-4">
+  {activeIcon !== 'shared' && (
+    <button
+      className="btn"
+      onClick={handleOutShare}
+      style={{ background: "#3621a9", color: "white", padding: "10px 20px", borderRadius: "5px", border: "none" }}
+    >
+      Out Share
+    </button>
+  )}
+</div>
+
       {showForm && activeIcon === 'project' && (
         <div className="mt-4">
           <h4>Add Share Information</h4>
           <form>
-            <table className="table table-bordered table-sm">
+            <table className=" table-bordered table-sm">
               <thead>
-                <tr>
-                  <th className="fw-bold bg-primary text-center fs-5">Share To</th>
+                <tr >
+                  <th className="fw-bold bg-primary text-center fs-5 ">Share To</th>
                   <th className="fw-bold bg-primary text-center fs-5">Type of Document</th>
                   <th className="fw-bold bg-primary text-center fs-5">Document</th>
                   <th className="fw-bold bg-primary text-center fs-5">Action</th>
@@ -254,76 +329,115 @@ const SalesSharespace = () => {
             </table>
           </form>
 
-          <button className="btn btn-secondary me-2" onClick={addRow}>Add Row</button>
-          <button className="btn btn-success me-2" onClick={handleSubmit}>Submit</button>
-          <button className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
+          <button className="btn btn-secondary me-2 mt-3" onClick={addRow}>Add Row</button>
+          <button className="btn btn-success me-2 mt-3" onClick={handleSubmit}>Submit</button>
+          <button className="btn btn-secondary mt-3" onClick={handleCancel}>Cancel</button>
         </div>
       )}
 
     
 
 
-{showProjectTable && activeIcon === 'project' && (
+{showProjectTable && activeIcon === 'project' && !showForm && ( 
   <div className="mt-4">
     <TableContainer component={Paper}>
-      <Table className="table" size="small" aria-label="project table">
-        <TableHead className=''>
-        
-          <TableRow sx={{ background: "#3621a9 !important" }}>
-
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>Action</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>Timestamp</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>Share To</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>Type of Document</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>Document</TableCell>
+      <Table className="" size="small" aria-label="project table">
+        <TableHead>
+          <TableRow sx={{ background: "#3621a9" }}>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>ACTION</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>TIMESTAMP</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>SHARE TO</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>TYPE OF DOCUMENT</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>DOCUMENT</TableCell>
           </TableRow>
-          
-
         </TableHead>
-     
+
         <TableBody>
-       
-          <TableRow>
-            <TableCell>{/* Action Data */}</TableCell>
-            <TableCell>{/* Timestamp Data */}</TableCell>
-            <TableCell>{/* Share To Data */}</TableCell>
-            <TableCell>{/* Type of Document Data */}</TableCell>
-            <TableCell>{/* Document Data */}</TableCell>
-          </TableRow>
+          {rows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell>
+                <IconButton
+                  size="small"
+                  onClick={() => handleEdit(row)}
+                  sx={{
+                    backgroundColor: "#4CAF50",
+                    color: "white",
+                    borderRadius: "50%",
+                    padding: "5px",
+                    "&:hover": { backgroundColor: "#388E3C" },
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </TableCell>
+              <TableCell>{row.timestamp}</TableCell>
+              <TableCell>{row.shareTo}</TableCell>
+              <TableCell>{row.documentType}</TableCell>
+             
+<TableCell>
+    <a
+        href={row.document || "#"} // If no document, prevent broken link
+        target={row.document ? "_blank" : "_self"} // Open in new tab only if there's a document
+        rel="noopener noreferrer"
+        style={{ pointerEvents: row.document ? "auto" : "none" }} // Disable click if no document
+    >
+        <FaEye size={20} color={row.document ? "blue" : "gray"} style={{ cursor: "pointer" }} />
+    </a>
+</TableCell>
+
+
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>
   </div>
 )}
 
-      {/* Collect Docs Section */}
-      {activeIcon === 'shared' && (
-        <div className="mt-4">
-         
-          <table className="table table-bordered table-sm">
-            <thead>
-              <tr style={{ background:"#3621a9"}}>
-                <th className="fw-bold bg-primary text-center fs-5">Shared From</th>
-                <th className="fw-bold bg-primary text-center fs-5">Timestamp</th>
-                <th className="fw-bold bg-primary text-center fs-5">Share To</th>
-                <th className="fw-bold bg-primary text-center fs-5">Type Of Document </th>
-                <th className="fw-bold bg-primary text-center fs-5">Document</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentRows.map((row, index) => (
-                <tr key={index}>
-                  <td>{row.sharedFrom}</td>
-                  <td>{row.timestamp}</td>
-                  <td>{row.shareTo}</td>
-                  <td>{row.documentType}</td>
-                  <td>{row.document}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+
+      
+      
+{activeIcon === 'shared' && (
+    <TableContainer component={Paper} className="mt-4">
+        <Table size="small" aria-label="shared table">
+            {/* Table Head */}
+            <TableHead>
+                <TableRow sx={{ background: "#3621a9" }}>
+                    <TableCell sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Shared From</TableCell>
+                    <TableCell sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Timestamp</TableCell>
+                    <TableCell sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Share To</TableCell>
+                    <TableCell sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Type Of Document</TableCell>
+                    <TableCell sx={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Document</TableCell>
+                </TableRow>
+            </TableHead>
+
+            {/* Table Body */}
+            <TableBody>
+                {currentRows.map((row, index) => (
+                    <TableRow key={index}>
+                        <TableCell align="center">{row.sharedFrom}</TableCell>
+                        <TableCell align="center">{row.timestamp}</TableCell>
+                        <TableCell align="center">{row.shareTo}</TableCell>
+                        <TableCell align="center">{row.documentType}</TableCell>
+
+                        {/* Document Column */}
+                        <TableCell align="center">
+                            <a
+                                href={row.document || "#"}
+                                target={row.document ? "_blank" : "_self"}
+                                rel="noopener noreferrer"
+                                style={{ pointerEvents: row.document ? "auto" : "none" }}
+                            >
+                                <FaEye size={20} color={row.document ? "blue" : "gray"} style={{ cursor: "pointer" }} />
+                            </a>
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    </TableContainer>
+)}
+
 
       <ToastContainer />
     </div>

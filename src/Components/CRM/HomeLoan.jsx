@@ -1017,7 +1017,7 @@ const displayLoans = () => {
   </TableCell>
 
   {/* Bank Name Column */}
-  <TableCell>{loan.bankName}</TableCell>
+  
 
   {/* Icon Button for Bank Name */}
   <TableCell>
@@ -1026,7 +1026,143 @@ const displayLoans = () => {
     </IconButton>
   </TableCell>
 
-  {/* Banker Name Column */}
+
+
+
+  <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+   <DialogTitle>Edit Loan Details</DialogTitle>
+   <DialogContent>
+    
+ <TextField
+     value={editingLoan?.flatNo || ''}
+     onChange={handleFlatNoChange} 
+     label="Flat No."
+     variant="outlined"
+     size="small"
+     fullWidth
+     error={editingLoan?.flatNo && !/^[0-9]*$/.test(editingLoan?.flatNo)} 
+     helperText={editingLoan?.flatNo && !/^[0-9]*$/.test(editingLoan?.flatNo) ? 'Only numbers allowed' : ''} 
+     sx={{ mb: 2 }}
+   />
+
+    
+
+
+<TextField
+   value={editingLoan?.nameOfAllotee || ''}
+   onChange={(e) => handleNameChange(e)}
+   label="Name of Allotee"
+  variant="outlined"
+  size="small"
+  fullWidth
+  error={!!editingLoan?.error}  
+  helperText={editingLoan?.error || ''}  
+  sx={{ mb: 2 }}
+/>
+    <div style={{ marginBottom: '8px' }}>Bank Name</div>
+    <Select
+      value={editingLoan?.bankName || ''}
+      onChange={(e) => handleInputChange(e, 'bankName')}
+      fullWidth
+      size="small"
+      sx={{ mb: 2 }} 
+    >
+       <MenuItem value="Loan Approved">Loan Approved</MenuItem>
+       <MenuItem value="HDFC Bank">HDFC Bank</MenuItem>
+       <MenuItem value="State Bank of India">State Bank of India</MenuItem>
+       <MenuItem value="IDBI Bank">IDBI Bank</MenuItem>
+       <MenuItem value="Axis Bank">Axis Bank</MenuItem>
+       <MenuItem value="Bank of Maharashtra">Bank of Maharashtra</MenuItem>
+    </Select>
+
+   
+    <div style={{ marginBottom: '8px' }}>Banker Name</div>
+    <Select
+      value={editingLoan?.bankerName || ''}
+      onChange={(e) => handleInputChange(e, 'bankerName')}
+      fullWidth
+      size="small"
+      sx={{ mb: 2 }} 
+    >
+     
+    </Select>
+
+     <TextField
+  value={editingLoan?.mobileNo || ''}
+  onChange={(e) => handleMobileNoChange(e)} 
+  label="Mobile No."
+  variant="outlined"
+  size="small"
+  fullWidth
+  type="tel" 
+  error={!!editingLoan?.errorMobileNo} 
+  helperText={editingLoan?.errorMobileNo || ''} 
+  sx={{ mb: 2 }} 
+/>
+
+
+   
+     <TextField
+      value={editingLoan?.loanAccountNo || ''}
+      onChange={(e) => handleLoanAccountChange(e)} 
+      label="Loan Account No."
+      variant="outlined"
+      size="small"
+      fullWidth
+      type="text"
+      sx={{ mb: 2 }} 
+    />
+
+   
+    <TextField
+      value={editingLoan?.loanAmount || ''}
+      onChange={(e) => handleLoanAmountChange(e)} 
+      label="Loan Amount"
+      variant="outlined"
+      size="small"
+      fullWidth
+      type="number"
+      InputProps={{
+        inputMode: 'numeric', 
+        pattern: '[0-9]*', 
+      }}
+      sx={{ mb: 2 }} 
+    />
+
+ <div style={{ marginBottom: '8px', fontWeight: '' }}>Sanction Letter</div>
+     <Button
+      variant="contained"
+      color=""
+      component="span"
+      sx={{ mb: 2 }}
+      onClick={() => document.getElementById('sanction-letter-input').click()} 
+    >
+      Choose File
+    </Button>
+    <input
+      id="sanction-letter-input"
+      type="file"
+      onChange={(e) => handleFileChange(e)}
+      style={{ display: 'none' }} 
+    />
+      
+      {selectedFileName && (
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            Selected File: {selectedFileName}
+          </Typography>
+        )}
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleCloseDialog} color="secondary">
+      Cancel
+    </Button>
+    <Button onClick={handleSave} color="primary" variant="contained">
+      Save
+    </Button>
+  </DialogActions>
+</Dialog>
+<ToastContainer /> 
+  
   <TableCell>{loan.bankerName}</TableCell>
   <TableCell>{loan.mobileNo}</TableCell>
   <TableCell>{loan.loanAccountNo}</TableCell>
