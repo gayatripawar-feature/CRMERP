@@ -1360,7 +1360,7 @@ const Template = () => {
   return (
     <div className="container mt-4">
       <h2>Sales Templates</h2>
-      <div className="row g-4 mt-5">
+      {/* <div className="row g-4 mt-5">
         {templates.map((template) => (
           <div className="col-12 col-sm-6 col-md-4" key={template.id}>
             <div className="card shadow-sm">
@@ -1386,7 +1386,47 @@ const Template = () => {
             </div>
           </div>
         ))}
+      </div> */}
+<div className="row g-4 mt-5">
+  {templates.map((template) => (
+    <div className="col-12 col-sm-6 col-md-4" key={template.id}>
+      <div className="card shadow-sm">
+        <div className="card-body">
+          <h5 className="card-title text-primary">{template.title}</h5>
+          <p className="card-text">{template.description}</p>
+          <div className="d-flex gap-3 justify-content-start">
+            {template.id === 1 ? (
+              <Button
+                variant="primary"
+                onClick={() => handleOpenModal("PDF")}
+              >
+                Download PDF
+              </Button>
+            ) : (
+              template.buttons.map((button, index) => (
+                <Button
+                  key={index}
+                  variant="primary"
+                  onClick={() =>
+                    handleOpenModal(
+                      button === "Form"
+                        ? template.formtype
+                        : button === "Display"
+                        ? template.displayType
+                        : "PDF"
+                    )
+                  }
+                >
+                  {button}
+                </Button>
+              ))
+            )}
+          </div>
+        </div>
       </div>
+    </div>
+  ))}
+</div>
 
       {/* MODAL */}
       <Modal show={openModal} onHide={handleCloseModal} size="lg">
@@ -1502,6 +1542,170 @@ const Template = () => {
               </tbody>
             </Table>
           )}
+
+<Modal.Body>
+  {/* Rate Approval Form */}
+  {modalContent === "rateApprovalDisplay" && (
+    <Form>
+      <Row>
+        <Col sm={6}>
+          <Form.Group controlId="formProjectName">
+            <Form.Label>Project Name</Form.Label>
+            <Form.Control type="text" placeholder="Enter Project Name" />
+          </Form.Group>
+        </Col>
+        <Col sm={6}>
+          <Form.Group controlId="formWing">
+            <Form.Label>Wing</Form.Label>
+            <Form.Control type="text" placeholder="Enter Wing" />
+          </Form.Group>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col sm={6}>
+          <Form.Group controlId="formFlatNo">
+            <Form.Label>Flat No.</Form.Label>
+            <Form.Control type="text" placeholder="Enter Flat No." />
+          </Form.Group>
+        </Col>
+        <Col sm={6}>
+          <Form.Group controlId="formType">
+            <Form.Label>Type</Form.Label>
+            <Form.Control type="text" placeholder="Enter Type" />
+          </Form.Group>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col sm={6}>
+          <Form.Group controlId="formDate">
+            <Form.Label>Date</Form.Label>
+            <Form.Control type="date" />
+          </Form.Group>
+        </Col>
+        <Col sm={6}>
+          <Form.Group controlId="formFacing">
+            <Form.Label>FACING (Direction)</Form.Label>
+            <Form.Control type="text" placeholder="Enter Facing Direction" />
+          </Form.Group>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col sm={6}>
+          <Form.Group controlId="formBrokerName">
+            <Form.Label>BROKER NAME (IF ANY)</Form.Label>
+            <Form.Control type="text" placeholder="Enter Broker Name" />
+          </Form.Group>
+        </Col>
+        <Col sm={6}>
+          <Form.Group controlId="formBasicRate">
+            <Form.Label>BASIC RATE</Form.Label>
+            <Form.Control type="number" placeholder="Enter Basic Rate" />
+          </Form.Group>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col sm={6}>
+          <Form.Group controlId="formPremiumFacing">
+            <Form.Label>PREMIUM FACING</Form.Label>
+            <Form.Control type="number" placeholder="Enter Premium Facing" />
+          </Form.Group>
+        </Col>
+        <Col sm={6}>
+          <Form.Group controlId="formFloorRise">
+            <Form.Label>FLOOR RISE</Form.Label>
+            <Form.Control type="number" placeholder="Enter Floor Rise" />
+          </Form.Group>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col sm={6}>
+          <Form.Group controlId="formDiscount">
+            <Form.Label>DISCOUNT</Form.Label>
+            <Form.Control type="number" placeholder="Enter Discount" />
+          </Form.Group>
+        </Col>
+        <Col sm={6}>
+          <Form.Group controlId="formAddDiscRef">
+            <Form.Label>ADD DISC. REF. BY</Form.Label>
+            <Form.Control type="text" placeholder="Enter Reference" />
+          </Form.Group>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col sm={12}>
+          <Form.Group controlId="formRemark">
+            <Form.Label>REMARK</Form.Label>
+            <Form.Control as="textarea" rows={2} placeholder="Enter Remark" />
+          </Form.Group>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col sm={6}>
+          <Form.Group controlId="formInfrastructure">
+            <Form.Label>INFRASTRUCTURE</Form.Label>
+            <Form.Control type="text" placeholder="Enter Infrastructure Details" />
+          </Form.Group>
+        </Col>
+        <Col sm={6}>
+          <Form.Group controlId="formTotalConsideration">
+            <Form.Label>TOTAL CONSIDERATION</Form.Label>
+            <Form.Control type="number" placeholder="Enter Total Consideration" />
+          </Form.Group>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col sm={6}>
+          <Form.Group controlId="formBrokerageAmount">
+            <Form.Label>BROKERAGE AMOUNT</Form.Label>
+            <Form.Control type="number" placeholder="Enter Brokerage Amount" />
+          </Form.Group>
+        </Col>
+      </Row>
+    </Form>
+  )}
+
+  {/* Package Wise Form (4th Card) */}
+  {modalContent === "packageDisplay" && (
+    <Form>
+      <Row>
+        <Col sm={6}>
+          <Form.Group controlId="formPackage">
+            <Form.Label>Package</Form.Label>
+            <Form.Control type="text" placeholder="Enter Package Details" />
+          </Form.Group>
+        </Col>
+        <Col sm={6}>
+          <Form.Group controlId="formCarpetArea">
+            <Form.Label>Carpet Area</Form.Label>
+            <Form.Control type="number" placeholder="Enter Carpet Area" />
+          </Form.Group>
+        </Col>
+      </Row>
+    </Form>
+  )}
+
+  {/* Agreement Value Wise Form (5th Card) */}
+  {modalContent === "agreementDisplay" && (
+    <Form>
+      <Row>
+        <Col sm={6}>
+          <Form.Group controlId="formAgreementValue">
+            <Form.Label>Agreement Value</Form.Label>
+            <Form.Control type="number" placeholder="Enter Agreement Value" />
+          </Form.Group>
+        </Col>
+        <Col sm={6}>
+          <Form.Group controlId="formAgreementCarpetArea">
+            <Form.Label>Agreement Carpet Area</Form.Label>
+            <Form.Control type="number" placeholder="Enter Carpet Area" />
+          </Form.Group>
+        </Col>
+      </Row>
+    </Form>
+  )}
+</Modal.Body>
+
+
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>

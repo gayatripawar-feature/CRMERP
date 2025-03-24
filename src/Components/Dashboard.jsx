@@ -277,6 +277,8 @@ const Dashboard = () => {
       transition: 'width 0.3s',  
       flexShrink: 0,  
       background:"#3621a9",
+      overflowY: 'auto',
+      scrollbarWidth: 'none',
       //  background: "linear-gradient(180deg, #ff6347 0%, #2c1a80 100%)",
 
 
@@ -360,7 +362,7 @@ const Dashboard = () => {
   { to: "/sales/saleslostvisits", icon: <FaRegTimesCircle />, label: "Lost Visits" },
   { to: "/sales/salestemplates", icon: <FaClipboard />, label: "Templates" },
   { to: "/sales/bookingform", icon: <FaRegEdit />, label: "Booking Form" },
-
+  { to: "/sales/channelpartner", icon: <FaRegEdit />, label: "Channel Partner" },
 
         ]}
       />

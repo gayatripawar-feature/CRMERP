@@ -17,10 +17,17 @@ import BookedTable from './BookedTable';
 import Lostleadstable from "./Lostleadstable";
 import LostVisitTable from './LostVisitTable';
 import BookingFormTable from './BookingFormTable';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import AdapterDateFns from '@mui/x-date-pickers/AdapterDateFns'; 
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { FaRegUser } from "react-icons/fa";
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'; // Named import
 
 const sections = [
-    { label: "Pending Follow Up", icon: <FaBuilding size={20} />, createLabel: "Create Firm" },
+    { label: "Booking Display", icon: <FaBuilding size={20} />, createLabel: "Create Firm" },
     
   ];
   const tabNames = [ "firm"]; 
@@ -32,7 +39,7 @@ const  BookingForm = () => {
     const [loans, setLoans] = useState([]);
     const [leadType, setLeadType] = useState("");
     const [assignedTo, setAssignedTo] = useState(""); 
-    const [expandedSection, setExpandedSection] = useState(0); 
+    // const [expandedSection, setExpandedSection] = useState(0); 
     const [showFirmForm, setShowFirmForm] = useState(false);
    
     const [showProjectForm, setShowProjectForm] = useState(false);
@@ -58,7 +65,8 @@ const  BookingForm = () => {
     const [mobileError, setMobileError] = useState("");
     const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState("");
-  
+  const [emailId1, setEmailId1] = useState("");
+
     const [firmPan, setFirmPan] = useState("");
     const [firmPanError, setFirmPanError] = useState("");
     
@@ -78,6 +86,7 @@ const  BookingForm = () => {
   const [aadharNumber, setAadharNumber] = useState('');
 //   const [leadType, setLeadType] = useState('');
 const [dateOfBirth, setDateOfBirth] = useState('');
+
 
   const [mobileEmail, setMobileEmail] = useState('');
   const dummyData = [
@@ -117,6 +126,100 @@ const [dateOfBirth, setDateOfBirth] = useState('');
       firmLightBillForAddressProof: "",
     });
   
+ 
+    const [carpetArea, setCarpetArea] = useState('');
+  const [wing, setWing] = useState('');
+  const [flatNo, setFlatNo] = useState('');
+  const [type, setType] = useState('');
+  const [soldRate, setSoldRate] = useState('');
+  const [enclosedBalcony, setEnclosedBalcony] = useState('');
+  const [openBalcony, setOpenBalcony] = useState('');
+  const [terrace, setTerrace] = useState('');
+  const [parking, setParking] = useState('');
+  const [floor, setFloor] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
+  // const [mobileError, setMobileError] = useState('');
+  // State for Section 3: Consideration
+  const [bookingAmount, setBookingAmount] = useState('');
+  const [totalConsideration, setTotalConsideration] = useState('');
+  const [stampDuty, setStampDuty] = useState('');
+  const [registrationFee, setRegistrationFee] = useState('');
+  const [gstAmount, setGstAmount] = useState('');
+
+  // State for Section 4: Documents
+  const [panCard, setPanCard] = useState('');
+  const [aadhaarCard, setAadhaarCard] = useState('');
+  const [marriageCertificate, setMarriageCertificate] = useState('');
+  const [passportPhoto, setPassportPhoto] = useState('');
+  const [otherDocuments, setOtherDocuments] = useState('');
+
+  // State for Section 5: Booking Payment Mode
+  const [paymentMode, setPaymentMode] = useState('');
+  const [chequeNo, setChequeNo] = useState('');
+  const [chequeDate, setChequeDate] = useState('');
+  const [bankName, setBankName] = useState('');
+  const [bankDetails, setBankDetails] = useState('');
+  const [alternateMobileNo, setAlternateMobileNo] = useState('');  // Define state for alternate mobile number
+  const [alternateMobileError, setAlternateMobileError] = useState('');
+  const [dateOfFlatBooking, setDateOfFlatBooking] = useState(null);
+  const [aadharNo, setAadharNo] = useState('');
+const [aadharError, setAadharError] = useState('');
+const [whatsAppNo, setWhatsAppNo] = useState('');
+const [whatsAppError, setWhatsAppError] = useState('');
+const [emailId, setEmailId] = useState('');
+const [address, setAddress] = useState('');
+const [coAllotteeName, setCoAllotteeName] = useState('');
+const [coAllotteeDob, setCoAllotteeDob] = useState('');
+const [coAllotteeOccupation, setCoAllotteeOccupation] = useState('');
+const [coAllotteePan, setCoAllotteePan] = useState(""); 
+const [coAllotteeAadhar, setCoAllotteeAadhar] = useState("");
+const [coAllotteeAadharError, setCoAllotteeAadharError] = useState("");
+// const [emailError, setEmailError] = useState('');
+const [expandedSection, setExpandedSection] = useState(null);
+const [isExpanded, setIsExpanded] = useState(false);
+  // const [dateOfBirth, setDateOfBirth] = useState(null);
+  const calculateStampDuty = () => {
+  //   return totalConsideration ? (totalConsideration * 0.07).toFixed(2) : 0;
+  };
+
+  const calculateRegistrationFee = () => {
+  //   return totalConsideration ? (totalConsideration * 0.02).toFixed(2) : 0;
+  };
+
+  const calculateGstAmount = () => {
+  //   return totalConsideration ? (totalConsideration * 0.18).toFixed(2) : 0;
+  };
+
+  const handleAadharChange = (e) => {
+    const value = e.target.value;
+    if (value.length > 12) {
+      setAadharError('AADHAR No. cannot exceed 12 digits');
+    } else {
+      setAadharError('');
+    }
+    setAadharNo(value);
+  };
+  const handleWhatsAppChange = (e) => {
+    const value = e.target.value;
+    if (value.length > 10) {
+      setWhatsAppNoError('WhatsApp No. cannot exceed 10 digits');
+    } else {
+      setWhatsAppNoError('');
+    }
+    setWhatsAppNo(value);
+  };
+  // const handleEmailChange = (e) => {
+  //   const value = e.target.value;
+  //   setEmailId(value);
+  
+  //   // Basic email validation regex
+  //   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  //   if (!emailRegex.test(value)) {
+  //     setEmailError('Please enter a valid email address');
+  //   } else {
+  //     setEmailError('');
+  //   }
+  // };
   
     const handleFirmPanChange = (e) => {
       const value = e.target.value;
@@ -133,8 +236,42 @@ const [dateOfBirth, setDateOfBirth] = useState('');
     const handleChangeDateOfBirth = (e) => {
         setDateOfBirth(e.target.value);  // Update the state with the new value
       };
+      // const handleAlternateMobileChange = (e) => {
+      //   const value = e.target.value;
+        
+      //   // Allow only numbers and restrict length to 10 digits
+      //   if (/^\d{0,10}$/.test(value)) {
+      //     setAlternateMobileNo(value);
+      //     setAlternateMobileError('');
+      //   } else if (value.length > 10) {
+      //     setAlternateMobileError('Mobile number cannot exceed 10 digits');
+      //   }
+      // };
 
 
+      const handleAlternateMobileChange = (e) => {
+        const value = e.target.value;
+    
+        // Check if the value is a number and limit it to 10 digits
+        if (/^\d{0,10}$/.test(value)) {
+          setAlternateMobileNo(value);
+          setAlternateMobileError('');
+        } else {
+          setAlternateMobileError('Mobile number cannot exceed 10 digits');
+        }
+      };
+    
+      // const handleMobileChange = (e) => {
+      //   const value = e.target.value;
+        
+      //   // Allow only numbers and limit to 10 digits
+      //   if (/^\d{0,10}$/.test(value)) {
+      //     setMobileNumber(value);
+      //     setMobileError('');
+      //   } else {
+      //     setMobileError('Mobile number should be 10 digits');
+      //   }
+      // };
      const handleFileChange = (e, key) => {
       const file = e.target.files[0]; 
       if (file) {
@@ -160,7 +297,20 @@ const [dateOfBirth, setDateOfBirth] = useState('');
           [leadId]: event.target.value
         });
       };
-  
+  // For second PAN field (Co-Allottee PAN)
+const handleCoAllotteePanChange = (e) => {
+  setCoAllotteePan(e.target.value);
+};
+
+const handleCoAllotteeAadharChange = (e) => {
+  const value = e.target.value;
+  if (value.length > 12) {
+    setCoAllotteeAadharError("AADHAR No. cannot exceed 12 digits");
+  } else {
+    setCoAllotteeAadharError("");
+  }
+  setCoAllotteeAadhar(value);
+};
   
     const handleOccupationChange = (e, index) => {
       const value = e.target.value;
@@ -213,6 +363,7 @@ const [dateOfBirth, setDateOfBirth] = useState('');
   } 
   
   
+
     
       setShowFirmForm(false);
       setShowProjectForm(false); 
@@ -263,6 +414,30 @@ const [dateOfBirth, setDateOfBirth] = useState('');
       }
     };
   
+    // const handlePanChange = (e) => {
+    //   setPanNumber(e.target.value); // Updates only PAN field
+    // };
+    
+    const handlePanChange = (e) => {
+      const value = e.target.value.toUpperCase(); // Convert input to uppercase
+    
+      // PAN regex pattern: First 5 letters, 4 numbers, last 1 letter
+      const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+    
+      if (value.length > 10) {
+        setPanError("PAN No. must be exactly 10 characters");
+      } else if (value.length === 10 && !panRegex.test(value)) {
+        setPanError("Invalid PAN No. format");
+      } else {
+        setPanError(""); // Clear error if valid
+      }
+    
+      setPanNumber(value);
+    };
+    // const handleAadharChange = (e) => {
+    //   setAadharNumber(e.target.value); // Updates only AADHAR field
+    // };
+    
     const handleNext = () => {
       setCurrentPage(currentPage + 1);
     };
@@ -307,6 +482,9 @@ const [dateOfBirth, setDateOfBirth] = useState('');
       });
     };
     
+    const handleAadharCoChange =() =>{
+
+    }
   
     const handleNameChange = (event) => {
       const value = event.target.value;
@@ -361,7 +539,20 @@ const [dateOfBirth, setDateOfBirth] = useState('');
       return panPattern.test(pan);
     };
   
+    // const handleMobileChange = (e) => {
+    //   const value = e.target.value;
     
+    //   // Ensure only numbers are entered and max length is respected
+    //   if (value.length > 10) {
+    //     setMobileError("Mobile number cannot exceed 10 digits");
+    //   } else if (!/^\d*$/.test(value)) {
+    //     setMobileError("Only numbers are allowed");
+    //   } else {
+    //     setMobileError(""); // Clear error if input is valid
+    //   }
+    
+    //   setMobileNumber(value); // Update the state with the entered value
+    // };
   
     const handlePartnerNameChange = (e, index) => {
       const value = e.target.value;
@@ -393,7 +584,9 @@ const [dateOfBirth, setDateOfBirth] = useState('');
       setFirmName(value);
     };
   
-  
+    const handleEmailChange1 = (e) => {
+      setEmailId1(e.target.value); // Update email state correctly
+    };
   
     const validateFirmName = () => {
       if (!firmName.trim()) {
@@ -530,32 +723,86 @@ const [dateOfBirth, setDateOfBirth] = useState('');
         setClosingExecutive(event.target.value);
       };
     
+      // const handleToggleSection = (index) => {
+      //   setExpandedSection(expandedSection === index ? null : index);
+      // };
+      
+  const handleToggle = () => {
+    setIsExpanded((prev) => !prev);
+  };
+
+
     return (
       <div className="main-content">
         <h6>Sales Module / Booking Management</h6>
        
-     
-   
+  
+          <div className="d-flex align-items-center mb-3">
+            {sections.map((section, index) => (
+              <Button
+                key={index}
+                onClick={() => handleToggleSection(index)}
+                variant="outlined"
+                color="success"
+                className='m-3'
+                style={{ borderRadius: '20px' }}
+                startIcon={<FaEye size={20} color="#28a745" />}
+              >
+                {expandedSection === index ? section.label : null}
+              </Button>
+            ))}
+          </div>
+       
+{/*     
       
-  
-  
-        <div className="d-flex align-items-center mb-3">
-          {sections.map((section, index) => (
-            <Button
-              key={index}
-              onClick={() => handleToggleSection(index)}
-              variant="outlined"
+        <Button
+              variant="contained"
               color="success"
-              className='m-3'
-              style={{ borderRadius: '20px' }}
-              startIcon={<FaEye size={20} color="#28a745" />}
+              sx={{
+                borderRadius: "20px",
+                transition: "width 0.3s ease, background 0.3s ease",
+                width: isExpanded ? "160px" : "50px",
+                minWidth: "50px",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                padding: "10px 15px",
+                marginTop: "20px",
+                marginBottom: "28px",
+                fontSize: "14px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textTransform: "none",
+                position: "relative",
+                // background: "linear-gradient(0deg, rgba(22,9,240,1) 0%, rgba(49,110,244,1) 100%)",
+                background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+                boxShadow:
+                  "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+                "&:hover": {
+                  // background: "linear-gradient(0deg, rgba(2,126,251,1) 0%, rgba(0,3,255,1) 100%)",
+                  background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+                },
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: "rgba(255, 255, 255, 0.2)",
+                  transform: "scale(0.1)",
+                  transition: "transform 0.3s ease",
+                  zIndex: -1,
+                },
+                "&:hover::after": {
+                  transform: "scale(1)",
+                },
+              }}
+              onClick={handleToggle}
+              startIcon={isExpanded ? <FaRegUser/> : <FaRegUser />}
             >
-              {expandedSection === index ? section.label : null}
-            </Button>
-          ))}
-        </div>
-  
-        
+              {isExpanded && "Registration"}
+            </Button> */}
   
        
   {expandedSection === 0 && selectedTab === "firm" && (
@@ -597,7 +844,7 @@ const [dateOfBirth, setDateOfBirth] = useState('');
   
       <div className="firm-form mt-4 p-3" style={{ maxHeight: "500px", overflowY: "auto", paddingRight: "10px" }}>
       <Paper className="p-4" elevation={4} style={{ borderRadius: "12px", paddingBottom: "20px" }}>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h5" gutterBottom sx={{ paddingTop: 3 }}>
         Section 1: Personal Information
         </Typography>
   
@@ -635,21 +882,27 @@ const [dateOfBirth, setDateOfBirth] = useState('');
           </Select>
         </FormControl>
       </Grid>
-    {/* </Grid> */}
+   
 
   
-    <Grid item xs={6}>
-      <TextField
-        label="Date Of Flat Booking"
-        fullWidth
-        variant="outlined"
-        value={firmPan}
-              onChange={handleFirmPanChange}
-              error={!!firmPanError}  // Show error if there is an error
-              helperText={firmPanError}
-      />
-    </Grid>
+    
 
+<Grid item xs={6}>
+  <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <DatePicker
+      label="Date Of Flat Booking"
+      value={dateOfFlatBooking}
+      onChange={(newValue) => setDateOfFlatBooking(newValue)}
+      renderInput={(params) => (
+        <TextField 
+          {...params} 
+          fullWidth 
+          variant="outlined" 
+        />
+      )}
+    />
+  </LocalizationProvider>
+</Grid>
     <Grid item xs={6}>
       <TextField
         label="NAME OF ALOTEE"
@@ -662,14 +915,7 @@ const [dateOfBirth, setDateOfBirth] = useState('');
               required 
       />
     </Grid>
-    {/* <Grid item xs={6}>
-      <TextField
-      type="date"
-        label=""
-        fullWidth
-        variant="outlined"
-      />
-    </Grid> */}
+    
     
     <Grid item xs={6}>
   <TextField
@@ -683,42 +929,40 @@ const [dateOfBirth, setDateOfBirth] = useState('');
     }}
   />
 </Grid>
+{/* <Grid item xs={6}>
+  <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <DatePicker
+      label="Date Of Birth"
+      value={dateOfBirth}
+      onChange={(newValue) => setDateOfBirth(newValue)}
+      renderInput={(params) => (
+        <TextField 
+          {...params} 
+          fullWidth 
+          variant="outlined" 
+        />
+      )}
+    />
+  </LocalizationProvider>
+</Grid> */}
+
 
 <Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel htmlFor="date-of-birth">Date Of Birth</InputLabel>
-    <TextField
-      id="date-of-birth"
+  <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <DatePicker
       label="Date Of Birth"
-      variant="outlined"
-      type="date"
-      value={dateOfBirth} // Use state for the date of birth value
-      onChange={(e) => setDateOfBirth(e.target.value)} // Update the state on change
-      required
-      InputLabelProps={{
-        shrink: true, // Ensures the label stays above the field
-      }}
+      value={dateOfFlatBooking}
+      onChange={(newValue) => setDateOfFlatBooking(newValue)}
+      renderInput={(params) => (
+        <TextField 
+          {...params} 
+          fullWidth 
+          variant="outlined" 
+        />
+      )}
     />
-  </FormControl>
+  </LocalizationProvider>
 </Grid>
-
-
-{/* 
-    <Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel id="lead-type-label ">Occupation</InputLabel>
-    <Select
-      labelId="lead-type-label"
-      id="lead-type"
-      value={leadType}
-      onChange={(e) => setLeadType(e.target.value)} 
-      label="Occupation"
-      
-    >
-      
-    </Select>
-  </FormControl>
-</Grid> */}
 
 <Grid item xs={6}>
   <FormControl fullWidth variant="outlined">
@@ -734,205 +978,250 @@ const [dateOfBirth, setDateOfBirth] = useState('');
   </FormControl>
 </Grid>
 
-<Grid item xs={6}>
+{/* <Grid item xs={6}>
   <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">PAN No.</InputLabel>
     <TextField
-      id="status"
-      value={status}
-      onChange={(e) => setStatus(e.target.value)} // Update the state with the entered value
       label="PAN No."
       variant="outlined"
+      value={panNumber} // Uses PAN-specific state
+      onChange={(e) => setPanNumber(e.target.value)} // Updates only PAN field
+    />
+  </FormControl>
+</Grid> */}
+<Grid item xs={6}>
+  <FormControl fullWidth variant="outlined">
+    <TextField
+      label="PAN No."
+      variant="outlined"
+      value={panNumber}
+      onChange={handlePanChange} // Apply validation
+      error={!!panError} // Show red border if error exists
+      helperText={panError} // Show validation message below field
+      inputProps={{ maxLength: 10 }} // Prevent entering more than 10 characters
     />
   </FormControl>
 </Grid>
-
-
 <Grid item xs={6}>
   <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">AADHAR No.</InputLabel>
     <TextField
-      id="status"
-      value={status}
-      onChange={(e) => setStatus(e.target.value)} // Update the state with the entered value
       label="AADHAR No."
       variant="outlined"
+      value={aadharNumber} // Uses AADHAR-specific state
+      onChange={(e) => setAadharNumber(e.target.value)} // Updates only AADHAR field
     />
   </FormControl>
 </Grid>
 
-
-
+{/* 
 <Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">MOBILE No.</InputLabel>
-    <Select
-      labelId="status-label"
-      id="status"
-      value={status}
-      onChange={(e) => setStatus(e.target.value)} // Update the state with the selected value
-      label="PAN No."
-    >
-     
-    </Select>
-  </FormControl>
+  <TextField
+    label="Mobile No."
+    fullWidth
+    variant="outlined"
+    value={mobileNumber}
+    onChange={handleMobileChange}
+    error={!!mobileError} // Show error styling if there's an error
+    helperText={mobileError} // Display the error message
+    inputProps={{
+      maxLength: 10, // Ensure max length
+      pattern: "[0-9]*", // Allow only numbers
+    }}
+  />
+</Grid> */}
+{/* <Grid item xs={6}>
+  <TextField
+    label="Mobile No."
+    fullWidth
+    variant="outlined"
+    value={mobileNumber}
+    onChange={handleMobileChange}
+    error={!!mobileError} // Show error if there's an error
+    helperText={mobileError} // Display the error message
+    inputProps={{
+      maxLength: 10, // Limit input to 10 characters
+      pattern: "[0-9]*", // Allows only numbers
+      inputMode: "numeric", // Opens the numeric keyboard on mobile
+    }}
+  />
+</Grid> */}
+<Grid item xs={6}>
+  <TextField
+    label="Mobile No"
+    fullWidth
+    variant="outlined"
+    value={alternateMobileNo}
+    onChange={(e) => {
+      const value = e.target.value;
+
+      // Check if the value length exceeds 10
+      if (value.length <= 10) {
+        setAlternateMobileNo(value); // Update value if it's less than or equal to 10
+        setAlternateMobileError(""); // Clear error message
+      } else {
+        setAlternateMobileError("Mobile number cannot exceed 10 digits"); // Set error if length exceeds 10
+      }
+    }}
+    error={!!alternateMobileError} // Show error if there's an error
+    helperText={alternateMobileError} // Display error message
+    inputProps={{
+      maxLength: 10, // Limit to 10 digits in the input field
+    }}
+  />
+</Grid>
+<Grid item xs={6}>
+  <TextField
+    label="Alternate Mobile No"
+    fullWidth
+    variant="outlined"
+    value={alternateMobileNo}
+    onChange={(e) => {
+      const value = e.target.value;
+
+      // Check if the value length exceeds 10
+      if (value.length <= 10) {
+        setAlternateMobileNo(value); // Update value if it's less than or equal to 10
+        setAlternateMobileError(""); // Clear error message
+      } else {
+        setAlternateMobileError("Mobile number cannot exceed 10 digits"); // Set error if length exceeds 10
+      }
+    }}
+    error={!!alternateMobileError} // Show error if there's an error
+    helperText={alternateMobileError} // Display error message
+    inputProps={{
+      maxLength: 10, // Limit to 10 digits in the input field
+    }}
+  />
 </Grid>
 
-
-
 <Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">Alternate Mobile No</InputLabel>
-    <Select
-      labelId="status-label"
-      id="status"
-      value={status}
-      onChange={(e) => setStatus(e.target.value)} // Update the state with the selected value
-      label="PAN No."
-    >
-     
-    </Select>
-  </FormControl>
+  <TextField
+    label="WhatsApp No."
+    fullWidth
+    variant="outlined"
+    value={whatsAppNo}
+    onChange={handleWhatsAppChange}
+    error={!!whatsAppError} // Show error if there's a validation error
+    helperText={whatsAppError} // Display the error message
+    inputProps={{
+      maxLength: 10, // Limit to 10 digits
+    }}
+  />
 </Grid>
 
-
-
+{/* 
 <Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">WhatsApp No.</InputLabel>
-    <Select
-      labelId="status-label"
-      id="status"
-      value={status}
-      onChange={(e) => setStatus(e.target.value)} // Update the state with the selected value
-      label="PAN No."
-    >
-     
-    </Select>
-  </FormControl>
-</Grid>
-
-
-
+  <TextField
+    label="Email ID"
+    fullWidth
+    variant="outlined"
+    value={emailId}
+    onChange={handleEmailChange}
+    error={!!emailError} // Show error if there's a validation error
+    helperText={emailError} // Display the error message
+  />
+</Grid> */}
 <Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">Email ID</InputLabel>
-    <Select
-      labelId="status-label"
-      id="status"
-      value={status}
-      onChange={(e) => setStatus(e.target.value)} // Update the state with the selected value
-      label="PAN No."
-    >
-     
-    </Select>
-  </FormControl>
-</Grid>
-
-
-
-<Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">AADHAR No.</InputLabel>
-    <Select
-      labelId="status-label"
-      id="status"
-      value={status}
-      onChange={(e) => setStatus(e.target.value)} // Update the state with the selected value
-      label="PAN No."
-    >
-     
-    </Select>
-  </FormControl>
-</Grid>
-
-
-
-<Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">ADDRESS</InputLabel>
-    <Select
-      labelId="status-label"
-      id="status"
-      value={status}
-      onChange={(e) => setStatus(e.target.value)} // Update the state with the selected value
-      label="PAN No."
-    >
-     
-    </Select>
-  </FormControl>
-</Grid>
-
-
-
-<Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">NAME OF CO-ALOTEE</InputLabel>
-    <Select
-      labelId="status-label"
-      id="status"
-      value={status}
-      onChange={(e) => setStatus(e.target.value)} // Update the state with the selected value
-      label="PAN No."
-    >
-     
-    </Select>
-  </FormControl>
-</Grid>
-
-
-
-<Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">
-    Date Of Birth (Co-Alotee)</InputLabel>
-    <Select
-      labelId="status-label"
-      id="status"
-      value={status}
-      onChange={(e) => setStatus(e.target.value)} // Update the state with the selected value
-      label="PAN No."
-    >
-     
-    </Select>
-  </FormControl>
-</Grid>
-
-
-
-<Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">Occupation (Co-Alotee)</InputLabel>
-    <Select
-      labelId="status-label"
-      id="status"
-      value={status}
-      onChange={(e) => setStatus(e.target.value)} // Update the state with the selected value
-      label="PAN No."
-    >
-     
-    </Select>
-  </FormControl>
-</Grid>
-
-
-
-
-<Grid item xs={6}>
-  <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">PAN No. (Co-Alotee)</InputLabel>
-    <TextField
-      id="pan-number"
-      label="PAN No. (Co-Alotee)"
-      variant="outlined"
-      value={panNumber} // Replace with your state value
-      onChange={(e) => setPanNumber(e.target.value)} // Replace with your state setter function
-    />
-  </FormControl>
+  <TextField
+    label="Email ID"
+    fullWidth
+    variant="outlined"
+    value={emailId1} // Ensure this matches the defined state variable
+    onChange={handleEmailChange1} // Ensure this updates the correct state
+    error={!!emailError}
+    helperText={emailError}
+  />
 </Grid>
 
 
 <Grid item xs={6}>
+  <TextField
+    label="AADHAR No."
+    fullWidth
+    variant="outlined"
+    value={aadharNo} // Use state for AADHAR No.
+    onChange={(e) => handleAadharChange(e)} // Handle the change
+    error={!!aadharError} // Show error if there's a validation error
+    helperText={aadharError} // Display the error message
+    inputProps={{
+      maxLength: 12, // Limit to 12 digits
+    }}
+  />
+</Grid>
+
+<Grid item xs={6}>
+  <TextField
+    label="Address"
+    fullWidth
+    variant="outlined"
+    value={address}
+    onChange={(e) => setAddress(e.target.value)} // Update state with entered value
+  />
+</Grid>
+
+
+<Grid item xs={6}>
+  <TextField
+    label="Name of Co-Allottee"
+    fullWidth
+    variant="outlined"
+    value={coAllotteeName}
+    onChange={(e) => setCoAllotteeName(e.target.value)} // Update state with entered value
+  />
+</Grid>
+
+
+<Grid item xs={6}>
+  <TextField
+    label="Date Of Birth (Co-Allottee)"
+    fullWidth
+    variant="outlined"
+    type="date"
+    value={coAllotteeDob} // Make sure to define this state in your component
+    onChange={(e) => setCoAllotteeDob(e.target.value)} // Updates state with the entered value
+    InputLabelProps={{
+      shrink: true, // Ensures the label stays above the field when a date is selected
+    }}
+  />
+</Grid>
+
+
+<Grid item xs={6}>
+  <TextField
+    label="Occupation (Co-Allottee)"
+    fullWidth
+    variant="outlined"
+    value={coAllotteeOccupation} // Make sure to define this state in your component
+    onChange={(e) => setCoAllotteeOccupation(e.target.value)} // Updates state with the entered value
+  />
+</Grid>
+
+<Grid item xs={6}>
+  <TextField
+    label="PAN No. (Co-Allottee)"
+    fullWidth
+    variant="outlined"
+    value={coAllotteePan} // Uses second PAN-specific state
+    onChange={handleCoAllotteePanChange} // Second PAN handler
+  />
+</Grid>
+
+{/* 
+<Grid item xs={6}>
+  <TextField
+    label="AADHAR No. (Co-Allottee)"
+    fullWidth
+    variant="outlined"
+    value={aadharNo}  // Should be 'aadharNo' and NOT 'panNumber'
+    onChange={handleAadharCoChange} // Correct function for AADHAR
+    error={!!aadharError}
+    helperText={aadharError}
+    inputProps={{ maxLength: 12 }} // Ensures AADHAR No. can't exceed 12 digits
+  />
+</Grid> */}
+
+
+
+{/* <Grid item xs={6}>
   <FormControl fullWidth variant="outlined">
     <InputLabel id="status-label">AADHAR No. (Co-Alotee)</InputLabel>
     <TextField
@@ -943,13 +1232,24 @@ const [dateOfBirth, setDateOfBirth] = useState('');
       onChange={(e) => setAadharNumber(e.target.value)} // Replace with your state setter function
     />
   </FormControl>
+</Grid> */}
+<Grid item xs={6}>
+  <TextField
+    label="AADHAR No. (Co-Allottee)"
+    fullWidth
+    variant="outlined"
+    value={coAllotteeAadhar} // Uses second AADHAR-specific state
+    onChange={handleCoAllotteeAadharChange} // Second AADHAR handler
+    error={!!coAllotteeAadharError} // Shows error if validation fails
+    helperText={coAllotteeAadharError} // Displays error message
+    inputProps={{ maxLength: 12 }} // Ensures AADHAR No. can't exceed 12 digits
+  />
 </Grid>
-
 
 
 <Grid item xs={6}>
   <FormControl fullWidth variant="outlined">
-    <InputLabel id="status-label">MOBILE No. & EMAIL (Co-Alotee)</InputLabel>
+    <InputLabel id="status-label"></InputLabel>
     <TextField
       id="mobile-email"
       label="MOBILE No. & EMAIL (Co-Alotee)"
@@ -959,12 +1259,472 @@ const [dateOfBirth, setDateOfBirth] = useState('');
     />
   </FormControl>
 </Grid>
+</Grid>
+<hr/>
 
+<Typography variant="h5" gutterBottom sx={{ paddingTop: 3 }}>
+Section 2: Particulars of Flat
+        </Typography>
 
+        <Grid container spacing={2}>
+  {/* Carpet Area (Sq. Mtr.) */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="carpet-area-label">Carpet Area in (Sq. Mtr.)</InputLabel>
+      <Select
+        labelId="carpet-area-label"
+        id="carpet-area"
+        value={carpetArea}
+        onChange={(e) => setCarpetArea(e.target.value)}
+        label="Carpet Area in (Sq. Mtr.)"
+      >
+        <MenuItem value="100">100</MenuItem>
+        <MenuItem value="150">150</MenuItem>
+        <MenuItem value="200">200</MenuItem>
+        <MenuItem value="250">250</MenuItem>
+      </Select>
+    </FormControl>
   </Grid>
-  
-  
 
+  {/* Wing */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="wing-label">Wing</InputLabel>
+      <Select
+        labelId="wing-label"
+        id="wing"
+        value={wing}
+        onChange={(e) => setWing(e.target.value)}
+        label="Wing"
+      >
+        <MenuItem value="A">A</MenuItem>
+        <MenuItem value="B">B</MenuItem>
+        <MenuItem value="C">C</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Flat No. */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="flat-no-label">FLAT No.</InputLabel>
+      <Select
+        labelId="flat-no-label"
+        id="flat-no"
+        value={flatNo}
+        onChange={(e) => setFlatNo(e.target.value)}
+        label="FLAT No."
+      >
+        <MenuItem value="101">101</MenuItem>
+        <MenuItem value="102">102</MenuItem>
+        <MenuItem value="103">103</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Type */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="type-label">Type</InputLabel>
+      <Select
+        labelId="type-label"
+        id="type"
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        label="Type"
+      >
+        <MenuItem value="2BHK">2BHK</MenuItem>
+        <MenuItem value="3BHK">3BHK</MenuItem>
+        <MenuItem value="4BHK">4BHK</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Sold Rate */}
+  <Grid item xs={6}>
+    <TextField
+      label="Sold Rate"
+      fullWidth
+      variant="outlined"
+      value={soldRate}
+      onChange={(e) => setSoldRate(e.target.value)}
+      type="number"
+    />
+  </Grid>
+
+  {/* Enclosed Balcony (Sq. Mtr.) */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="enclosed-balcony-label">Enclosed Balcony in (Sq. Mtr.)</InputLabel>
+      <Select
+        labelId="enclosed-balcony-label"
+        id="enclosed-balcony"
+        value={enclosedBalcony}
+        onChange={(e) => setEnclosedBalcony(e.target.value)}
+        label="Enclosed Balcony in (Sq. Mtr.)"
+      >
+        <MenuItem value="10">10</MenuItem>
+        <MenuItem value="15">15</MenuItem>
+        <MenuItem value="20">20</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Open Balcony (Sq. Mtr.) */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="open-balcony-label">Open Balcony in (Sq. Mtr.)</InputLabel>
+      <Select
+        labelId="open-balcony-label"
+        id="open-balcony"
+        value={openBalcony}
+        onChange={(e) => setOpenBalcony(e.target.value)}
+        label="Open Balcony in (Sq. Mtr.)"
+      >
+        <MenuItem value="5">5</MenuItem>
+        <MenuItem value="10">10</MenuItem>
+        <MenuItem value="15">15</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Terrace (Sq. Mtr.) */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="terrace-label">Terrace in (Sq. Mtr.)</InputLabel>
+      <Select
+        labelId="terrace-label"
+        id="terrace"
+        value={terrace}
+        onChange={(e) => setTerrace(e.target.value)}
+        label="Terrace in (Sq. Mtr.)"
+      >
+        <MenuItem value="30">30</MenuItem>
+        <MenuItem value="40">40</MenuItem>
+        <MenuItem value="50">50</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Parking */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="parking-label">Parking</InputLabel>
+      <Select
+        labelId="parking-label"
+        id="parking"
+        value={parking}
+        onChange={(e) => setParking(e.target.value)}
+        label="Parking"
+      >
+        <MenuItem value="Stack Parking">Stack Parking</MenuItem>
+        <MenuItem value="Open car parking">Open car parking</MenuItem>
+        <MenuItem value="Covered car parking">Covered car parking</MenuItem>
+        <MenuItem value="Basement car parking">Basement car parking</MenuItem>
+        <MenuItem value="Other">Other</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Floor */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="floor-label">Floor</InputLabel>
+      <Select
+        labelId="floor-label"
+        id="floor"
+        value={floor}
+        onChange={(e) => setFloor(e.target.value)}
+        label="Floor"
+      >
+        <MenuItem value="1st">1st</MenuItem>
+        <MenuItem value="2nd">2nd</MenuItem>
+        <MenuItem value="3rd">3rd</MenuItem>
+        <MenuItem value="4th">4th</MenuItem>
+        <MenuItem value="5th">5th</MenuItem>
+        <MenuItem value="6th">6th</MenuItem>
+        <MenuItem value="7th">7th</MenuItem>
+        <MenuItem value="8th">8th</MenuItem>
+        <MenuItem value="9th">9th</MenuItem>
+        <MenuItem value="10th">10th</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+</Grid>
+
+<hr/>
+  
+  
+{/*   
+<Typography variant="h5" gutterBottom>
+Section 3: Consideration
+        </Typography> */}
+{/* Section 3: Consideration */}
+<Typography variant="h5" gutterBottom sx={{ paddingTop: 3 }}>
+        Section 3: Consideration
+      </Typography>
+
+      <Grid container spacing={2}>
+        {/* Total Consideration (Auto Calculated) */}
+        <Grid item xs={6}>
+          <TextField
+            label="Total Consideration / Agreement Value"
+            fullWidth
+            variant="outlined"
+            value={totalConsideration}
+            onChange={(e) => setTotalConsideration(e.target.value)}
+            type="number"
+          />
+        </Grid>
+
+        {/* Booking Amount / Advance Payment */}
+        <Grid item xs={6}>
+          <TextField
+            label="Booking Amount / Advance Payment"
+            fullWidth
+            variant="outlined"
+            value={bookingAmount}
+            onChange={(e) => setBookingAmount(e.target.value)}
+            type="number"
+          />
+        </Grid>
+
+        <Grid item xs={6}>
+  <TextField
+    label="Stamp Duty (7% of Agreement Cost)"
+    fullWidth
+    variant="outlined"
+    value={stampDuty} // Bind state to allow manual input
+    onChange={(e) => setStampDuty(e.target.value)} // Update state on input
+  />
+</Grid>
+
+
+         {/* Registration Fee */}
+  <Grid item xs={6}>
+    <TextField
+      label="Registration Fee (Auto Calculated)"
+      fullWidth
+      variant="outlined"
+      value={registrationFee}
+      onChange={(e) => setRegistrationFee(e.target.value)}
+    />
+  </Grid>
+
+  {/* GST Amount */}
+  <Grid item xs={6}>
+    <TextField
+      label="GST Amount (Auto Calculated)"
+      fullWidth
+      variant="outlined"
+      value={gstAmount}
+      onChange={(e) => setGstAmount(e.target.value)}
+    />
+  </Grid>
+     
+      </Grid>
+
+      {/* Section 4: Documents */}
+      <Typography variant="h5" gutterBottom sx={{ paddingTop: 3 }}>
+        Section 4: Documents
+      </Typography>
+
+      <Grid container spacing={2}>
+  {/* PAN Card */}
+  {/* <Grid item xs={6}>
+    <Typography variant="body1">PAN Card (of both)</Typography>
+    <Button variant="contained" component="label">
+      Choose File
+      <input type="file" hidden onChange={(e) => setPanCard(e.target.files[0])}  />
+    </Button>
+    {panCard && <Typography variant="body2">{panCard.name}</Typography>}
+  </Grid> */}
+  <Grid item xs={6}>
+    <Typography variant="body1">PAN Card (of both)</Typography>
+    <Button 
+      variant="contained" 
+      component="label"
+      sx={{ backgroundColor: "white", color: "black", "&:hover": { backgroundColor: "#f0f0f0" } }}
+    >
+      Choose File
+      <input type="file" hidden onChange={(e) => setPanCard(e.target.files[0])} />
+    </Button>
+    {panCard && <Typography variant="body2">{panCard.name}</Typography>}
+  </Grid>
+
+  {/* AADHAR Card */}
+  <Grid item xs={6}>
+    <Typography variant="body1">AADHAR Card (of both)</Typography>
+    <Button 
+      variant="contained" 
+      component="label"
+      sx={{ backgroundColor: "white", color: "black", "&:hover": { backgroundColor: "#f0f0f0" } }}
+    >
+      Choose File
+      <input type="file" hidden onChange={(e) => setAadhaarCard(e.target.files[0])} />
+    </Button>
+    {aadhaarCard && <Typography variant="body2">{aadhaarCard.name}</Typography>}
+  </Grid>
+
+  {/* Marriage Certificate */}
+  <Grid item xs={6}>
+    <Typography variant="body1">MARRIAGE CERTIFICATE (If Available)</Typography>
+    <Button 
+      variant="contained" 
+      component="label"
+      sx={{ backgroundColor: "white", color: "black", "&:hover": { backgroundColor: "#f0f0f0" } }}
+    >
+      Choose File
+      <input type="file" hidden onChange={(e) => setMarriageCertificate(e.target.files[0])} />
+    </Button>
+    {marriageCertificate && <Typography variant="body2">{marriageCertificate.name}</Typography>}
+  </Grid>
+
+  {/* Passport Size Photo */}
+  <Grid item xs={6}>
+    <Typography variant="body1">PASSPORT SIZE PHOTO (of both)</Typography>
+    <Button 
+      variant="contained" 
+      component="label"
+      sx={{ backgroundColor: "white", color: "black", "&:hover": { backgroundColor: "#f0f0f0" } }}
+    >
+      Choose File
+      <input type="file" hidden onChange={(e) => setPassportPhoto(e.target.files[0])} />
+    </Button>
+    {passportPhoto && <Typography variant="body2">{passportPhoto.name}</Typography>}
+  </Grid>
+
+  {/* Any Other Documents */}
+  <Grid item xs={6}>
+    <Typography variant="body1">Any Other</Typography>
+    <Button 
+      variant="contained" 
+      component="label"
+      sx={{ backgroundColor: "white", color: "black", "&:hover": { backgroundColor: "#f0f0f0" } }}
+    >
+      Choose File
+      <input type="file" hidden onChange={(e) => setOtherDocuments(e.target.files[0])} />
+    </Button>
+    {otherDocuments && <Typography variant="body2">{otherDocuments.name}</Typography>}
+  </Grid>
+</Grid>
+
+
+      {/* Section 5: Booking Payment Mode */}
+      <Typography variant="h5" gutterBottom sx={{ paddingTop: 3 }}>
+        Section 5: Booking Payment Mode
+      </Typography>
+
+      <Grid container spacing={2}>
+        {/* Booking Amount */}
+        <Grid item xs={6}>
+          <TextField
+            label="Booking Amount"
+            fullWidth
+            variant="outlined"
+            value={bookingAmount}
+            onChange={(e) => setBookingAmount(e.target.value)}
+            type="number"
+            
+          />
+        </Grid>
+
+        {/* Payment Mode */}
+        <Grid item xs={6}>
+          <FormControl fullWidth variant="outlined">
+            <InputLabel id="payment-mode-label">Payment Mode</InputLabel>
+            <Select
+              labelId="payment-mode-label"
+              id="payment-mode"
+              value={paymentMode}
+              onChange={(e) => setPaymentMode(e.target.value)}
+              label="Payment Mode"
+            >
+              <MenuItem value="Cheque">Cheque</MenuItem>
+              <MenuItem value="Bank Transfer">Bank Transfer</MenuItem>
+              <MenuItem value="Cash">Cash</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+
+        {/* Cheque/TRN No. */}
+        <Grid item xs={6}>
+          <TextField
+            label="Cheque/TRN No."
+            fullWidth
+            variant="outlined"
+            value={chequeNo}
+            onChange={(e) => setChequeNo(e.target.value)}
+          />
+        </Grid>
+
+      
+       
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+  <Grid item xs={6}>
+    <DatePicker
+      label="Cheque/TRN Date"
+      value={chequeDate}
+      onChange={(newValue) => setChequeDate(newValue)} 
+      renderInput={(params) => (
+        <TextField 
+          {...params} 
+          fullWidth 
+          variant="outlined" 
+          sx={{ width: '100%' }} 
+        />
+      )}
+    />
+  </Grid>
+</LocalizationProvider>
+
+       
+        <Grid item xs={6}>
+  <FormControl fullWidth variant="outlined">
+    <InputLabel id="bank-name-label">Bank Name</InputLabel>
+    <Select
+      labelId="bank-name-label"
+      id="bank-name"
+      value={bankName}
+      onChange={(e) => setBankName(e.target.value)}
+      label="Bank Name"
+    >
+      <MenuItem value="State Bank of India (SBI)">State Bank of India (SBI)</MenuItem>
+      <MenuItem value="HDFC">HDFC Bank</MenuItem>
+      <MenuItem value="ICICI Bank">ICICI Bank</MenuItem>
+      <MenuItem value="Punjab National Bank">Punjab National Bank</MenuItem>
+      <MenuItem value="Bank of Baroda">Bank of Baroda</MenuItem>
+      <MenuItem value="Axis Bank">Axis Bank</MenuItem>
+      <MenuItem value="Canara Bank">Canara Bank</MenuItem>
+      <MenuItem value="Union Bank of India">Union Bank of India</MenuItem>
+      <MenuItem value="Bank of India">Bank of India</MenuItem>
+      <MenuItem value="Kotak Mahindra Bank">Kotak Mahindra Bank</MenuItem>
+      <MenuItem value="IndusInd Bank">IndusInd Bank</MenuItem>
+      <MenuItem value="Yes Bank">Yes Bank</MenuItem>
+      <MenuItem value="IDBI Bank">IDBI Bank</MenuItem>
+      <MenuItem value="Indian Bank">Indian Bank</MenuItem>
+      <MenuItem value="Central Bank of India">Central Bank of India</MenuItem>
+      <MenuItem value="Indian Overseas Bank">Indian Overseas Bank</MenuItem>
+      <MenuItem value="Federal Bank">Federal Bank</MenuItem>
+      <MenuItem value="UCO Bank">UCO Bank</MenuItem>
+      <MenuItem value="Bandhan Bank">Bandhan Bank</MenuItem>
+    </Select>
+  </FormControl>
+</Grid>
+
+
+        {/* Bank Details */}
+        <Grid item xs={6}>
+          <TextField
+            label="Bank Details"
+            fullWidth
+            variant="outlined"
+            value={bankDetails}
+            onChange={(e) => setBankDetails(e.target.value)}
+          />
+        </Grid>
+        </Grid>
+      
   
   
   

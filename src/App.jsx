@@ -41,6 +41,7 @@ import FirstVisitSteps from './Components/Sales/FirstVisitSteps';
 import SalesLostVisits from "./Components/Sales/SalesLostVisits";
 import Templates from "./Components/Sales/Templates";
 import BookingForm from './Components/Sales/BookingForm';
+import ChannelPartner from './Components/Sales/ChannelPartner';
 const App = () => {
 
   useEffect(() => {
@@ -92,6 +93,7 @@ const App = () => {
         <Route path ="/sales/saleslostvisits" element={<SalesLostVisits/>} />
         <Route path = "/sales/salestemplates" element={<Templates/>} />
         <Route path = "/sales/bookingform" element={<BookingForm/>} />
+        <Route path = "/sales/channelpartner" element={<ChannelPartner/>} />
         {/* <Route path ="/sales/salescalander" element={< SalesCalendar/>} />
         <Route path ="/sales/sharespace" element={< SalesSharespace/>} /> */}
          
