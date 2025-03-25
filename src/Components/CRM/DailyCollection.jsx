@@ -1,0 +1,536 @@
+
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Modal, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { FaEye } from "react-icons/fa";
+import { jsPDF } from "jspdf";
+import { ToastContainer, toast } from 'react-toastify';
+import { MonetizationOn } from "@mui/icons-material";
+
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+// import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import { IconButton } from "@mui/material";
+const fetchLoansData = async () => {
+  const response = await fetch('/api/getOCRCollection');
+  return response.json();
+};
+
+
+const DailyCollection= () => {
+  const [loans, setLoans] = useState([]);
+  const [filteredLoans, setFilteredLoans] = useState([]);
+   const [isExpanded, setIsExpanded] = useState(true);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [filterType, setFilterType] = useState('');
+  const [filterValue, setFilterValue] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+const [isCollapsed, setIsCollapsed] = useState(false);
+
+const [selectedDate, setSelectedDate] = useState(null);
+
+
+const [selectedTitle, setSelectedTitle] = useState("Mr."); 
+  const rowsPerPage = 10;
+  
+  // State for Modal
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState(null);
+  const [selectedLevel, setSelectedLevel] = useState("");
+  useEffect(() => {
+    loadLoansData();
+  }, []);
+
+  const loadLoansData = async () => {
+    const data = await fetchLoansData();
+    setLoans(data);
+    setFilteredLoans(data);
+  };
+
+  const handleOpenModal = (loan) => {
+    setSelectedLoan(loan);
+    setOpenModal(true);
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date); // Update state when date is selected
+  };
+  
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedLoan(null);
+  };
+
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+
+  const handleCollapseToggle = () => {
+    setIsCollapsed((prev) => !prev);
+  };
+  const handleChange = (event) => {
+    setSelectedLevel(event.target.value);
+  };
+
+
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= Math.ceil(filteredLoans.length / rowsPerPage)) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  
+  const handleResetFilters = () => {
+    setFilterType('');
+    setFilterValue('');
+  };
+
+  const resetFilters = () => {
+    setFilterType('');
+    setFilterValue('');
+    setStartDate('');
+    setEndDate('');
+  };
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = filteredLoans.slice(indexOfFirstRow, indexOfLastRow);
+
+
+  // / Handle Rows per page change
+const handleRowsPerPageChange = (e) => {
+  const value = parseInt(e.target.value, 10);
+  if (!isNaN(value) && value > 0) {
+    setRowsPerPage(value);
+  }
+};
+
+ 
+const handleToggle = () => {
+  setIsExpanded((prev) => !prev);
+};
+
+  const getFilterOptions = (type) => {
+    switch (type) {
+      case 'Flat Type':
+        return ['1BHK', '2BHK', '3BHK'];
+      case 'Parking':
+        return ['Basement', 'Parking 1','Parking 2'];
+      case 'Floor':
+        // return ['1', 'First', 'Second'];
+        return Array.from({ length: 15 }, (_, i) => (i + 1).toString());
+      case 'Rate':
+        return Array.from({ length: 120 }, (_, i) => (50000 * (i + 1)).toLocaleString()); // Generates values from 50,000 to 6,000,000
+      case 'Slab':
+        return ['OCR', 'GST', 'Stamp Duty', 'Registration', 'Booking', 'Plinth Amount Received', '1st Slab Level', '2nd Slab Level', '3rd Slab Level', '5th Slab Level', '7th Slab Level', '10th Slab Level', 'Brick Level', 'External Plaster Level', 'Flooring Level', 'Staircase Level', 'Lift Level', 'Possession Level'];
+      default:
+        return [];
+    }
+  };
+
+
+  
+  const handleSubmit = () => {
+    // Show success toast
+    toast.success("Form submitted successfully!");
+  };
+
+  const generatePDF = () => {
+    toast.info("PDF generation in progress...");
+    
+    const {
+      flatNo,
+      nameOfAllotee,
+      coAlloteeName,
+      totalAgreementValue,
+      demandRaising,
+      totalDuePayment,
+      paymentReceived,
+      paymentBalance,
+      paymentBalanceWords,
+    } = selectedLoan;
+  
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+    doc.text("Demand Letter", 20, 20);
+  
+    let y = 40; // Start position for text
+  
+    doc.text(`Flat No: ${flatNo}`, 20, y);
+    y += 10;
+    doc.text(`Name Of Allotee: ${nameOfAllotee}`, 20, y);
+    y += 10;
+    doc.text(`Name Of Co-Allotee: ${coAlloteeName}`, 20, y);
+    y += 10;
+    doc.text(`Total Agreement Value: ${totalAgreementValue}`, 20, y);
+    y += 10;
+    doc.text(`% Of Demand Raising: ${demandRaising}`, 20, y);
+    y += 10;
+    doc.text(`Total Due Payment: ${totalDuePayment}`, 20, y);
+    y += 10;
+    doc.text(`Payment Received Till Date: ${paymentReceived}`, 20, y);
+    y += 10;
+    doc.text(`Payment Balance Till Date: ${paymentBalance}`, 20, y);
+    y += 10;
+    doc.text(`Payment Balance (In Words): ${paymentBalanceWords}`, 20, y);
+  
+    doc.save("demand-letter.pdf");
+  };
+  
+ 
+
+
+  return (
+    <div className="main-content">
+       {!openModal ? (
+        <>
+      <h6>Sales Module / Daily Collection</h6>
+
+
+      
+
+<Button
+  variant="contained"
+  color="success"
+  sx={{
+    borderRadius: "20px",
+    transition: "width 0.3s ease, background 0.3s ease",
+    width: isExpanded ? "160px" : "50px",
+    minWidth: "50px",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    padding: "10px 15px",
+    marginTop: "20px",
+    marginBottom: "12px", // Updated margin-bottom
+    fontSize: "14px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    textTransform: "none",
+    position: "relative",
+    background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+    boxShadow:
+      "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+    "&:hover": {
+      background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+    },
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(255, 255, 255, 0.2)",
+      transform: "scale(0.1)",
+      transition: "transform 0.3s ease",
+      zIndex: -1,
+    },
+    "&:hover::after": {
+      transform: "scale(1)",
+    },
+  }}
+  onClick={handleToggle}
+  startIcon={< MonetizationOn />}
+>
+  {isExpanded && "Display Collections"}
+</Button>
+
+
+      
+
+<div className="d-flex align-items-center justify-content-between my-3 pt-4 pb-3">
+  <Button variant="contained" className="text-nowrap" style={{ minWidth: "150px" ,background:"#272ba8"}} color="primary" onClick={() => handleOpenModal(null)}>
+   Add Collection
+  </Button>
+
+ 
+             
+
+
+</div>
+
+
+<TableContainer component={Paper} className="mt-4" sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
+      <Table >
+        <TableHead>
+        <TableRow sx={{background:"#3621a9"}}>
+            <TableCell  sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>ACTION</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>	TIMESTAMP</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>RECEIPT NO.</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>CUSTOMER NAME</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>DEMAND LEVEL</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>	CHEQUE NO.</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>BANK NAME</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>DATE RECEIVED</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>AMOUNT RECEIVED</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>TOWARDS</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>PAYMENT MODE</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>DEMAND PERCENTAGE</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Planned</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Actual</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Amount Received by Account</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Date of Received Amount (A/c)</TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>Time Delay</TableCell>
+           
+           
+          </TableRow>
+        </TableHead>
+        <TableBody>
+  <TableRow>
+    <TableCell></TableCell> {/* ACTION */}
+    <TableCell></TableCell> {/* TIMESTAMP */}
+    <TableCell></TableCell> {/* RECEIPT NO. */}
+    <TableCell></TableCell> {/* CUSTOMER NAME */}
+    <TableCell></TableCell> {/* DEMAND LEVEL */}
+    <TableCell></TableCell> {/* CHEQUE NO. */}
+    <TableCell></TableCell> {/* BANK NAME */}
+    <TableCell></TableCell> {/* DATE RECEIVED */}
+    <TableCell></TableCell> {/* AMOUNT RECEIVED */}
+    <TableCell></TableCell> {/* TOWARDS */}
+    <TableCell></TableCell> {/* PAYMENT MODE */}
+    <TableCell></TableCell> {/* DEMAND PERCENTAGE */}
+    <TableCell></TableCell> {/* Planned */}
+    <TableCell></TableCell> {/* Actual */}
+    <TableCell></TableCell> {/* Amount Received by Account */}
+    <TableCell></TableCell> {/* Date of Received Amount (A/c) */}
+    <TableCell></TableCell> {/* Time Delay */}
+  </TableRow>
+</TableBody>
+
+      </Table>
+    </TableContainer>
+
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+        <button 
+          className="btn btn-secondary"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          style={{ borderRadius: '5px', padding: '13px 20px' ,backgroundColor:"#800080"}}
+        >
+          Previous
+        </button>
+
+
+
+        <button
+          className="btn btn-secondary"
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === Math.ceil(filteredLoans.length / rowsPerPage)}
+          style={{ borderRadius: '5px', padding: '13px 20px',backgroundColor:"#800080" }}
+        >
+          Next
+        </button>
+      </div>
+
+     
+
+
+      </>
+       ):(
+
+
+<Modal open={openModal} onClose={handleCloseModal}>
+  <Box
+    sx={{
+      width: 870,
+      bgcolor: "background.paper",
+      borderRadius: 2,
+      p: 4,
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      boxShadow: 24,
+    }}
+  >
+   
+  
+     <div style={{ backgroundColor: "#1976d2", padding: "8px 16px",marginBottom:"10px", borderRadius: "5px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <h5 style={{ margin: 0, color: "#fff" }}>Daily Collection</h5>
+      <Button 
+        onClick={handleCloseModal} 
+        style={{ fontSize: "16px", color: "#fff", fontWeight: "bold", minWidth: "auto" }}>
+        ✖
+      </Button>
+    </div>
+   
+
+    {/* Form Fields with two per row */}
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      <div style={{ display: "flex", gap: "20px" }}>
+        <TextField
+          label="Receipt No"
+          fullWidth
+          value={selectedLoan?.flatNo || ""}
+          onChange={(e) => setSelectedLoan({ ...selectedLoan, flatNo: e.target.value })}
+        />
+        <TextField
+          label="Name of Customer"
+          fullWidth
+          value={selectedLoan?.nameOfAllotee || ""}
+          onChange={(e) => setSelectedLoan({ ...selectedLoan, nameOfAllotee: e.target.value })}
+        />
+      </div>
+ 
+
+
+
+<div style={{ display: "flex", gap: "20px" }}>
+  
+  
+
+ 
+  <TextField
+    label="Cheque No."
+    fullWidth
+    value={selectedLoan?.coAlloteeName || ""}
+    onChange={(e) => setSelectedLoan({ ...selectedLoan, coAlloteeName: e.target.value })}
+  />
+</div>
+
+<FormControl sx={{ minWidth: 100 }}>
+          <InputLabel>Demand Level</InputLabel>
+          <Select
+            value={selectedLoan?.demandLevel || ""}
+            onChange={(e) => setSelectedLoan({ ...selectedLoan, demandLevel: e.target.value })}
+          >
+            <MenuItem value="OCR">OCR</MenuItem>
+            <MenuItem value="GST">GST</MenuItem>
+            <MenuItem value="Stamp Duty">Stamp Duty</MenuItem>
+            <MenuItem value="Registration">Registration</MenuItem>
+            <MenuItem value="Booking">Booking</MenuItem>
+            <MenuItem value="Plinth Level Amount Received">Plinth Level Amount Received</MenuItem>
+            <MenuItem value="1st Slab Disbursement - Amount Received">1st Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="2nd Slab Disbursement - Amount Received">2nd Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="3rd Slab Disbursement - Amount Received">3rd Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="5th Slab Disbursement">5th Slab Disbursement - Amount Received </MenuItem>
+            <MenuItem value="7th Slab Disbursement">7th Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="10th Slab Disbursement">10th Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="Brick Work Disbursement">Brick Work Disbursement - Amount Received</MenuItem>
+            <MenuItem value="External Plaster Disbursement">External Plaster Disbursement -- Amount Received</MenuItem>
+            <MenuItem value="Flooring Level Disbursement">Flooring Level Disbursement- - Amount Received</MenuItem>
+            <MenuItem value="Staircase Level Disbursement - Amount Received">Staircase Level Disbursement - Amount Received</MenuItem>
+            <MenuItem value="Possession Level Disbursement - Amount Received">Possession Level Disbursement - Amount Received</MenuItem>
+          </Select>
+        </FormControl>
+
+
+
+      <div style={{ display: "flex", gap: "20px" }}>
+        <TextField
+          label="Bank Name"
+          fullWidth
+          value={selectedLoan?.demandRaising || ""}
+          onChange={(e) => setSelectedLoan({ ...selectedLoan, demandRaising: e.target.value })}
+        />
+        <TextField
+         type="date"
+          label=""
+          fullWidth
+          value={selectedLoan?.totalDuePayment || ""}
+          onChange={(e) => setSelectedLoan({ ...selectedLoan, totalDuePayment: e.target.value })}
+        />
+      </div>
+
+      <div style={{ display: "flex", gap: "20px" }}>
+        <TextField type="number"
+          label="Amount Received by CRM"
+          fullWidth
+          value={selectedLoan?.paymentReceived || ""}
+          onChange={(e) => setSelectedLoan({ ...selectedLoan, paymentReceived: e.target.value })}
+        />
+        <TextField
+          label="
+Towards"
+          fullWidth
+          value={selectedLoan?.paymentBalance || ""}
+          onChange={(e) => setSelectedLoan({ ...selectedLoan, paymentBalance: e.target.value })}
+        />
+      </div>
+
+      {/* <div style={{ display: "flex", gap: "20px" }}>
+        <TextField
+          label="Mode of Payment"
+          fullWidth
+          value={selectedLoan?.paymentBalanceWords || ""}
+          onChange={(e) => setSelectedLoan({ ...selectedLoan, paymentBalanceWords: e.target.value })}
+        />
+      </div> */}
+
+      <div style={{ display: "flex", gap: "20px" }}>
+      <FormControl sx={{ minWidth: 200 }}>
+    <InputLabel>Mode of Payment</InputLabel>
+    <Select
+      value={selectedLoan?.paymentBalanceWords || ""}
+      onChange={(e) => setSelectedLoan({ ...selectedLoan, paymentBalanceWords: e.target.value })}
+    >
+      <MenuItem value="Cash">Cash</MenuItem>
+      <MenuItem value="Cheque">Cheque</MenuItem>
+      <MenuItem value="NEFT">NEFT</MenuItem>
+      <MenuItem value="RTGS">RTGS</MenuItem>
+      <MenuItem value="UPI">UPI</MenuItem>
+    </Select>
+  </FormControl>
+       
+      </div>
+    </div>
+
+ 
+
+<div>
+    
+      <div style={{ textAlign: "right", marginTop: 24 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}  
+        >
+          Submit
+        </Button>
+        <Button
+          className="m-2"
+          variant="contained"
+          color="primary"
+          onClick={generatePDF}
+        >
+          Generate PDF
+        </Button>
+      </div>
+
+     
+      <ToastContainer />
+    </div>
+
+
+  </Box>
+</Modal>
+       
+  
+  
+
+       
+       )
+      }
+
+      </div>
+    
+   
+  
+      
+
+  
+  );
+};
+
+export default DailyCollection;
+

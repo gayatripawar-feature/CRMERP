@@ -42,6 +42,7 @@ import SalesLostVisits from "./Components/Sales/SalesLostVisits";
 import Templates from "./Components/Sales/Templates";
 import BookingForm from './Components/Sales/BookingForm';
 import ChannelPartner from './Components/Sales/ChannelPartner';
+import DailyCollection from "./Components/CRM/DailyCollection";
 const App = () => {
 
   useEffect(() => {
@@ -105,6 +106,11 @@ const App = () => {
           <Route path ="crm/Agreement" element={<Agreement />} />
           <Route path="crm/architect" element={<Architect/>} />
           <Route path ="crm/Demand" element={<Demand />} />
+  
+          <Route path ="crm/dailycollection" element={<DailyCollection />} />
+          {/* <Route path ="crm/Demand" element={<Demand />} /> */}
+  
+  
 
         </Route>
       </Routes>
