@@ -144,3 +144,18 @@ th, td {
   height :30px;
 }
 
+.visit-table td {
+  font-size: 12px;
+  padding: 8px;
+  text-align: left;
+  width: 33.33%; /* Ensure equal width */
+}
+
+.label-cell {
+  font-weight: normal; /* Remove bold */
+  padding-right: 15px; /* Provide space for values */
+}
+
+.value-cell {
+  min-width: 150px; /* Space for backend values */
+}
