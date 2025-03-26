@@ -393,7 +393,8 @@ const Dashboard = () => {
     { to: "/crm/Demand", icon: <FaBell />, label: "Demand Raised" },
     { to: "/crm/dailycollection", icon: <FaBell />, label: "Daily Collection" },
     { to: "/crm/flatallotementreport", icon: <FaBell />, label: "Flat Allotement Report" },
-
+    {to :"/crm/parkingreport" ,icon :<FaBell />, label :"Parking Report"},
+    {to :"/crm/misreport" ,icon :<FaBell />, label :"MIS Report"},
       ]}
       />
    

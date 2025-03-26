@@ -202,3 +202,79 @@ th, td {
 
   margin-left: 0;  
 }
+
+
+
+
+.hover-shadow {
+  transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+.card-header {
+  font-size: 1.1rem;
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+.wing-header {
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: 8px;
+  margin-bottom: 1.5rem; /* Adds space below the heading */
+}
+
+.hover-shadow {
+  transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+.card-header {
+  font-size: 1.1rem;
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+
+
+
+/* Set the width for the custom card column */
+.card-column {
+  flex: 0 0 20%;  /* This ensures that each card takes up around 20% of the width */
+  max-width: 20%;  /* This limits the maximum width */
+}
+
+/* Optional: Add responsiveness for smaller screen sizes */
+@media (max-width: 1200px) {
+  .card-column {
+    flex: 0 0 25%;  /* Adjusts to 25% width on medium screens */
+    max-width: 25%;
+  }
+}
+
+@media (max-width: 768px) {
+  .card-column {
+    flex: 0 0 50%;  /* Adjusts to 50% width on small screens */
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-column {
+    flex: 0 0 100%;  /* Adjusts to 100% width on very small screens */
+    max-width: 100%;
+  }
+}

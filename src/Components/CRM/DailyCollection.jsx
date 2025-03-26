@@ -20,6 +20,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { IconButton } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';  // Using InfoIcon
 
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 
 const fetchLoansData = async () => {
@@ -49,7 +50,9 @@ const [selectedTitle, setSelectedTitle] = useState("Mr.");
   
   // State for Modal
   const [openModal, setOpenModal] = useState(false);
-  const [selectedLoan, setSelectedLoan] = useState(null);
+  const [selectedLoan, setSelectedLoan] = useState({
+    receivedDate: null, // Initialize with null or any default date
+  });
   const [selectedLevel, setSelectedLevel] = useState("");
   useEffect(() => {
     loadLoansData();
@@ -650,15 +653,19 @@ Towards"
                 onChange={(e) => setSelectedLoan({ ...selectedLoan, amountReceived: e.target.value })}
               />
 
-              {/* Received Date */}
-              <TextField
-                label="Received Date"
-                type="date"
-                fullWidth
-                value={selectedLoan?.receivedDate || ""}
-                onChange={(e) => setSelectedLoan({ ...selectedLoan, receivedDate: e.target.value })}
-                InputLabelProps={{ shrink: true }}
-              />
+             
+              <LocalizationProvider dateAdapter={AdapterDateFns}> {/* Localization Provider wrapping the component */}
+      <div style={{ width: '00%' }}>
+        
+        <DesktopDatePicker
+          label="Received Date"
+          inputFormat="yyyy-MM-dd" // Date format
+          value={selectedLoan.receivedDate}
+          onChange={(date) => setSelectedLoan({ ...selectedLoan, receivedDate: date })}
+          renderInput={(params) => <TextField {...params} fullWidth />} // Use MUI TextField for input
+        />
+      </div>
+    </LocalizationProvider>
             </div>
 
             {/* Action Buttons */}

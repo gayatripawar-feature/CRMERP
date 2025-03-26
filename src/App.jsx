@@ -44,7 +44,8 @@ import BookingForm from './Components/Sales/BookingForm';
 import ChannelPartner from './Components/Sales/ChannelPartner';
 import DailyCollection from "./Components/CRM/DailyCollection";
 import FlatAllotementReport from "./Components/CRM/FlatAllotementReport";
-
+import Parkingreport from "./Components/CRM/Parkingreport";
+import MISReport from "./Components/CRM/MISReport";
 const App = () => {
 
   useEffect(() => {
@@ -111,6 +112,8 @@ const App = () => {
   
           <Route path ="crm/dailycollection" element={<DailyCollection />} />
           <Route path ="crm/flatallotementreport" element ={<FlatAllotementReport />} />
+          <Route path ="crm/parkingreport" element ={<Parkingreport />}  />
+          <Route path ="crm/misreport" element ={<MISReport/>}  />
           {/* <Route path ="crm/Demand" element={<Demand />} /> */}
   
   

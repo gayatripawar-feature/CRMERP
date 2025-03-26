@@ -8,7 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Card } from 'antd';
 // import { HomeOutlined } from '@ant-design/icons';
-const FlatAllotmentReport = () => {
+const Parkingreport = () => {
   const [formData, setFormData] = useState({
     project: '',
     wing: '',
@@ -48,27 +48,39 @@ const FlatAllotmentReport = () => {
   };
 
 
-  const flatData = [
-    { flatNo: "101", floor: "1st floor", flatType: "1BHK", price: "$50,000", owner: "Landowner" },
-    { flatNo: "102", floor: "1st floor", flatType: "2BHK", price: "$70,000", owner: "Developer" },
-    { flatNo: "201", floor: "2nd floor", flatType: "1BHK", price: "$55,000", owner: "Investor" },
-    { flatNo: "202", floor: "2nd floor", flatType: "3BHK", price: "$90,000", owner: "Developer" },
-    { flatNo: "301", floor: "3rd floor", flatType: "1.5BHK", price: "$65,000", owner: "Landowner" },
-    { flatNo: "301", floor: "3rd floor", flatType: "1.5BHK", price: "$65,000", owner: "Landowner" },
+  const parkingData = [
+    {
+      flatNo: "101",
+      flatType: "2 BHK",
+      parkingType: "Covered Car Parking", // Could be "Covered", "Open", "Basement", or any other type
+    },
+    {
+      flatNo: "102",
+      flatType: "3 BHK",
+      parkingType: "Open Car Parking",
+    },
+    {
+      flatNo: "103",
+      flatType: "2 BHK",
+      parkingType: "Parking Available",
+    },
+    // More flat objects...
   ];
+  
 
   return (
     <div className="container mt-3" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
-      <h5 className="mb-5">Reports / Flat Allotment Report</h5>
+      <h5 className="mb-5">Reports/Parking Allotment Report</h5>
 
      
-      <div className="form-wrapper shadow-lg p-4 rounded" style={{ boxShadow: '0px 0px 15px 5px rgba(255, 255, 255, 0.7)', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+      
+
+<div className="form-wrapper shadow-lg p-4 rounded" style={{ boxShadow: '0px 0px 15px 5px rgba(255, 255, 255, 0.7)', overflowX: 'auto', whiteSpace: 'nowrap' }}>
   <LocalizationProvider dateAdapter={AdapterDateFns}>
     <form>
-     
+      {/* First Row */}
       <div className="row mb-3 pt-3">
-      
-        <div className="col-md-3">
+        <div className="col-md-4">
           <label htmlFor="project" className="form-label">Project:</label>
           <select id="project" name="project" className="form-select" value={formData.project} onChange={handleChange}>
             <option value="">--Select Project--</option>
@@ -77,8 +89,7 @@ const FlatAllotmentReport = () => {
           </select>
         </div>
 
-        {/* Wing Selection */}
-        <div className="col-md-3">
+        <div className="col-md-4">
           <label htmlFor="wing" className="form-label">Wing:</label>
           <select id="wing" name="wing" className="form-select" value={formData.wing} onChange={handleChange}>
             <option value="">Select Wing</option>
@@ -87,8 +98,7 @@ const FlatAllotmentReport = () => {
           </select>
         </div>
 
-        {/* Floor Selection */}
-        <div className="col-md-3">
+        <div className="col-md-4">
           <label htmlFor="floor" className="form-label">Floor:</label>
           <select id="floor" name="floor" className="form-select" value={formData.floor} onChange={handleChange}>
             <option value="">Select Floor</option>
@@ -97,20 +107,17 @@ const FlatAllotmentReport = () => {
             ))}
           </select>
         </div>
+      </div>
 
-        
-        <div className="col-md-3">
+      {/* Second Row */}
+      <div className="row mb-3 pt-3">
+        <div className="col-md-4">
           <label htmlFor="flatNo" className="form-label">Flat No:</label>
           <select id="flatNo" name="flatNo" className="form-select" value={formData.flatNo} onChange={handleChange}>
             <option value="">Select Flat No</option>
-          
           </select>
         </div>
-      </div>
 
-    
-      <div className="row mb-3 pt-3">
-      
         <div className="col-md-4">
           <label htmlFor="flatType" className="form-label">Flat Type:</label>
           <select id="flatType" name="flatType" className="form-select" value={formData.flatType} onChange={handleChange}>
@@ -126,7 +133,6 @@ const FlatAllotmentReport = () => {
           </select>
         </div>
 
-   
         <div className="col-md-4">
           <label htmlFor="approvalStatus" className="form-label">Approval Status:</label>
           <select id="approvalStatus" name="approvalStatus" className="form-select" value={formData.approvalStatus} onChange={handleChange}>
@@ -135,8 +141,10 @@ const FlatAllotmentReport = () => {
             <option value="unapproved">Unapproved</option>
           </select>
         </div>
+      </div>
 
- 
+      {/* Third Row */}
+      <div className="row mb-3 pt-3">
         <div className="col-md-4">
           <label htmlFor="ownership" className="form-label">Ownership:</label>
           <select id="ownership" name="ownership" className="form-select" value={formData.ownership} onChange={handleChange}>
@@ -147,11 +155,7 @@ const FlatAllotmentReport = () => {
             <option value="investor">Investor</option>
           </select>
         </div>
-      </div>
 
-     
-      <div className="row mb-3 pt-3">
-      
         <div className="col-md-4">
           <label htmlFor="saleStatus" className="form-label">Sale Status:</label>
           <select id="saleStatus" name="saleStatus" className="form-select" value={formData.saleStatus} onChange={handleChange}>
@@ -161,7 +165,20 @@ const FlatAllotmentReport = () => {
           </select>
         </div>
 
-        {/* Start Date */}
+        <div className="col-md-4">
+          <label htmlFor="parkingType" className="form-label">Parking Type:</label>
+          <select id="parkingType" name="parkingType" className="form-select" value={formData.parkingType} onChange={handleChange}>
+            <option value="">All</option>
+            <option value="basement">Basement Car Parking</option>
+            <option value="covered">Covered Car Parking</option>
+            <option value="open">Open Car Parking</option>
+            <option value="other">Parking Other</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Date Fields Row */}
+      <div className="row mb-3 pt-3">
         <div className="col-md-4 pt-4">
           <label htmlFor="startDate" className="form-label pt-3 p-1">Start Date:</label>
           <DatePicker
@@ -180,7 +197,6 @@ const FlatAllotmentReport = () => {
           />
         </div>
 
-        {/* End Date */}
         <div className="col-md-4 pt-4">
           <label htmlFor="endDate" className="form-label pt-3 p-1">End Date:</label>
           <DatePicker
@@ -198,11 +214,8 @@ const FlatAllotmentReport = () => {
             )}
           />
         </div>
-      </div>
 
-      
-      <div className="row mb-3">
-        <div className="col-md-12 text-end">
+        <div className="col-md-4 text-end">
           <button type="submit" className="btn btn-primary mt-4 w-25">Submit</button>
         </div>
       </div>
@@ -213,10 +226,9 @@ const FlatAllotmentReport = () => {
 
 
       
-
 <div className="row mt-5">
-
-  <div className="col-md-3 mb-4">
+ 
+  <div className="col-md-2.4 card-column mb-4">
     <div className="card">
       <div className="card-header bg-primary text-white m-2 p-3">Approval Status Summary</div>
       <div className="card-body d-flex justify-content-between">
@@ -235,7 +247,7 @@ const FlatAllotmentReport = () => {
   </div>
 
  
-  <div className="col-md-3 mb-4">
+  <div className="col-md-2.4 card-column mb-4">
     <div className="card">
       <div className="card-header bg-success text-white m-2 p-3">Ownership Summary</div>
       <div className="card-body d-flex justify-content-between">
@@ -259,15 +271,11 @@ const FlatAllotmentReport = () => {
     </div>
   </div>
 
-
-
-
-
-  <div className="col-md-3 mb-4">
+  {/* Flat Type Summary */}
+  <div className="col-md-2.4 card-column mb-4">
     <div className="card">
       <div className="card-header bg-danger text-white m-2 p-3">Flat Type Summary</div>
       <div className="card-body">
-      
         {["2.5 BHK", "4 BHK", "2 BHK", "3 BHK", "1 BHK", "1.5 BHK", "4.5 BHK"].map((flatType) => (
           <div className="d-flex justify-content-between mt-2" key={flatType}>
             <div>{flatType}:</div>
@@ -275,7 +283,7 @@ const FlatAllotmentReport = () => {
               className="bg-light rounded px-2"
               style={{ backgroundColor: '#ffccbc', color: '#d32f2f' }}
             >
-              {summaryData.flatTypeSummary[flatType] || 0} 
+              {summaryData.flatTypeSummary[flatType] || 0}
             </div>
           </div>
         ))}
@@ -283,9 +291,8 @@ const FlatAllotmentReport = () => {
     </div>
   </div>
 
-
   {/* Sale Status Summary */}
-  <div className="col-md-3 mb-4">
+  <div className="col-md-2.4 card-column mb-4">
     <div className="card">
       <div className="card-header bg-warning text-white m-2 p-3">Sale Status Summary</div>
       <div className="card-body d-flex justify-content-between">
@@ -303,11 +310,26 @@ const FlatAllotmentReport = () => {
     </div>
   </div>
 
-  
- 
+  {/* Parking Type Summary */}
+  <div className="col-md-2.4 card-column mb-4">
+    <div className="card">
+      <div className="card-header bg-info text-white m-2 p-3">Parking Type Summary</div>
+      <div className="card-body">
+        {["Covered Car Parking", "Open Car Parking", "Basement Car Parking", "Parking Other"].map((parkingType) => (
+          <div className="d-flex justify-content-between mt-2" key={parkingType}>
+            <div>{parkingType}:</div>
+            <div
+              className="bg-light rounded px-2"
+              style={{ backgroundColor: '#b2ebf2', color: '#00796b' }}
+            >
+              {summaryData?.parkingTypeSummary?.[parkingType] || 0}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
 </div>
-
-
 
 
 
@@ -319,37 +341,61 @@ const FlatAllotmentReport = () => {
 </div>
 
   
-  <div className="row mt-5">
-    {flatData.map((flat, index) => (
-      <div className="col-md-4 mb-4" key={index}>
-        <div className="card shadow-lg rounded">
+<div className="row mt-5">
+  {parkingData.map((flat, index) => (
+    <div className="col-md-4 mb-4" key={index}>
+      <div className="card shadow-lg rounded">
+        <div className="card-header text-white text-left p-3" style={{ background: 'linear-gradient(to right, #6a11cb, #2575fc)' }}>
+          Flat No: {flat.flatNo}
+        </div>
+
+        <div className="card-body">
+          {/* Flat Type */}
+          <div className="mb-3 text-left">
+            <strong>{flat.flatType}</strong>
+          </div>
+
+ {/* Vehicle Image */}
+{/* Vehicle Image from Pixabay */}
+<div className="text-center mb-3">
+  <img
+    src="https://cdn.pixabay.com/photo/2023/09/24/16/31/beetle-8273349_1280.jpg"  
+    alt="Volkswagen Beetle"
+    style={{ width: "100%", maxWidth: "300px", height: "auto" }} 
+  />
+</div>
+
+
+
+
+          {/* Parking Available Section */}
+          <div className="d-flex justify-content-between mb-3">
+            {/* Assuming flat.parkingType contains the type of parking available */}
+            <div className="w-100 mx-1 py-2 px-3 text-center" 
+              style={{
+                backgroundColor: flat.parkingType === "Covered Car Parking" ? "#4caf50" : 
+                                 flat.parkingType === "Open Car Parking" ? "#ffeb3b" : 
+                                 flat.parkingType === "Parking availble" ? "#2196f3" : 
+                                 "#9e9e9e", 
+                color: "#fff",
+                borderRadius: "5px"
+              }}>
+              {flat.parkingType || "No Parking"}
+            </div>
+          </div>
+
        
-          <div className="card-header text-white text-left p-3" style={{ background: 'linear-gradient(to right, #6a11cb, #2575fc)' }}>
-            Flat No: {flat.flatNo}
-          </div>
 
-          <div className="card-body">
-        
-            <div className="mb-3 text-left">
-              <strong>{flat.flatType}</strong>
-            </div>
-
-            <div className="d-flex justify-content-between mb-3">
-              <button className="btn btn-success btn-sm w-100 mx-1 py-2 px-3 hover-shadow">Approved</button>
-              <button className="btn btn-warning btn-sm w-100 mx-1 py-2 px-3 hover-shadow">Landowner</button>
-              <button className="btn btn-danger btn-sm w-100 mx-1 py-2 px-3 hover-shadow">Unsold</button>
-            </div>
-
-           
-            <div className="text-left text-muted">No Date</div>
-          </div>
+         
         </div>
       </div>
-    ))}
-  </div>
+    </div>
+  ))}
+</div>
+
 </div>
 </div>
   );
 };
 
-export default FlatAllotmentReport;
+export default Parkingreport;
