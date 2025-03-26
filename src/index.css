@@ -159,3 +159,46 @@ th, td {
 .value-cell {
   min-width: 150px; /* Space for backend values */
 }
+
+
+
+.square-day {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;  /* Adjust the height to make it square-shaped */
+  width: 60px;   /* Adjust the width to make it square-shaped */
+  background-color: #5ab7f9; /* Optional: Set a background color */
+  border: 1px solid #ddd;   /* Optional: Add a border for a square block effect */
+  border-radius: 25px; /* Optional: Add rounded corners if you prefer */
+}
+
+.square-day:hover {
+  background-color: #e0e0e0; /* Optional: Change background color on hover */
+}
+
+
+.square-block {
+  width: 70px; /* Increase size for better spacing */
+  height: 70px; /* Keep width and height same for a perfect square */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa; /* Light background */
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow instead of borders */
+  border-radius: 10px; /* Slight rounding for smooth design */
+  font-size: 1.2rem; /* Larger font for better visibility */
+  font-weight: bold;
+  transition: 0.2s ease-in-out;
+}
+
+.square-block:hover {
+  background-color: #e0e0e0; /* Light grey hover effect */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.calendar-grid {
+  max-width: 700px; 
+
+  margin-left: 0;  
+}

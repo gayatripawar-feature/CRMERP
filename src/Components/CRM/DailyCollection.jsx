@@ -5,9 +5,10 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Modal, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,   Dialog, DialogActions, DialogContent, DialogTitle, Button,TextField, Modal, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { FaEye } from "react-icons/fa";
 import { jsPDF } from "jspdf";
+import EditIcon from '@mui/icons-material/Edit'; // Importing the edit icon
 import { ToastContainer, toast } from 'react-toastify';
 import { MonetizationOn } from "@mui/icons-material";
 
@@ -17,6 +18,10 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 // import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { IconButton } from "@mui/material";
+import InfoIcon from '@mui/icons-material/Info';  // Using InfoIcon
+
+
+
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
   return response.json();
@@ -36,8 +41,9 @@ const DailyCollection= () => {
 const [isCollapsed, setIsCollapsed] = useState(false);
 
 const [selectedDate, setSelectedDate] = useState(null);
-
-
+const [openForm, setOpenForm] = useState(false)
+const [setAmount, setSetAmount] = useState(false);  // State for Modal
+const [setAmountForm, setSetAmountForm] = useState(false);
 const [selectedTitle, setSelectedTitle] = useState("Mr."); 
   const rowsPerPage = 10;
   
@@ -55,6 +61,15 @@ const [selectedTitle, setSelectedTitle] = useState("Mr.");
     setFilteredLoans(data);
   };
 
+
+  const handleEditClick = () => {
+    setOpenForm(true); // Open the form
+  };
+  const handleCloseForm = () => {
+    e.stopPropagation();
+    setOpenForm(false); // Close the form
+  };
+
   const handleOpenModal = (loan) => {
     setSelectedLoan(loan);
     setOpenModal(true);
@@ -66,6 +81,7 @@ const [selectedTitle, setSelectedTitle] = useState("Mr.");
   
   const handleCloseModal = () => {
     setOpenModal(false);
+    setOpenForm(false);
     setSelectedLoan(null);
   };
 
@@ -81,6 +97,15 @@ const [selectedTitle, setSelectedTitle] = useState("Mr.");
     setSelectedLevel(event.target.value);
   };
 
+  const handleOpen = () => {
+    setSetAmount(true); // Open the modal
+    setSetAmountForm(true);  // Optionally open the form inside the modal
+  };
+
+  const handleClose = () => {
+    setSetAmount(false); // Close the modal
+    setSetAmountForm(false);  // Optionally close the form inside the modal
+  };
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= Math.ceil(filteredLoans.length / rowsPerPage)) {
@@ -138,10 +163,23 @@ const handleToggle = () => {
 
 
   
+  // const handleSubmit = () => {
+  //   // Show success toast
+  //   toast.success("Form submitted successfully!");
+  //   setOpenForm(false);
+  //   setOpenModal(false);
+  // };
   const handleSubmit = () => {
     // Show success toast
     toast.success("Form submitted successfully!");
+  
+    // Delay the modal close for a short time to allow the toast to show
+    setTimeout(() => {
+      setOpenForm(false);  // Close the form modal
+      setOpenModal(false);  // Close any other modal (if applicable)
+    },2000);  // Adjust the timeout (in ms) if needed to match the toast duration
   };
+  
 
   const generatePDF = () => {
     toast.info("PDF generation in progress...");
@@ -286,7 +324,27 @@ const handleToggle = () => {
         </TableHead>
         <TableBody>
   <TableRow>
-    <TableCell></TableCell> {/* ACTION */}
+    {/* <TableCell></TableCell> ACTION */}
+    <TableCell>
+  {/* Edit Icon Button with #3621a9 background and reduced size */}
+  <IconButton
+    onClick={handleEditClick}
+    sx={{
+      backgroundColor: "#3621a9",  // Custom background color
+      color: "white",              // White icon color
+      fontSize: "14px",            // Reduced icon size
+      padding: "6px",              // Adjusted padding for smaller button
+      '&:hover': {
+        backgroundColor: "#2c1880",  // Darker shade for hover effect
+      }
+    }}
+  >
+    <EditIcon />
+  </IconButton>
+</TableCell>
+
+
+
     <TableCell></TableCell> {/* TIMESTAMP */}
     <TableCell></TableCell> {/* RECEIPT NO. */}
     <TableCell></TableCell> {/* CUSTOMER NAME */}
@@ -301,13 +359,316 @@ const handleToggle = () => {
     <TableCell></TableCell> {/* Planned */}
     <TableCell></TableCell> {/* Actual */}
     <TableCell></TableCell> {/* Amount Received by Account */}
-    <TableCell></TableCell> {/* Date of Received Amount (A/c) */}
+    {/* <TableCell></TableCell> Date of Received Amount (A/c) */}
+    <TableCell>
+        {/* Icon for Date of Received Amount (A/c) */}
+        <IconButton onClick={handleOpen} style={{ backgroundColor: '#3621a9' }}>
+          <InfoIcon style={{ color: '#fff', fontSize: 18 }} />  {/* Using InfoIcon with custom color */}
+        </IconButton>
+      </TableCell>
     <TableCell></TableCell> {/* Time Delay */}
   </TableRow>
 </TableBody>
 
       </Table>
     </TableContainer>
+
+  
+  
+
+
+  
+<Modal open={openForm} onClose={handleCloseForm}>
+  <Box
+    sx={{
+      width: 870,
+      bgcolor: "background.paper",
+      borderRadius: 2,
+      p: 4,
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      boxShadow: 24,
+    }}
+  >
+   
+  
+     <div style={{ backgroundColor: "#1976d2", padding: "8px 16px",marginBottom:"10px", borderRadius: "5px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <h5 style={{ margin: 0, color: "#fff" }}>Daily Collection</h5>
+      <Button 
+        onClick={handleCloseModal} 
+        
+        style={{ fontSize: "16px", color: "#fff", fontWeight: "bold", minWidth: "auto" }}>
+        ✖
+      </Button>
+    </div>
+   
+
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      <div style={{ display: "flex", gap: "20px" }}>
+        <TextField
+          label="Receipt No"
+          fullWidth
+          value={selectedLoan?.flatNo || ""}
+          onChange={(e) => setSelectedLoan({ ...selectedLoan, flatNo: e.target.value })}
+        />
+      
+
+<FormControl fullWidth>
+  <InputLabel>Name of Customer</InputLabel>
+  <Select
+    value={selectedLoan?.nameOfAllotee || ""}
+    onChange={(e) => setSelectedLoan({ ...selectedLoan, nameOfAllotee: e.target.value })}
+  >
+    <MenuItem value="">Select Customer</MenuItem>
+   
+  </Select>
+</FormControl>
+      </div>
+ 
+
+      <FormControl sx={{ minWidth: 100 }}>
+          <InputLabel>Demand Level</InputLabel>
+          <Select
+            value={selectedLoan?.demandLevel || ""}
+            onChange={(e) => setSelectedLoan({ ...selectedLoan, demandLevel: e.target.value })}
+          >
+            
+            <MenuItem value="OCR">OCR</MenuItem>
+            <MenuItem value="GST">GST</MenuItem>
+            <MenuItem value="Stamp Duty">Stamp Duty</MenuItem>
+            <MenuItem value="Registration">Registration</MenuItem>
+            <MenuItem value="Booking">Booking</MenuItem>
+            <MenuItem value="Plinth Level Amount Received">Plinth Level Amount Received</MenuItem>
+            <MenuItem value="1st Slab Disbursement - Amount Received">1st Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="2nd Slab Disbursement - Amount Received">2nd Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="3rd Slab Disbursement - Amount Received">3rd Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="5th Slab Disbursement">5th Slab Disbursement - Amount Received </MenuItem>
+            <MenuItem value="7th Slab Disbursement">7th Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="10th Slab Disbursement">10th Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="Brick Work Disbursement">Brick Work Disbursement - Amount Received</MenuItem>
+            <MenuItem value="External Plaster Disbursement">External Plaster Disbursement -- Amount Received</MenuItem>
+            <MenuItem value="Flooring Level Disbursement">Flooring Level Disbursement- - Amount Received</MenuItem>
+            <MenuItem value="Staircase Level Disbursement - Amount Received">Staircase Level Disbursement - Amount Received</MenuItem>
+            <MenuItem value="Possession Level Disbursement - Amount Received">Possession Level Disbursement - Amount Received</MenuItem>
+          </Select>
+        </FormControl>
+
+<div style={{ display: "flex", gap: "20px" }}>
+  
+  <TextField
+    label="Cheque No."
+    fullWidth
+    value={selectedLoan?.coAlloteeName || ""}
+    onChange={(e) => setSelectedLoan({ ...selectedLoan, coAlloteeName: e.target.value })}
+  />
+</div>
+
+
+
+
+
+      <div style={{ display: "flex", gap: "20px" }}>
+        <TextField
+          label="Bank Name"
+          fullWidth
+          value={selectedLoan?.demandRaising || ""}
+          onChange={(e) => setSelectedLoan({ ...selectedLoan, demandRaising: e.target.value })}
+        />
+      
+
+<FormControl fullWidth>
+  <InputLabel shrink>Date of Received</InputLabel>
+  <TextField
+    type="date"
+    fullWidth
+    value={selectedLoan?.totalDuePayment || ""}
+    onChange={(e) => setSelectedLoan({ ...selectedLoan, totalDuePayment: e.target.value })}
+  />
+</FormControl>
+
+
+      </div>
+
+      <div style={{ display: "flex", gap: "20px" }}>
+        <TextField type="number"
+          label="Amount Received by CRM"
+          fullWidth
+          value={selectedLoan?.paymentReceived || ""}
+          onChange={(e) => setSelectedLoan({ ...selectedLoan, paymentReceived: e.target.value })}
+        />
+        <TextField
+          label="
+Towards"
+          fullWidth
+          value={selectedLoan?.paymentBalance || ""}
+          onChange={(e) => setSelectedLoan({ ...selectedLoan, paymentBalance: e.target.value })}
+        />
+      </div>
+
+      
+<div style={{ display: "flex", gap: "20px", width: "100%" }}>
+  <FormControl sx={{ width: "100%" }}>
+    <InputLabel>Mode of Payment</InputLabel>
+    <Select
+      value={selectedLoan?.paymentBalanceWords || ""}
+      onChange={(e) => setSelectedLoan({ ...selectedLoan, paymentBalanceWords: e.target.value })}
+    >
+      <MenuItem value="Cash">Cash</MenuItem>
+      <MenuItem value="Cheque">Cheque</MenuItem>
+      <MenuItem value="NEFT">NEFT</MenuItem>
+      <MenuItem value="RTGS">RTGS</MenuItem>
+      <MenuItem value="UPI">UPI</MenuItem>
+    </Select>
+  </FormControl>
+</div>
+
+      
+<div style={{ display: "flex", gap: "20px" }}>
+  
+  
+
+ 
+  <TextField
+  type="number"
+    label="Demand Raised Percentage"
+    fullWidth
+    value={selectedLoan?.coAlloteeName || ""}
+    onChange={(e) => setSelectedLoan({ ...selectedLoan, coAlloteeName: e.target.value })}
+  />
+</div>
+    </div>
+
+ 
+
+<div>
+    
+      <div style={{ textAlign: "right", marginTop: 24 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}  
+        >
+         Update
+        </Button>
+       
+      </div>
+
+     
+      <ToastContainer />
+    </div>
+
+
+  </Box>
+</Modal>
+
+
+{/* Modal for Form */}
+<Modal
+        open={setAmount}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+            width: 600,
+          }}
+        >
+          {/* Form Title */}
+          <div style={{ backgroundColor: "#1976d2", padding: "8px 16px", marginBottom: "10px", borderRadius: "5px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h5 style={{ margin: 0, color: "#fff" }}>Amount Received by Account</h5>
+            <Button 
+              onClick={handleClose} 
+              style={{ fontSize: "16px", color: "#fff", fontWeight: "bold", minWidth: "auto" }}>
+              ✖
+            </Button>
+          </div>
+
+          {/* Form Fields */}
+          <form onSubmit={handleSubmit}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+              {/* Receipt No. */}
+              <TextField
+                label="Receipt No."
+                fullWidth
+                value={selectedLoan?.receiptNo || ""}
+                onChange={(e) => setSelectedLoan({ ...selectedLoan, receiptNo: e.target.value })}
+              />
+              
+              {/* Customer Name */}
+              <TextField
+                label="Customer Name"
+                fullWidth
+                value={selectedLoan?.customerName || ""}
+                onChange={(e) => setSelectedLoan({ ...selectedLoan, customerName: e.target.value })}
+              />
+              
+              {/* Demand Level Dropdown */}
+              <FormControl fullWidth>
+                <InputLabel>Demand Level</InputLabel>
+                <Select
+                  value={selectedLoan?.demandLevel || ""}
+                  onChange={(e) => setSelectedLoan({ ...selectedLoan, demandLevel: e.target.value })}
+                >
+                  <MenuItem value="OCR">OCR</MenuItem>
+            <MenuItem value="GST">GST</MenuItem>
+            <MenuItem value="Stamp Duty">Stamp Duty</MenuItem>
+            <MenuItem value="Registration">Registration</MenuItem>
+            <MenuItem value="Booking">Booking</MenuItem>
+            <MenuItem value="Plinth Level Amount Received">Plinth - Amount Received</MenuItem>
+            <MenuItem value="1st Slab Disbursement - Amount Received">1st Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="2nd Slab Disbursement - Amount Received">2nd Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="3rd Slab Disbursement - Amount Received">3rd Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="5th Slab Disbursement">5th Slab Disbursement - Amount Received </MenuItem>
+            <MenuItem value="7th Slab Disbursement">7th Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="10th Slab Disbursement">10th Slab Disbursement - Amount Received</MenuItem>
+            <MenuItem value="Brick Work Disbursement">Brick Level Disbursement - Amount Received</MenuItem>
+            <MenuItem value="Brick Work Disbursement">External Plaster Level Disbursement - Amount Received</MenuItem>
+            <MenuItem value="External Plaster Disbursement">Flooring Level Disbursement -- Amount Received</MenuItem>
+            <MenuItem value="Flooring Level Disbursement">Staircase Level Disbursement- - Amount Received</MenuItem>
+            <MenuItem value="Staircase Level Disbursement - Amount Received">Lift Level Disbursement - Amount Received</MenuItem>
+            <MenuItem value="Possession Level Disbursement - Amount Received">Possession Level Disbursement - Amount Received</MenuItem>
+                </Select>
+              </FormControl>
+
+              {/* Amount Received */}
+              <TextField
+                type="number"
+                label="Amount Received"
+                fullWidth
+                value={selectedLoan?.amountReceived || ""}
+                onChange={(e) => setSelectedLoan({ ...selectedLoan, amountReceived: e.target.value })}
+              />
+
+              {/* Received Date */}
+              <TextField
+                label="Received Date"
+                type="date"
+                fullWidth
+                value={selectedLoan?.receivedDate || ""}
+                onChange={(e) => setSelectedLoan({ ...selectedLoan, receivedDate: e.target.value })}
+                InputLabelProps={{ shrink: true }}
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ display: "flex", gap: "20px", marginTop: "20px", justifyContent: "flex-end" }}>
+              <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+              <Button variant="contained" color="primary" type="submit">Submit</Button>
+            </div>
+          </form>
+        </Box>
+      </Modal>
 
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
@@ -374,36 +735,33 @@ const handleToggle = () => {
           value={selectedLoan?.flatNo || ""}
           onChange={(e) => setSelectedLoan({ ...selectedLoan, flatNo: e.target.value })}
         />
-        <TextField
+        {/* <TextField
           label="Name of Customer"
           fullWidth
           value={selectedLoan?.nameOfAllotee || ""}
           onChange={(e) => setSelectedLoan({ ...selectedLoan, nameOfAllotee: e.target.value })}
-        />
+        /> */}
+
+<FormControl fullWidth>
+  <InputLabel>Name of Customer</InputLabel>
+  <Select
+    value={selectedLoan?.nameOfAllotee || ""}
+    onChange={(e) => setSelectedLoan({ ...selectedLoan, nameOfAllotee: e.target.value })}
+  >
+    <MenuItem value="">Select Customer</MenuItem>
+   
+  </Select>
+</FormControl>
       </div>
  
 
-
-
-<div style={{ display: "flex", gap: "20px" }}>
-  
-  
-
- 
-  <TextField
-    label="Cheque No."
-    fullWidth
-    value={selectedLoan?.coAlloteeName || ""}
-    onChange={(e) => setSelectedLoan({ ...selectedLoan, coAlloteeName: e.target.value })}
-  />
-</div>
-
-<FormControl sx={{ minWidth: 100 }}>
+      <FormControl sx={{ minWidth: 100 }}>
           <InputLabel>Demand Level</InputLabel>
           <Select
             value={selectedLoan?.demandLevel || ""}
             onChange={(e) => setSelectedLoan({ ...selectedLoan, demandLevel: e.target.value })}
           >
+            
             <MenuItem value="OCR">OCR</MenuItem>
             <MenuItem value="GST">GST</MenuItem>
             <MenuItem value="Stamp Duty">Stamp Duty</MenuItem>
@@ -424,6 +782,18 @@ const handleToggle = () => {
           </Select>
         </FormControl>
 
+<div style={{ display: "flex", gap: "20px" }}>
+  
+  <TextField
+    label="Cheque No."
+    fullWidth
+    value={selectedLoan?.coAlloteeName || ""}
+    onChange={(e) => setSelectedLoan({ ...selectedLoan, coAlloteeName: e.target.value })}
+  />
+</div>
+
+
+
 
 
       <div style={{ display: "flex", gap: "20px" }}>
@@ -433,13 +803,25 @@ const handleToggle = () => {
           value={selectedLoan?.demandRaising || ""}
           onChange={(e) => setSelectedLoan({ ...selectedLoan, demandRaising: e.target.value })}
         />
-        <TextField
-         type="date"
-          label=""
-          fullWidth
-          value={selectedLoan?.totalDuePayment || ""}
-          onChange={(e) => setSelectedLoan({ ...selectedLoan, totalDuePayment: e.target.value })}
-        />
+       {/* <TextField
+  type="date"
+  label="Date of Received"
+  fullWidth
+  value={selectedLoan?.totalDuePayment || ""}
+  onChange={(e) => setSelectedLoan({ ...selectedLoan, totalDuePayment: e.target.value })}
+/> */}
+
+<FormControl fullWidth>
+  <InputLabel shrink>Date of Received</InputLabel>
+  <TextField
+    type="date"
+    fullWidth
+    value={selectedLoan?.totalDuePayment || ""}
+    onChange={(e) => setSelectedLoan({ ...selectedLoan, totalDuePayment: e.target.value })}
+  />
+</FormControl>
+
+
       </div>
 
       <div style={{ display: "flex", gap: "20px" }}>
@@ -458,17 +840,9 @@ Towards"
         />
       </div>
 
-      {/* <div style={{ display: "flex", gap: "20px" }}>
-        <TextField
-          label="Mode of Payment"
-          fullWidth
-          value={selectedLoan?.paymentBalanceWords || ""}
-          onChange={(e) => setSelectedLoan({ ...selectedLoan, paymentBalanceWords: e.target.value })}
-        />
-      </div> */}
-
-      <div style={{ display: "flex", gap: "20px" }}>
-      <FormControl sx={{ minWidth: 200 }}>
+      
+<div style={{ display: "flex", gap: "20px", width: "100%" }}>
+  <FormControl sx={{ width: "100%" }}>
     <InputLabel>Mode of Payment</InputLabel>
     <Select
       value={selectedLoan?.paymentBalanceWords || ""}
@@ -481,8 +855,22 @@ Towards"
       <MenuItem value="UPI">UPI</MenuItem>
     </Select>
   </FormControl>
-       
-      </div>
+</div>
+
+      
+<div style={{ display: "flex", gap: "20px" }}>
+  
+  
+
+ 
+  <TextField
+  type="number"
+    label="Demand Raised Percentage"
+    fullWidth
+    value={selectedLoan?.coAlloteeName || ""}
+    onChange={(e) => setSelectedLoan({ ...selectedLoan, coAlloteeName: e.target.value })}
+  />
+</div>
     </div>
 
  
@@ -497,14 +885,7 @@ Towards"
         >
           Submit
         </Button>
-        <Button
-          className="m-2"
-          variant="contained"
-          color="primary"
-          onClick={generatePDF}
-        >
-          Generate PDF
-        </Button>
+       
       </div>
 
      

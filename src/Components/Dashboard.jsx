@@ -391,7 +391,8 @@ const Dashboard = () => {
     { to: "/crm/registration", icon: <FaStamp />, label: "Registration" },
     { to: "/crm/Architect", icon: <FaDraftingCompass />, label: "Engineer & Architect Letter" },
     { to: "/crm/Demand", icon: <FaBell />, label: "Demand Raised" },
-    { to: "/crm/dailycollection", icon: <FaBell />, label: "Daily Collection" }
+    { to: "/crm/dailycollection", icon: <FaBell />, label: "Daily Collection" },
+    { to: "/crm/flatallotementreport", icon: <FaBell />, label: "Flat Allotement Report" },
 
       ]}
       />

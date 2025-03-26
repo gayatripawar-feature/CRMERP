@@ -26,7 +26,7 @@ import CostSheet from './Components/Developer/CostSheet';
 import Salesmis from './Components/Developer/Salesmis';
 import Marketing from './Components/Developer/Marketing';
 import { Calendar } from 'lucide-react';
-// import SalesCalendar from "./Components/SalesCalendar";
+import SalesCalendar from "./Components/Sales/SalesCalendar";
 import SalesDashboard from "./Components/Sales/SalesDashboard";
 import SalesSharespace from "./Components/Sales/SalesSharespace";
 import Leads from "./Components/Sales/Leads";
@@ -43,6 +43,8 @@ import Templates from "./Components/Sales/Templates";
 import BookingForm from './Components/Sales/BookingForm';
 import ChannelPartner from './Components/Sales/ChannelPartner';
 import DailyCollection from "./Components/CRM/DailyCollection";
+import FlatAllotementReport from "./Components/CRM/FlatAllotementReport";
+
 const App = () => {
 
   useEffect(() => {
@@ -95,8 +97,8 @@ const App = () => {
         <Route path = "/sales/salestemplates" element={<Templates/>} />
         <Route path = "/sales/bookingform" element={<BookingForm/>} />
         <Route path = "/sales/channelpartner" element={<ChannelPartner/>} />
-        {/* <Route path ="/sales/salescalander" element={< SalesCalendar/>} />
-        <Route path ="/sales/sharespace" element={< SalesSharespace/>} /> */}
+         <Route path ="/sales/salescalander" element={< SalesCalendar/>} />
+       {/* <Route path ="/sales/sharespace" element={< SalesSharespace/>} /> */}
          
         
            <Route path="crm/CRM" element={<CRM/>} /> 
@@ -108,6 +110,7 @@ const App = () => {
           <Route path ="crm/Demand" element={<Demand />} />
   
           <Route path ="crm/dailycollection" element={<DailyCollection />} />
+          <Route path ="crm/flatallotementreport" element ={<FlatAllotementReport />} />
           {/* <Route path ="crm/Demand" element={<Demand />} /> */}
   
   
