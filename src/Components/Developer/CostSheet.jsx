@@ -89,7 +89,7 @@ const CostSheet = () => {
       ) : (
         <>
        
-          <div className="d-flex align-items-center mb-3">
+          {/* <div className="d-flex align-items-center mb-3">
             <Button
               onClick={handleToggle}
               variant="outlined"
@@ -99,14 +99,67 @@ const CostSheet = () => {
                 borderRadius: "20px",
                 minWidth: isExpanded ? "auto" : "50px",
                 padding: isExpanded ? "6px 16px" : "6px",
+                
               }}
               startIcon={<FaEye size={20} color="#28a745" />}
             >
               {isExpanded && <span className="text-success">Cost Sheet</span>}
             </Button>
-          </div>
+          </div> */}
 
-     
+
+<div className="d-flex align-items-center mb-3">
+  <Button
+    onClick={handleToggle}
+    variant="outlined"
+    color="success"
+    className="m-3"
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      backgroundColor: '#3621a9',
+      padding: '8px',
+      borderRadius: '20px',  // Border radius applied here
+      margin: '5px',
+      cursor: 'pointer',     // Add pointer cursor for better UX
+      transition: 'width 0.3s ease, background 0.3s ease',
+      width: isExpanded ? '180px' : '50px',  // Toggle width based on expanded state
+      minWidth: '50px',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      fontSize: '14px',
+      justifyContent: 'flex-start', // Align items to the left
+      textTransform: 'none',
+      position: 'relative',
+      background: 'linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)',  // Gradient background
+      boxShadow:
+        'inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)',
+    }}
+  >
+    {/* Hover effects */}
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'rgba(255, 255, 255, 0.2)',
+        transform: 'scale(0.1)',
+        transition: 'transform 0.3s ease',
+        zIndex: -1,
+      }}
+    ></div>
+
+    {/* Button Icon and Text */}
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <FaEye size={24} color="white" /> {/* Increased icon size and changed color to white */}
+      {isExpanded && <span style={{ color: 'white', fontSize: '16px', marginLeft: '8px' }}>Cost Sheet</span>} {/* Increased font size and set text color to white */}
+    </div>
+  </Button>
+</div>
+
+    
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
             <h3 style={{ margin: 0 }}>Cost Information</h3>
 
@@ -158,7 +211,7 @@ const CostSheet = () => {
 
 
 
-<h3 className="pt-5">Developer Entries</h3>
+<h3 className="pt-5 pb-3">Developer Entries</h3>
 <div className="button-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
   <Button 
     onClick={handleShowForm} 

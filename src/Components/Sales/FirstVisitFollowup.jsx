@@ -14,14 +14,23 @@ import BookedTable from './BookedTable';
 // import FirstvisitfollowupbookedTable from './FirstvisitfollowupUndefinedTable';
 import FirstvisitfollowupUndefinedTable from './FirstvisitfollowupUndefinedTable';
 import FirstvisitfollowupbookedTable from './FirstvisitfollowupbookedTable';
+// import { FaBuilding,    } from 'react-icons/fa'; 
+import {   FaHourglassStart,FaHistory, FaUserCheck, FaQuestionCircle } from 'react-icons/fa'; 
+
+// const sections = [
+//     { label: "Pending Follow Up", icon: <FaBuilding size={20} />, createLabel: "Create Firm" },
+//     { label: "Follow Up History", icon: <FaBuilding size={20} />, createLabel: "Create Project" },
+//     { label: "Booked", icon: <FaBuilding size={20} />, createLabel: "Create Landowner Info" },
+//     { label: "Undefined", icon: <FaBuilding size={20} />, createLabel: "Create Flat Allotment Info" },
+ 
+//   ];
 
 const sections = [
-    { label: "Pending Follow Up", icon: <FaBuilding size={20} />, createLabel: "Create Firm" },
-    { label: "Follow Up History", icon: <FaBuilding size={20} />, createLabel: "Create Project" },
-    { label: "Booked", icon: <FaBuilding size={20} />, createLabel: "Create Landowner Info" },
-    { label: "Undefined", icon: <FaBuilding size={20} />, createLabel: "Create Flat Allotment Info" },
- 
-  ];
+  { label: "Pending Follow Up", icon: <FaHourglassStart size={20} />, createLabel: "Create Firm" }, // Use FaHistory for pending follow-up
+  { label: "Follow Up History", icon: <FaHistory size={20} />, createLabel: "Create Project" }, // Use FaHistory for follow-up history
+  { label: "Booked", icon: <FaUserCheck size={20} />, createLabel: "Create Landowner Info" }, // Use FaUserCheck for booked
+  { label: "Undefined", icon: <FaQuestionCircle size={20} />, createLabel: "Create Flat Allotment Info" }, // Use FaQuestionCircle for undefined
+];
   const tabNames = [ "firm", "display", "landowner","allotement"]; 
 
 const FirstvisitFollowup = () => {
@@ -522,7 +531,7 @@ const FirstvisitFollowup = () => {
       
   
   
-        <div className="d-flex align-items-center mb-3">
+        {/* <div className="d-flex align-items-center mb-3">
           {sections.map((section, index) => (
             <Button
               key={index}
@@ -536,8 +545,77 @@ const FirstvisitFollowup = () => {
               {expandedSection === index ? section.label : null}
             </Button>
           ))}
+        </div> */}
+        <div className='d-flex align-items-center mb-3'>
+        {sections.map((section, index) => (
+  <div
+    key={index}
+    className="d-flex align-items-center"  // Added Bootstrap d-flex and align-items-center for flexbox
+    style={{
+      backgroundColor: '#3621a9',
+      padding: '8px',
+      borderRadius: '20px',
+      margin: '5px',
+      cursor: 'pointer', // Add pointer cursor for better UX
+      transition: "width 0.3s ease, background 0.3s ease",
+      width: expandedSection === index ? "220px" : "50px", // Toggle width based on expanded state
+      minWidth: "50px",
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      fontSize: "14px",
+      justifyContent: "center", // Can be overridden by Bootstrap classes
+      textTransform: "none",
+      position: "relative",
+      background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)", // Gradient background
+      boxShadow: "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+    }}
+    onClick={() => handleToggleSection(index)}  // onClick function for handling clicks
+  >
+    {/* Modify icon size here */}
+    {React.cloneElement(section.icon, { 
+      style: { 
+        marginRight: '8px', 
+        fontSize: expandedSection === index ? '150px' : '160px', // Increase the size of the icon when expanded
+        color: '#fff',
+        transition: "font-size 0.3s ease",  // Optional: Add transition for a smooth size change
+      }
+    })}
+
+    {/* Conditionally display label based on expandedSection */}
+    {expandedSection === index ? (
+      <span className="p-1 fw-bold fs-6" style={{ color: 'white', marginLeft: '10px' }}>
+        {section.label}
+      </span>
+    ) : null}
+
+    {/* Hover effects */}
+    <div style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(255, 255, 255, 0.2)",
+      transform: "scale(0.1)",
+      transition: "transform 0.3s ease",
+      zIndex: -1,
+    }}></div>
+
+    <div
+      style={{
+        "&:hover": {
+          background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+        },
+        "&:hover div": {
+          transform: "scale(1)",
+        },
+      }}
+    ></div>
+  </div>
+))}
         </div>
-  
+
+
         
   
        

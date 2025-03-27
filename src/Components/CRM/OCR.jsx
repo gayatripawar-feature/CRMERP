@@ -49,7 +49,7 @@ const OCR = () => {
   const [floor, setFloor] = useState('');
   const [rate, setRate] = useState('');
   
-  // State to toggle filter visibility
+  
   const [showFilters, setShowFilters] = useState(false);
   const [showCRM, setShowCRM] = useState(false);  // State for CRM toggle
   const [isCollapsed, setIsCollapsed] = useState(false); // State for collapse toggle
@@ -71,6 +71,12 @@ const OCR = () => {
   const [expanded, setExpanded] = useState(false); // For collapsing
   const [editingIndex, setEditingIndex] = useState(null);
   const [inputValue, setInputValue] = useState("");
+
+
+  // const [loanData, setLoanData] = useState(filteredLoans);
+
+
+
   useEffect(() => {
     loadLoansData();
   }, []);
@@ -141,15 +147,11 @@ const OCR = () => {
   };
 
   const handleRowsPerPageChange = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10)); // Update rows per page
-    setCurrentPage(1); // Reset to first page whenever rows per page is changed
+    setRowsPerPage(parseInt(event.target.value, 10)); 
+    setCurrentPage(1); 
   };
 
 
-  // const handleEditClick = (flatNo, historyCashWithAV) => {
-  //   setEditingFlatNo(flatNo); // Start editing the selected flat
-  //   setEditingHistoryCashWithAV(historyCashWithAV); // Set the value to be edited
-  // };
 
   // Handle change in History Cash With AV value
   const handleHistoryCashWithAVChange = (flatNo, value) => {
@@ -158,43 +160,18 @@ const OCR = () => {
         loan.flatNo === flatNo ? { ...loan, historyCashWithAV: value } : loan
       )
     );
-    setEditingFlatNo(null); // Stop editing after change
+    setEditingFlatNo(null); 
   };
 
 
-//   const handleAddClick = () => {
-//     setIsEditing(false);
-//     setEditingHistoryCashWithAV("");
-//     setModalOpen(true);
-//   };
-
-
-// const handleEditValue = (index) => {
-//   setSelectedIndex(index); // Correctly setting selected index
-//   setEditingHistoryCashWithAV(historyCashValues[index]); // Set the value of the selected index
-//   setIsEditing(true); // Indicate that we are editing
-//   setModalOpen(true); // Open the modal
-// };
 
 
 
-// const handleSaveOrUpdate = () => {
-//   if (isEditing) {
-//     const updatedValues = [...historyCashValues];
-//     updatedValues[selectedIndex] = editingHistoryCashWithAV; // Update the value at selected index
-//     setHistoryCashValues(updatedValues);
-//   } else {
-//     // Add new value to the array (if it's not in editing mode)
-//     setHistoryCashValues([...historyCashValues, editingHistoryCashWithAV]);
-//   }
 
-//   setModalOpen(false); // Close modal after saving
-//   setIsEditing(false); // Reset editing mode
-// };
 
 
 const handleAddClick = () => {
-  setEditingIndex(null); // Adding a new entry
+  setEditingIndex(null); 
   setInputValue("");
   setExpanded(true);
 };
@@ -222,7 +199,7 @@ const handleToggle = () => {
 
 
   const handleCashWithAVChange = (flatNo, value) => {
-    // Logic to update the state with the new value for the specific loan
+  
     setLoans((prevLoans) =>
       prevLoans.map((loan) =>
         loan.flatNo === flatNo ? { ...loan, cashWithAV: value } : loan
@@ -230,6 +207,14 @@ const handleToggle = () => {
     );
   };
 
+  // const handleCashWithAVChange = (flatNo, newValue) => {
+  //   setLoanData((prevData) => {
+  //     return prevData.map((loan) => 
+  //       loan.flatNo === flatNo ? { ...loan, cashWithAV: newValue } : loan
+  //     );
+  //   });
+  // };
+  
   
 
   const displayLoans = () => {
@@ -268,22 +253,7 @@ const handleToggle = () => {
         <TableCell>{loan.ocrBalance}</TableCell>
         <TableCell>{loan.online}</TableCell>
         <TableCell>{loan.cashWithAV}</TableCell>
-        {/* <TableCell>
-  <input
-    type="number"           
-    value={loan.cashWithAV} 
-    onChange={(e) => handleCashWithAVChange(loan.flatNo, e.target.value)} 
-    style={{
-      padding: '8px',               
-      backgroundColor: 'white',     
-      border: '1px solid black',    
-      borderRadius: '4px',          
-      fontSize: '14px',            
-      width: '100%'                
-    }}
-  />
-</TableCell> */}
-
+        
         <TableCell>{loan.historyCashWithAV}</TableCell>
         <TableCell>{loan.balanceCashWithAV}</TableCell>
         <TableCell>{loan.cashWithoutAV}</TableCell>
@@ -319,67 +289,8 @@ const handleToggle = () => {
       <h6 className='pt-3'>Sales Module / OCR Collection Management</h6>
 
 
-      {/* <div className="d-flex align-items-center mb-3">
-        <Button
-          onClick={handleCollapseToggle}
-          variant="outlined"
-          className='mt-4 mb-4'
-          color="success"
-          style={{ borderRadius: '20px' }}
-          startIcon={<FaEye size={20} color="#28a745" />}
-        >
-          {!isCollapsed && <span className="text-success">OCR Collection</span>}
-        </Button>
-      </div> */}
+    
 
-
-{/* <Button
-      variant="contained"
-      color="success"
-      sx={{
-        borderRadius: "20px",
-        transition: "width 0.3s ease, background 0.3s ease",
-        width: isHovered ? "160px" : "50px",
-        minWidth: "50px",
-        overflow: "hidden",
-        whiteSpace: "nowrap",
-        padding: "10px 15px",
-        marginTop:"20px",
-        marginBottom:"28px",
-        fontSize: "14px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        textTransform: "none",
-        position: "relative",
-        background: "linear-gradient(0deg, rgba(22,9,240,1) 0%, rgba(49,110,244,1) 100%)",
-        boxShadow:
-          "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
-        "&:hover": {
-          background: "linear-gradient(0deg, rgba(2,126,251,1) 0%, rgba(0,3,255,1) 100%)",
-        },
-        "&::after": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          background: "rgba(255, 255, 255, 0.2)",
-          transform: "scale(0.1)",
-          transition: "transform 0.3s ease",
-          zIndex: -1,
-        },
-        "&:hover::after": {
-          transform: "scale(1)",
-        },
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      startIcon={<FaEye />}
-    >
-      {isHovered && "OCR Collection"}
-    </Button> */}
 
          
 <Button
@@ -579,17 +490,17 @@ const handleToggle = () => {
           {loans.map((loan) => (
             <TableRow key={loan.flatNo}>
               <TableCell>{loan.flatNo}</TableCell>
-              <TableCell>John Doe</TableCell>
-              <TableCell>Jane Doe</TableCell>
-              <TableCell>3BHK</TableCell>
-              <TableCell>2nd Floor</TableCell>
-              <TableCell>johndoe@example.com</TableCell>
-              <TableCell>+91 9876543210</TableCell>
-              <TableCell>₹5000</TableCell>
-              <TableCell>₹50,00,000</TableCell>
-              <TableCell>2025-03-01</TableCell>
-              <TableCell>Yes</TableCell>
-              <TableCell>101</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
               <TableCell>
                 <select
                   style={{
@@ -606,10 +517,10 @@ const handleToggle = () => {
                   <option value="Non Sanction">Non Sanction</option>
                 </select>
               </TableCell>
-              <TableCell>₹30,000</TableCell>
-              <TableCell>₹25,000</TableCell>
-              <TableCell>₹5,000</TableCell>
-              <TableCell>₹1,00,000</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
               <TableCell>
                 <input
                   type="number"
@@ -626,93 +537,10 @@ const handleToggle = () => {
                 />
               </TableCell>
              
+ 
 
 
-              {/* <TableCell>
-  <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
-    
-    <IconButton onClick={handleAddClick} style={{ marginBottom: "8px" }}>
-      <AddIcon />
-    </IconButton>
-    
-    
-    {historyCashValues.map((value, index) => (
-      <TextField
-        key={index}
-        type="number"
-        value={value}
-        disabled 
-        style={{
-          marginBottom: "1px",
-          backgroundColor: "white",
-         
-          borderRadius: "4px",
-          fontSize: "14px",
-          width: "80%",
-          padding:"0px",
-          
-        }}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={() => handleEditValue(index)}> 
-                <EditIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
-    ))}
-  </div>
-
-  
-  <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-    <Box
-      sx={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        width: 300,
-        bgcolor: "white",
-        boxShadow: 24,
-        p: 3,
-        borderRadius: 2,
-      }}
-    >
-      <h2>{isEditing ? "Update Amount" : "Add Amount"}</h2>
-      {/* <TextField
-        fullWidth
-        type="number"
-        value={editingHistoryCashWithAV} // Display value for editing
-        onChange={(e) => setEditingHistoryCashWithAV(e.target.value)}
-        sx={{ mt: 2, padding: "4px" }}  // Reduced padding here as well
-      /> 
-
-
-      <TextField
-  fullWidth
-  type="number"
-  value={editingHistoryCashWithAV}
-  onChange={(e) => setEditingHistoryCashWithAV(e.target.value)}
-  sx={{ mt: 2 }}
-  InputProps={{
-    sx: { height: "30px", fontSize: "14px", padding: "0px" }, // Adjust height and font size
-  }}
-/>
-
-      <div className="flex justify-end gap-2 mt-4">
-        <Button onClick={() => setModalOpen(false)} variant="outlined">
-          Cancel
-        </Button>
-        <Button onClick={handleSaveOrUpdate} variant="contained">
-          {isEditing ? "Update" : "Save"}
-        </Button>
-      </div>
-    </Box>
-  </Modal>
-</TableCell> */}
-
+            
 
 <TableCell>
       <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
@@ -785,7 +613,7 @@ const handleToggle = () => {
       border: "1px solid #ccc",
       borderRadius: "4px",
       fontSize: "14px",
-      width: "100%", // Adjust width as needed
+      width: "100%", 
     }}
   />
 </TableCell>
@@ -873,7 +701,7 @@ const handleToggle = () => {
       border: "1px solid #ccc",
       borderRadius: "4px",
       fontSize: "14px",
-      width: "100%", // Adjust width as needed
+      width: "100%", 
     }}
   />
 </TableCell>

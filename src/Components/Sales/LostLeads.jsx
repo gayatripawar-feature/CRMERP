@@ -160,6 +160,7 @@ const LostLeads = () => {
       console.log("Clicked Section Index:", index);
       console.log("Selected Tab Before Update:", selectedTab);
       setExpandedSection(index);  
+      // setExpandedSection(expandedSection === index ? null : index);
   
      
     if (sections[index].label === "Follow Up History") {
@@ -494,7 +495,7 @@ const LostLeads = () => {
   
   
         <div className="d-flex align-items-center mb-3">
-          {sections.map((section, index) => (
+          {/* {sections.map((section, index) => (
             <Button
               key={index}
               onClick={() => handleToggleSection(index)}
@@ -506,7 +507,34 @@ const LostLeads = () => {
             >
               {expandedSection === index ? section.label : null}
             </Button>
-          ))}
+          ))} */}
+{sections.map((section, index) => (
+  <Button
+    key={index}
+    onClick={() => handleToggleSection(index)}
+    variant="outlined"
+    color="success"
+    className="m-3 fw-bold"
+    style={{
+      borderRadius: '20px',
+      backgroundColor: '#3621a9', // Add background color
+      color: 'white', // Set text color to white for better contrast
+      border: '1px solid #3621a9', // Match the border to background
+      transition: "background-color 0.3s ease", // Optional: Add a transition effect for the background color
+    }}
+    startIcon={
+      <FaEye
+        size={20}
+        color={expandedSection === index ? "#fff" : "#28a745"} // Change icon color to white when expanded
+      />
+    }
+  >
+    {expandedSection === index ? section.label : null}
+  </Button>
+))}
+
+
+      
         </div>
   
         

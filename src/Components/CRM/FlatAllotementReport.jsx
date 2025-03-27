@@ -328,6 +328,15 @@ const FlatAllotmentReport = () => {
             Flat No: {flat.flatNo}
           </div>
 
+          <img 
+  src="/house-7160203_1280.png" 
+  alt="Flat" 
+  className="img-fluid rounded-circle" 
+  style={{ width: '100px', height: '100px', objectFit: 'cover', margin: '10px auto' }} 
+/>
+
+
+
           <div className="card-body">
         
             <div className="mb-3 text-left">

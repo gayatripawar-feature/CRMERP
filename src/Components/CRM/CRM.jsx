@@ -901,10 +901,10 @@ const loansData = [
       <IconButton
         sx={{
           color: 'primary.main',
-          fontSize: '2px',
+          fontSize: '1px',
           backgroundColor: 'rgba(0, 0, 0, 0.08)', // Light gray background for Edit
           borderRadius: '50%', // Makes the icon rounded
-          padding: '5px',
+          padding: '2px',
           '&:hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.12)', // Darker gray on hover
           },
@@ -921,7 +921,7 @@ const loansData = [
           fontSize: '2px',
           backgroundColor: '#25D366', // WhatsApp green background
           borderRadius: '50%', // Makes the icon rounded
-          padding: '5px',
+          padding: '2px',
           '&:hover': {
             backgroundColor: '#128C7E', // Darker green for WhatsApp on hover
           },
@@ -935,9 +935,11 @@ const loansData = [
       <IconButton
         sx={{
           color: 'white', // Icon color white for contrast
-          fontSize: '2px',
+          fontSize: '1px',
           backgroundColor: '#007BFF', // Blue background for Email
-          borderRadius: '50%', // Makes the icon rounded
+          borderRadius: '50%', 
+          padding: '4px',
+          // Makes the icon rounded
           '&:hover': {
             backgroundColor: '#0056b3', // Darker blue for Email on hover
           },

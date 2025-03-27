@@ -14,6 +14,7 @@ import { FaArrowRight } from 'react-icons/fa';
 import EditIcon from "@mui/icons-material/Edit";
 import PersonIcon from "@mui/icons-material/Person";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper ,IconButton,Button} from '@mui/material';
+import { FaRegClipboard, FaRegShareSquare } from 'react-icons/fa';
 
 
 const SalesSharespace = () => {
@@ -146,9 +147,15 @@ const [isExpanded, setIsExpanded] = useState(false);
     setRows(newRows);
   };
 
+  
+  const handleCollapseToggle = () => {
+    setIsCollapsed(prev => !prev);
+  };
+
+
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  
+   const [isCollapsed, setIsCollapsed] = useState(false); 
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = sharedWithMeRows.slice(indexOfFirstRow, indexOfLastRow);
@@ -163,7 +170,7 @@ const [isExpanded, setIsExpanded] = useState(false);
     <div className="container my-4">
       <h2 className="fs-6 mb-3">Developer Module / Share Space</h2>
 
-      <div className="d-flex align-items-center gap-4">
+      {/* <div className="d-flex align-items-center gap-4">
         <div
           className="d-flex align-items-center gap-2 p-2"
           onClick={() => handleToggle('project')}
@@ -171,7 +178,7 @@ const [isExpanded, setIsExpanded] = useState(false);
             cursor: 'pointer',
             borderRadius: '20px',
             background: activeIcon === 'project' ? '#f8f9fa' : 'transparent',
-            //  here just changed the buttons style..
+            
           }}
         >
          
@@ -181,54 +188,6 @@ const [isExpanded, setIsExpanded] = useState(false);
           {activeIcon === 'project' && <span>Out Share Display</span>}
         </div>
         
-{/* <Button
-      variant="contained"
-      color="success"
-      sx={{
-        borderRadius: "20px",
-        transition: "width 0.3s ease, background 0.3s ease",
-        width: isExpanded ? "160px" : "50px",
-        minWidth: "50px",
-        overflow: "hidden",
-        whiteSpace: "nowrap",
-        padding: "10px 15px",
-        marginTop: "20px",
-        marginBottom: "28px",
-        fontSize: "14px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        textTransform: "none",
-        position: "relative",
-        // background: "linear-gradient(0deg, rgba(22,9,240,1) 0%, rgba(49,110,244,1) 100%)",
-        background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
-        boxShadow:
-          "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
-        "&:hover": {
-          // background: "linear-gradient(0deg, rgba(2,126,251,1) 0%, rgba(0,3,255,1) 100%)",
-          background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
-        },
-        "&::after": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          background: "rgba(255, 255, 255, 0.2)",
-          transform: "scale(0.1)",
-          transition: "transform 0.3s ease",
-          zIndex: -1,
-        },
-        "&:hover::after": {
-          transform: "scale(1)",
-        },
-      }}
-      onClick={handleToggle}
-      startIcon={isExpanded ? <PersonIcon />: <PersonIcon />}
-    >
-      {isExpanded && "Share Space"}
-    </Button> */}
 
         <div
           className="d-flex align-items-center gap-2 p-2"
@@ -245,10 +204,157 @@ const [isExpanded, setIsExpanded] = useState(false);
 </div>
           {activeIcon === 'shared' && <span>Collect Docs</span>}
         </div>
-      </div>
+      </div> */}
 
      
+<div className="d-flex align-items-center gap-4">
+  {/* Project Section */}
+  <div
+    className="d-flex align-items-center gap-2 p-2"
+    onClick={() => handleToggle('project')}
+    style={{
+      cursor: 'pointer',
+      borderRadius: '20px',
+      width: activeIcon === 'project' ? "190px" : "50px", // Similar width change as in the button
+      minWidth: "50px",
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      padding: '10px 15px',
+      marginTop: '20px',
+      marginBottom: '28px',
+      fontSize: '14px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textTransform: 'none',
+      position: 'relative',
+      background: activeIcon === 'project'
+        ? "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)"
+        : 'transparent',
+      boxShadow:
+        "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+      transition: "width 0.3s ease, background 0.3s ease",
+    }}
+  >
+    {/* Icon Container */}
+    {/* <div
+      className="d-flex justify-content-center align-items-center rounded-circle bg-white p-2 shadow"
+      style={{
+        background: activeIcon === 'project' ? "#3621a9" : "transparent", // White background when active
+      }}
+    > */}
+  <div
+  className="d-flex justify-content-center align-items-center rounded-circle p-2 shadow"
+  style={{
+    background: (activeIcon === 'project' || isCollapsed) ? "#3621a9" : "transparent", 
+    padding: '12px', 
+  }}
+>
+      {/* <FaRegClipboard size={26} color={activeIcon === 'project' ? "#fff" : "#333"} />  */}
+      <FaRegClipboard size={26} color="#fff" />
+    </div>
+    
+    {activeIcon === 'project' && <span className='text-white fs-6 fw-bold'>Out Share Display</span>}
+  </div>
+
+  {/* Shared Section */}
+  {/* <div
+    className="d-flex align-items-center gap-2 p-2"
+    onClick={() => handleToggle('shared')}
+    style={{
+      cursor: 'pointer',
+      borderRadius: '20px',
+      width: activeIcon === 'shared' ? "160px" : "50px", // Similar width change as in the button
+      minWidth: "50px",
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      padding: '10px 15px',
+      marginTop: '20px',
+      marginBottom: '28px',
+      fontSize: '14px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textTransform: 'none',
+      position: 'relative',
+      background: activeIcon === 'shared'
+        ? "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)"
+        : 'transparent', // Linear gradient on active
+      boxShadow:
+        "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+      transition: "width 0.3s ease, background 0.3s ease",
+    }}
+  >
+    
+  <div
+          className="d-flex justify-content-center align-items-center rounded-circle p-2 shadow"
+          style={{
+            backgroundColor: activeIcon === 'shared' ? "#3621a9" : "transparent", 
+            padding: '12px', 
+          }}
+        >
+          <FaRegShareSquare size={26} color={activeIcon === 'shared' ? "white" : "#333"} />
+        </div>
       
+        {activeIcon === 'shared' && <span className='text-white fs-6 fw-bold'>Collect Docs</span>}
+      </div>
+     */}
+   
+  <div
+  className="d-flex align-items-center gap-2 p-2"
+  onClick={() => handleToggle('shared')}
+  style={{
+    cursor: 'pointer',
+    borderRadius: '20px',
+    // background: activeIcon === 'shared' ? '#f8f9fa' : 'transparent',
+    backgroundColor: activeIcon === 'shared' || isCollapsed ? "#3621a9" : "transparent",
+    transition: "all 0.3s ease",
+    // padding: '10px 15px',
+    padding: '5px 10px',  // Reduced padding
+    height: '58px', 
+  }}
+>
+  {/* Icon and Text Group */}
+  <div
+    className="d-flex align-items-center gap-2"
+    style={{
+      backgroundColor: activeIcon === 'shared' ? "#3621a9" : "transparent",  // Background color for active state
+      borderRadius: '20px',  // Rounded corners for both icon and text
+      padding: '8px 12px', // Padding to make both icon and text visible
+      transition: 'all 0.3s ease', // Smooth transition
+      alignItems: 'center',
+    }}
+  >
+    {/* Icon Container */}
+    <div
+      className="d-flex justify-content-center align-items-center rounded-circle p-2 shadow"
+      style={{
+        backgroundColor: activeIcon === 'shared' ? "#3621a9" : "transparent",  // Icon background when active
+        padding: '12px',
+      }}
+    >
+      {/* Icon */}
+      <FaRegShareSquare size={26} color="white" /> {/* White icon */}
+    </div>
+
+    {/* Text with Background */}
+    {activeIcon === 'shared' && (
+      <span
+        style={{
+          color: "white", // White text when active
+          padding: '2px 8px',
+          borderRadius: '8px',
+        }}
+      >
+        Collect Docs
+      </span>
+    )}
+  </div>
+</div>
+
+
+</div>
+
 <div className="d-flex justify-content-between align-items-center mt-4">
   {activeIcon !== 'shared' && (
     <button

@@ -212,7 +212,11 @@ import { useNavigate } from "react-router-dom";
 import { Outlet, Link } from "react-router-dom";
 import {  FaClipboardList, FaCalendarCheck, FaRegHandshake, FaRegClock, FaTasks, FaRegTimesCircle, FaClipboard, FaRegEdit } from 'react-icons/fa';
 
- 
+import {  FaMicrophone } from "react-icons/fa";
+import VoiceNavigation from "./VoiceNavigation";
+
+
+
 
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -222,7 +226,7 @@ const Dashboard = () => {
     sales: false,
     crm: false,
   });
-
+  const [showVoiceRecognition, setShowVoiceRecognition] = useState(false);
   const navigate = useNavigate();
 
   // Memoized toggle functions
@@ -237,11 +241,22 @@ const Dashboard = () => {
     navigate('/login');
   }, [navigate]);
 
+
+
+
+  // handleClose function that will be passed to VoiceNavigation as a prop
+  const handleClose = () => {
+    console.log("Closing the voice navigation.");
+    setShowVoiceRecognition(false); // Hide the voice recognition when it's closed
+  };
+
+
+
   return (
     <div className="d-flex flex-column vh-100 ">
       {/* Top Navbar */}
       {/* <nav className="navbar navbar-dark bg-primary px-3"> */}
-      <nav className="navbar navbar-dark  px-3" style={{background:"#3621a9"}}>
+      {/* <nav className="navbar navbar-dark  px-3" style={{background:"#3621a9"}}>
         <div className="d-flex align-items-center">
           <button className="btn btn-dark me-3" onClick={toggleSidebar}>
             <FaBars size={20} />
@@ -252,20 +267,44 @@ const Dashboard = () => {
           <input type="text" className="form-control" placeholder="Search..." />
         </div>
         <div>
-          {/* <img
-            src="https://i.pravatar.cc/40?img=3"
-            alt="Profile"
-            className="rounded-circle"
-          /> */}
+          
           <img
             src="/unnamed.png"
             alt="Profile"
             className="rounded-circle profile"
           />
         </div>
-      </nav>
+      </nav> */}
+<nav className="navbar navbar-dark px-3" style={{ background: "#3621a9" }}>
 
-      
+  <div className="d-flex align-items-center">
+    <button className="btn btn-dark me-3" onClick={toggleSidebar}>
+      <FaBars size={20} />
+    </button>
+    <span className="navbar-brand mb-0 h1">CRM ERP</span>
+  </div>
+  <div className="mx-auto w-50">
+    <input type="text" className="form-control" placeholder="Search..." />
+  </div>
+  <div className="d-flex align-items-center">
+    {/* Microphone Icon */}
+    {/* <FaMicrophone size={20} className="me-3 text-white" /> */}
+    <FaMicrophone
+            size={20}
+            className="me-3 text-white"
+            style={{ cursor: "pointer" }}
+            onClick={() => setShowVoiceRecognition(true)}
+          />
+    {/* Profile Image */}
+    <img
+      src="/unnamed.png"
+      alt="Profile"
+      className="rounded-circle profile"
+    />
+  </div>
+</nav>
+{/* {showVoiceRecognition && <VoiceNavigation />} */}
+{showVoiceRecognition && <VoiceNavigation onClose={handleClose} />}
 
        <div className="d-flex w-100">
  

@@ -528,7 +528,7 @@ const SalesLostVisits = () => {
       
   
   
-        <div className="d-flex align-items-center mb-3">
+        {/* <div className="d-flex align-items-center mb-3">
           {sections.map((section, index) => (
             <Button
               key={index}
@@ -543,8 +543,51 @@ const SalesLostVisits = () => {
             </Button>
           ))}
         </div>
-  
-        
+   */}
+<div className="d-flex align-items-center mb-3">
+      {sections.map((section, index) => (
+        <Button
+          key={index}
+          onClick={() => handleToggleSection(index)}  // Toggle the section
+          variant="outlined"
+          color="success"
+          className="m-3"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: '#3621a9',  // Background color
+            padding: '8px',
+            borderRadius: '20px',  // Border radius
+            margin: '5px',
+            cursor: 'pointer',  // Add pointer cursor for better UX
+            transition: 'width 0.3s ease, background 0.3s ease',
+            width: expandedSection === index ? '200px' : '50px',  // Toggle width based on expanded state
+            minWidth: '50px',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            fontSize: '14px',
+            justifyContent: 'flex-start',  // Align items to the left
+            textTransform: 'none',
+            position: 'relative',
+            background: 'linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)', // Gradient background
+            boxShadow:
+              'inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)',
+          }}
+          startIcon={<FaEye size={24} color="white" />}  // Use a white icon with larger size
+        >
+          {/* Show the label only when the section is expanded */}
+          {expandedSection === index && (
+            <span style={{ color: 'white', fontSize: '16px', marginLeft: '8px' }}>
+              {section.label}
+            </span>
+          )}
+        </Button>
+      ))}
+    </div>
+
+
+
+
   
        
   {expandedSection === 0 && selectedTab === "firm" && (

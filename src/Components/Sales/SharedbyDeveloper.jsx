@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {Input, Table, TableBody, TableCell, TableContainer, Typography,IconButton,TableHead, TableRow, Paper,Box,Tabs, Tab, Button, TextField, Grid ,MenuItem,FormControl,Select, InputLabel} from '@mui/material';
-import { FaEye, FaBuilding, FaFileDownload, FaPlus, FaTrash,FaUpload } from "react-icons/fa";
+// import { FaEye, FaBuilding, FaFileDownload, FaPlus, FaTrash,FaUpload } from "react-icons/fa";
 import FirmTable from './FirmTable';
 import DisplayTable from "./DisplayTable";
 import LandownerTable from "./LandownerTable";
@@ -15,11 +15,16 @@ import FlatAllotment from './FlatAllotement';
 import { ToastContainer, toast } from 'react-toastify';
 
 
-import { FaUsers, FaHome } from 'react-icons/fa'; // FontAwesome
-import { AiOutlineFileSearch } from 'react-icons/ai'; // AntDesign
-import { IoIosBuild } from 'react-icons/io'; // Ionicons
+// import { FaUsers, FaHome } from 'react-icons/fa'; // FontAwesome
+// import { AiOutlineFileSearch } from 'react-icons/ai'; // AntDesign
+// import { IoIosBuild } from 'react-icons/io'; // Ionicons
 
 
+import { FaBuilding, FaHome, FaUsers } from 'react-icons/fa';
+import { AiOutlineFileSearch } from 'react-icons/ai'; 
+import { MdBusiness, MdDescription, MdApartment } from 'react-icons/md';   // Material Design Icons
+import { GiOfficeChair } from 'react-icons/gi'; // For office or business-related
+import { HiOutlineDocumentDownload } from 'react-icons/hi'; // For download-related
 
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
@@ -29,14 +34,29 @@ const fetchLoansData = async () => {
 
 
 
+// const sections = [
+//     { label: "Firm Display", icon: <FaBuilding size={20} color="purple" />, createLabel: "Create Firm" },
+//     { label: "Project Display", icon: <AiOutlineFileSearch size={20} color="orange" />, createLabel: "Create Project" },
+//     { label: "LandOwner Display", icon: <FaUsers size={20} color="green" />, createLabel: "Create Landowner Info" },  // Updated icon
+//     { label: "Flat Allotment Display", icon: <FaHome size={20} color="blue" />, createLabel: "Create Flat Allotment Info" },  // Updated icon
+//     { label: "Download PDF", icon: <FaFileDownload size={20} color="red" />, createLabel: "" }  // Updated icon
+//   ];
 const sections = [
-    { label: "Firm Display", icon: <FaBuilding size={20} color="purple" />, createLabel: "Create Firm" },
-    { label: "Project Display", icon: <AiOutlineFileSearch size={20} color="orange" />, createLabel: "Create Project" },
-    { label: "LandOwner Display", icon: <FaUsers size={20} color="green" />, createLabel: "Create Landowner Info" },  // Updated icon
-    { label: "Flat Allotment Display", icon: <FaHome size={20} color="blue" />, createLabel: "Create Flat Allotment Info" },  // Updated icon
-    { label: "Download PDF", icon: <FaFileDownload size={20} color="red" />, createLabel: "" }  // Updated icon
-  ];
+  // Updated icon for "Firm Display"
+  { label: "Firm Display", icon: <MdBusiness size={30} color="purple" />, createLabel: "Create Firm" }, 
 
+  // Updated icon for "Project Display"
+  { label: "Project Display", icon: <MdDescription size={30} color="orange" />, createLabel: "Create Project" },  
+
+  // Updated icon for "LandOwner Display"
+  { label: "LandOwner Display", icon: <GiOfficeChair size={30} color="green" />, createLabel: "Create Landowner Info" },  
+
+  // Updated icon for "Flat Allotment Display"
+  { label: "Flat Allotment Display", icon: <MdApartment size={30} color="blue" />, createLabel: "Create Flat Allotment Info" },
+
+  // Updated icon for "Download PDF"
+  { label: "Download PDF", icon: <HiOutlineDocumentDownload size={30} color="red" />, createLabel: "" }
+];
 
 const tabNames = [ "firm", "display", "landowner","allotement"]; 
   
@@ -306,6 +326,9 @@ setShowFlatForm(false); // Ensure this is not reset elsewhere if you want the ta
  
   
   return (
+
+    
+
     <div className="main-content">
       <h6>Sales Module / Shared by Developer</h6>
      
@@ -315,7 +338,7 @@ setShowFlatForm(false); // Ensure this is not reset elsewhere if you want the ta
 
 
    <div className="d-flex align-items-center mb-3">
-        {sections.map((section, index) => (
+        {/* {sections.map((section, index) => (
             
 
           <Button
@@ -334,7 +357,73 @@ setShowFlatForm(false); // Ensure this is not reset elsewhere if you want the ta
           >
             {expandedSection === index ? section.label : null}
           </Button>
-        ))}
+        ))} */}
+
+{sections.map((section, index) => (
+  <div 
+    key={index} 
+    style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      backgroundColor: '#3621a9', 
+      padding: '8px', 
+      borderRadius: '20px',  // borderRadius changed to 20px from 10%
+      margin: '5px',
+      cursor: 'pointer',    // Add pointer cursor for better UX
+      transition: "width 0.3s ease, background 0.3s ease",
+      width: expandedSection === index ? "200px" : "50px", // Toggle width based on expanded state
+      minWidth: "50px",
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      fontSize: "14px",
+      
+     
+      justifyContent: "center",
+      textTransform: "none",
+      position: "relative",
+      background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)", // Gradient background
+      boxShadow:
+        "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+    }}
+    onClick={() => handleToggleSection(index)}  // onClick function for handling clicks
+  >
+    {React.cloneElement(section.icon, { style: { marginRight: '8px',color: 'white' } })}  {/* Add some margin to separate icon from label */}
+    
+    {/* Conditionally display label based on expandedSection */}
+    {expandedSection === index ? (
+      <span className="fw-bold text-white fs-6"style={{ color: 'white', marginLeft: '10px' }}>{section.label}</span>
+    ) : null}
+
+    {/* Hover effects */}
+    <div style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(255, 255, 255, 0.2)",
+      transform: "scale(0.1)",
+      transition: "transform 0.3s ease",
+      zIndex: -1,
+    }}></div>
+
+    <div 
+      style={{
+        "&:hover": {
+          background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+        },
+        "&:hover div": {
+          transform: "scale(1)",
+        },
+      }}
+    ></div>
+
+  </div>
+))}
+
+
+
+
       </div>  
 
 
@@ -411,45 +500,6 @@ setShowFlatForm(false); // Ensure this is not reset elsewhere if you want the ta
 )}
 
 
-{/* 
-{expandedSection === 3 && selectedTab === "allotement" && (
-  <div className="content-container mt-3">
-    {!showFlatForm ? (
-      <>
-      
-        
-        <div className="button-container">
- 
-    <Button variant="contained" color="primary" style={{ background: '#272ba8' }} className='fw-bold'
-    onClick={() => setShowFlatForm(true)}>
-      + Flat Allotment Info
-    </Button>
-
-
-    <div className="right-buttons">
-      <Button variant="contained" color="secondary" onClick={handlePrevious}>
-        Previous
-      </Button>
-      <Button variant="contained" color="secondary" onClick={handleNext}>
-        Next
-      </Button>
-    </div>
-  </div>
-
-
-        <div className="mt-3">
-          <FlatAllotment data={Flatdata} />
-        </div>
-      </>
-    ) : null } 
-
-
-
-
-  </div>
-  )
-}
-    */}
  
  {expandedSection === 3 && selectedTab === "allotement" && (
   <div className="content-container mt-3">

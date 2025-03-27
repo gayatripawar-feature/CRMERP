@@ -280,13 +280,40 @@ const Admin_Banker = () => {
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>
+                {/* <TableCell>
                   <IconButton color="primary">
                     <EditIcon />
                   </IconButton>
                   <IconButton color="error">
                     <DeleteIcon />
                   </IconButton>
+                </TableCell> */}
+                <TableCell>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    {/* Edit Icon */}
+                    <IconButton
+                      color="primary"
+                      style={{
+                        backgroundColor: "#1976d2", // Set the background color to the primary color
+                        borderRadius: "50%", // Make the icon circular
+                        padding: "6px", // Adjust padding to create the circle effect
+                      }}
+                    >
+                      <EditIcon style={{ color: "white" }} /> {/* Set icon color to white */}
+                    </IconButton>
+                
+                    {/* Delete Icon */}
+                    <IconButton
+                      color="error"
+                      style={{
+                        backgroundColor: "#d32f2f", // Set the background color to the error color
+                        borderRadius: "50%", // Make the icon circular
+                        padding: "6px", // Adjust padding to create the circle effect
+                      }}
+                    >
+                      <DeleteIcon style={{ color: "white" }} /> {/* Set icon color to white */}
+                    </IconButton>
+                  </div>
                 </TableCell>
                 
               </TableRow>

@@ -172,7 +172,7 @@ const MenuProps = {
     <div className="container my-4">
       <h2 className="fs-6 mb-3">Developer Module / Share Space</h2>
 
-    
+{/*     
       <div className="d-flex align-items-center gap-4">
         
         <div
@@ -205,7 +205,92 @@ const MenuProps = {
           </div>
           {activeIcon === 'shared' && <span>Revisit Status</span>}
         </div>
-      </div>
+      </div> */}
+
+<div className="d-flex align-items-center gap-4">
+  {/* Project Icon */}
+  <div
+    className="d-flex align-items-center gap-2 p-2"
+    onClick={() => handleToggle('project')}
+    style={{
+      cursor: 'pointer',
+      borderRadius: '20px',
+      background: activeIcon === 'project' ? '#f8f9fa' : 'transparent',  // Active state background color
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      transition: 'background 0.3s ease', // Smooth background transition
+    }}
+  >
+    <div
+      className="d-flex justify-content-center align-items-center rounded-circle bg-white p-2 shadow"
+      style={{
+        background: activeIcon === 'project' ? '#f8f9fa' : '#3621a9', // Background color changes based on active state
+        padding: '10px', // Increase padding
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: 'inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)',
+      }}
+    >
+      <FaProjectDiagram size={26} color="white" /> {/* Icon color changed to white */}
+    </div>
+    {activeIcon === 'project' && (
+      <span
+        style={{
+          color: 'white',
+          fontSize: '16px',
+          marginLeft: '8px', // Space between icon and label
+        }}
+      >
+        Booking Status
+      </span>
+    )}
+  </div>
+
+  {/* Share Icon */}
+  <div
+    className="d-flex align-items-center gap-2 p-2"
+    onClick={() => handleToggle('shared')}
+    style={{
+      cursor: 'pointer',
+      borderRadius: '20px',
+      background: activeIcon === 'shared' ? '#f8f9fa' : 'transparent',  // Active state background color
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      transition: 'background 0.3s ease', // Smooth background transition
+    }}
+  >
+    <div
+      className="d-flex justify-content-center align-items-center rounded-circle bg-white p-2 shadow"
+      style={{
+        background: activeIcon === 'shared' ? '#f8f9fa' : '#3621a9', // Background color changes based on active state
+        padding: '10px', // Increase padding
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: 'inset 2px 2px 2px 0px rgba(114, 10, 252, 0.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)',
+      }}
+    >
+      <FaShareAlt size={26} color="white" /> {/* Icon color changed to white */}
+    </div>
+    {activeIcon === 'shared' && (
+      <span
+        style={{
+          color: 'white',
+          fontSize: '16px',
+          marginLeft: '8px', // Space between icon and label
+        }}
+      >
+        Revisit Status
+      </span>
+    )}
+  </div>
+</div>
+
+
+
 
       {/* Out Share Button and Pagination Controls in One Row */}
       {/* <div className="d-flex justify-content-between align-items-center mt-4">

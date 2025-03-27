@@ -9,21 +9,29 @@ import LandownerTable from "./LandownerTable";
 import FlatAllotment from './FlatAllotement';
 import { ToastContainer, toast } from 'react-toastify';
 
+import {  FaProjectDiagram, FaUserTie, FaHome, } from 'react-icons/fa';
+
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
   return response.json();
 };
 
 const sections = [
-  { label: "Firm Display", icon: <FaBuilding size={20} />, createLabel: "Create Firm" },
-  { label: "Project Display", icon: <FaBuilding size={20} />, createLabel: "Create Project" },
-  { label: "LandOwner Display", icon: <FaBuilding size={20} />, createLabel: "Create Landowner Info" },
+  { label: "Firm Display", icon: <FaProjectDiagram size={20} />, createLabel: "Create Firm" },
+  { label: "Project Display", icon: <FaHome size={20} />, createLabel: "Create Project" },
+  { label: "LandOwner Display", icon: <FaUserTie size={20} />, createLabel: "Create Landowner Info" },
   { label: "Flat Allotement Display", icon: <FaBuilding size={20} />, createLabel: "Create Flat Allotment Info" },
   { label: "Download PDF", icon: <FaFileDownload size={20} />, createLabel: "" }
 ];
 
 
-
+// const sections = [
+//   { label: "Firm Display", icon: <FaProjectDiagram size={20} />, createLabel: "Create Firm" },
+//   { label: "Project Display", icon: <FaHome size={20} />, createLabel: "Create Project" },
+//   { label: "LandOwner Display", icon: <FaUserTie size={20} />, createLabel: "Create Landowner Info" },
+//   { label: "Flat Allotment Display", icon: <FaBuilding size={20} />, createLabel: "Create Flat Allotment Info" },
+//   { label: "Download PDF", icon: <FaFileDownload size={20} />, createLabel: "" }
+// ];
 
 const tabNames = [ "firm", "display", "landowner","allotement"]; 
   
@@ -547,7 +555,7 @@ const handleTabClick = (index) => {
 
 
       <div className="d-flex align-items-center mb-3">
-        {sections.map((section, index) => (
+        {/* {sections.map((section, index) => (
           <Button
             key={index}
             onClick={() => handleToggleSection(index)}
@@ -559,7 +567,69 @@ const handleTabClick = (index) => {
           >
             {expandedSection === index ? section.label : null}
           </Button>
-        ))}
+        ))} */}
+{sections.map((section, index) => (
+  <div 
+    key={index} 
+    style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      backgroundColor: '#3621a9', 
+      padding: '8px', 
+      borderRadius: '20px',  // borderRadius changed to 20px from 10%
+      margin: '5px',
+      cursor: 'pointer',    // Add pointer cursor for better UX
+      transition: "width 0.3s ease, background 0.3s ease",
+      width: expandedSection === index ? "250px" : "50px", // Toggle width based on expanded state
+      minWidth: "50px",
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      fontSize: "14px",
+      
+     
+      justifyContent: "center",
+      textTransform: "none",
+      position: "relative",
+      background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)", // Gradient background
+      boxShadow:
+        "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
+    }}
+    onClick={() => handleToggleSection(index)}  // onClick function for handling clicks
+  >
+    {React.cloneElement(section.icon, { style: { marginRight: '8px',color: 'white' } })}  {/* Add some margin to separate icon from label */}
+    
+    {/* Conditionally display label based on expandedSection */}
+    {expandedSection === index ? (
+      <span className="fw-bold text-white p-2 fs-6" style={{ color: 'white', marginLeft: '10px' }}>{section.label}</span>
+    ) : null}
+
+    {/* Hover effects */}
+    <div style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(255, 255, 255, 0.2)",
+      transform: "scale(0.1)",
+      transition: "transform 0.3s ease",
+      zIndex: -1,
+    }}></div>
+
+    <div 
+      style={{
+        "&:hover": {
+          background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
+        },
+        "&:hover div": {
+          transform: "scale(1)",
+        },
+      }}
+    ></div>
+
+  </div>
+))}
+
       </div>
 
       {/* {expandedSection === 0 &&  selectedTab === "firm" && (

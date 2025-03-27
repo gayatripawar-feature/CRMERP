@@ -7,6 +7,15 @@ import {TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,Typogra
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+
+
+
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TextField, Grid, Box } from '@mui/material';
 // const [selectedTemplate, setSelectedTemplate] = useState(null);
 
 
@@ -240,7 +249,12 @@ const Template = () => {
     setModalContent(null);
   };
 
-
+  const handleDateChange = (newDate) => {
+    setFormData({
+      ...formData,
+      date: newDate,
+    });
+  };
 
   
 // const modalTitles = {
@@ -355,18 +369,29 @@ const generatePDF = () => {
     return;
   }
 
+  // Wait for content to fully render before capturing it
   setTimeout(() => {
-    html2canvas(input, { scale: 2 }).then((canvas) => {
+    html2canvas(input, { 
+      scale: 2, // Increase quality of the canvas
+      scrollX: 0, 
+      scrollY: 0 
+    }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
+
       const pdf = new jsPDF("p", "mm", "a4");
       const imgWidth = 210; // A4 width in mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+
+      // Save the generated PDF
       pdf.save("RateApprovalForm.pdf");
+    }).catch((error) => {
+      console.error("Error generating the PDF:", error);
     });
-  }, 500); // Small delay to allow rendering
+  }, 500); // Small delay to ensure content is ready
 };
+
 
 
 
@@ -458,7 +483,7 @@ const modalTitles = {
      
     }}
     onClick={() => {
-      console.log('Button clicked');  // Debugging line
+      console.log('Button clicked');  
       generatePDF();  // Calling the function to generate PDF
     }}
     
@@ -481,10 +506,15 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
 
 
   return (
+
+
+
     <div className="container mt-4">
       <h2>Sales Templates</h2>
       
       
+   
+
 
 <div className="row g-4 mt-5">
   {templates.map((template) => (
@@ -591,12 +621,34 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
                 </Col>
               </Row>
               <Row className="mt-3">
-                <Col sm={6}>
+                {/* <Col sm={6}>
                   <Form.Group controlId="formDate">
                     <Form.Label>Date</Form.Label>
                     <Form.Control type="date" name="date" value={formData.date} onChange={() => {}} />
                   </Form.Group>
-                </Col>
+                </Col> */}
+
+{/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={6}>
+          <Form.Group controlId="formDate">
+          <Form.Label sx={{ pt: 3 }}>Date :</Form.Label>  
+
+            <DatePicker
+              value={formData.date}
+              onChange={handleDateChange}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </Form.Group>
+        </Grid>
+      </Grid>
+    </LocalizationProvider> */}
+
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DatePicker']}>
+        <DatePicker label="Date" />
+      </DemoContainer>
+    </LocalizationProvider>
               </Row>
             </Form>
           )}
@@ -907,14 +959,14 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
 
    
 <div ref={pdfRef} style={{ padding: "20px", background: "#fff" }}>
-<Table bordered style={{ width: '100%' }}>
+ {/* <Table bordered style={{ width: '100%' }}>
   <tbody>
-    {/* Heading */}
+   
     <tr>
       <td colSpan="4" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1rem' }}>PROJECT NAME</td>
     </tr>
 
-    {/* From Section */}
+  
     <tr>
       <td style={{ fontSize: '0.9rem', width: '30%' }}>From :</td>
       <td style={{ width: '25%' }}>{projectData?.from || ''}</td>
@@ -964,10 +1016,10 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
       <td style={{ width: '25%' }}>{projectData?.whatsapp || ''}</td>
     </tr>
 
-    {/* Space */}
+  
     <tr><td colSpan="4" style={{ height: '10px' }}></td></tr>
 
-    {/* To Section */}
+    
     <tr>
       <td colSpan="4" style={{ fontWeight: 'bold', fontSize: '1rem' }}>To</td>
     </tr>
@@ -987,12 +1039,12 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
       </td>
     </tr>
 
-    {/* Agreement Details Heading */}
+   
     <tr>
       <td colSpan="4" style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1rem' }}>AGREEMENT DETAILS</td>
     </tr>
 
-    {/* Agreement Details Fields */}
+    
     <tr>
       <td style={{ fontSize: '0.9rem', width: '30%' }}>BUILDING (Wing):</td>
       <td style={{ width: '25%' }}>{projectData?.building || ''}</td>
@@ -1075,7 +1127,12 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
   <td>MD.</td>
 </tr>
   </tbody>
-</Table>
+</Table>  */}
+
+<h1>Test PDF Content</h1>
+<p>This is a simple test to verify PDF generation.</p>
+
+
 </div>
 
   </div>
@@ -1119,12 +1176,29 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
       </Col>
     </Row>
     <Row className="mt-3">
-      <Col sm={6}>
-        <Form.Group controlId="formDate">
-          <Form.Label>Date</Form.Label>
-          <Form.Control type="date" />
-        </Form.Group>
-      </Col>
+      {/* <Col sm={6}>
+       
+        
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DatePicker']}>
+        <DatePicker label="Date" />
+      </DemoContainer>
+    </LocalizationProvider>
+      </Col> */}
+         <Col sm={6} style={{ display: 'flex', flexDirection: 'column', padding: 6 }}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={['DatePicker']} style={{ width: '100%' }}>
+          {/* <DatePicker label="Date" fullWidth /> */}
+          <DatePicker
+  label="Date"
+  fullWidth
+  
+  onChange={handleDateChange}
+/>
+
+        </DemoContainer>
+      </LocalizationProvider>
+    </Col>
       <Col sm={6}>
         <Form.Group controlId="formFacing">
           <Form.Label>FACING (Direction)</Form.Label>
@@ -1170,7 +1244,7 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
     <Row className="mt-3">
       <Col sm={6}>
         <Form.Group controlId="formDate">
-          <Form.Label>PDISCOUNT</Form.Label>
+          <Form.Label>DISCOUNT</Form.Label>
           <Form.Control type="text" />
         </Form.Group>
       </Col>
@@ -1369,7 +1443,7 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
           <Button className="btn btn-primary" variant="" onClick={handleCloseModal}>
            Submit
           </Button>
-          {modalContent === "visit" && <Button variant="primary">Submit</Button>}
+          {/* {modalContent === "visit" && <Button variant="primary">Submit</Button>} */}
         </Modal.Footer>
       </Modal>
     </div>

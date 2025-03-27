@@ -56,6 +56,7 @@ const Leads = () => {
   const [showFileInput, setShowFileInput] = useState(false);
 
   const [mobile, setMobile] = useState('');
+  // const [expandedSection, setExpandedSection] = useState(null);
   const [email, setEmail] = useState('');
   const [mobileError, setMobileError] = useState('');
   const [emailError, setEmailError] = useState('')
@@ -201,24 +202,8 @@ const Leads = () => {
     </Button>
   ))} */}
 
-{/* {sections.map((section, index) => (
-        <Tooltip key={index} title={section.label} arrow>
-          <IconButton
-            color="primary"
-            onClick={() => console.log(`${section.label} clicked`)}
-            sx={{
-              backgroundColor: "primary.main",
-              padding: "5px",
-              borderRadius: "50%",
-              color: "white",
-              fontSize: "18px",
-            }}
-          >
-            {section.icon}
-          </IconButton>
-        </Tooltip>
-      ))} */}
 
+{/* 
 {sections.map((section, index) => (
         <Tooltip key={index} title={section.label} arrow>
           <IconButton
@@ -237,7 +222,56 @@ const Leads = () => {
             {section.icon}
           </IconButton>
         </Tooltip>
-      ))}
+      ))} */}
+
+{sections.map((section, index) => (
+  <Tooltip key={index} title={section.label} arrow>
+    <div
+      style={{
+        display: 'flex',               // Flexbox to arrange icon and label horizontally
+        alignItems: 'center',          // Align the icon and label vertically in the center
+        justifyContent: 'flex-start',  // Ensure the content is aligned to the left
+        backgroundColor: '#3621a9',    // Background color for the button
+        padding: '10px',
+        margin: '10px',
+        borderRadius: '20px',          // Rounded corners for the container
+        color: 'white',
+        fontSize: '16px',              // Font size for the label
+        width: expandedSection === index ? '200px' : '50px',  // Toggle width based on expanded state
+        height: '50px',                // Make the height consistent for both collapsed and expanded
+        transition: 'width 0.3s ease', // Smooth transition for the width
+        background: 'linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)', // Gradient background
+        boxShadow: 'inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)', // Shadow for depth
+      }}
+    >
+      {/* Icon */}
+      <IconButton
+        color="primary"
+        onClick={() => handleToggleSection(index)}
+        sx={{
+          padding: 0,                   // Remove padding around icon for tight alignment
+          marginRight: '8px',           // Add space between icon and label
+          fontSize: '24px',             // Increased icon size
+          color: 'white',               // Set the icon color to white
+        }}
+      >
+        {section.icon}
+      </IconButton>
+
+      {/* Label */}
+      <span className='fw-bold'
+        style={{
+          color: 'white',
+          fontSize: '16px',
+          display: expandedSection === index ? 'inline' : 'none', // Show label only when expanded
+          marginLeft: '8px',             // Add some space between icon and label
+        }}
+      >
+        {section.label}
+      </span>
+    </div>
+  </Tooltip>
+))}
 
 
 

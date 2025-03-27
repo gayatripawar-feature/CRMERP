@@ -11,7 +11,8 @@ import {
   InputLabel,
   Select,MenuItem,
 } from "@mui/material";
-import { FaBuilding } from "react-icons/fa";
+import {  FaHandshake } from 'react-icons/fa';
+
 import { ToastContainer, toast } from "react-toastify";
 import ChannelPartnerTable from "./ChannelPartnerTable";
 
@@ -48,7 +49,7 @@ const ChannelPartner = () => {
       <Typography variant="h6">Sales Module / Channel Partner</Typography>
 
       {/* Toggle Icon and Name Display */}
-      <Button
+      {/* <Button
         variant="contained"
         color="primary"
         className="mt-3 mb-3"
@@ -69,7 +70,34 @@ const ChannelPartner = () => {
         startIcon={<FaBuilding />}
       >
         {isExpanded && "Channel Partner"}
-      </Button>
+      </Button> */}
+      <Button
+  variant="contained"
+  color="primary"
+  className="mt-3 mb-3"
+  sx={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start', // Align items to the left
+    gap: 1,
+    borderRadius: '20px',  // Border radius applied here
+    width: isExpanded ? '200px' : '50px',  // Toggle width based on expanded state
+    minWidth: '50px',
+    padding: '10px 15px',
+    textTransform: 'none',
+    transition: 'width 0.3s ease, background 0.3s ease',
+    background: 'linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)', // Gradient background
+    boxShadow:
+      'inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)',
+    cursor: 'pointer',  // Add pointer cursor for better UX
+    marginBottom: 2,
+  }}
+  onClick={handleToggleSidebar}
+  startIcon={<FaHandshake size={24} color="white" />} // Increased icon size and changed color to white
+>
+  {isExpanded && <span style={{ color: 'white', fontSize: '16px' }}>Channel Partner</span>} {/* Increased font size and set text color to white */}
+</Button>
+
 
       {/* This section is always visible */}
       <Box className="content-container mt-4">

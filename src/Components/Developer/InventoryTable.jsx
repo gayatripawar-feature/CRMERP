@@ -1,7 +1,9 @@
 
 import React from "react";
-import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Button } from "@mui/material";
+import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, Button,IconButton } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
+
+import { Delete as DeleteIcon } from "@mui/icons-material";
 
 const InventoryTable = ({ inventoryData, handleDelete }) => {
   return (
@@ -37,9 +39,19 @@ const InventoryTable = ({ inventoryData, handleDelete }) => {
           {inventoryData.map((item, index) => (
             <TableRow key={index}>
               <TableCell>
-                <Button color="error" onClick={() => handleDelete(index)}>
+                {/* <Button color="error" onClick={() => handleDelete(index)}>
                   <FaTrash />
-                </Button>
+                </Button> */}
+                 <IconButton
+                color="error"
+                style={{
+                  backgroundColor: '#d32f2f', // Set the background color to the error color
+                  borderRadius: '50%', // Make the icon circular
+                  padding: '6px', // Adjust padding to create the circle effect
+                }}
+              >
+                <DeleteIcon style={{ color: 'white' }} /> {/* Set icon color to white */}
+              </IconButton>
               </TableCell>
               <TableCell>{item.timestamp}</TableCell>
               <TableCell>{item.projectName}</TableCell>
