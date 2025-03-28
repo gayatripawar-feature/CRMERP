@@ -111,7 +111,7 @@ const BookingFormTable= ({ data }) => {
 <TableCell sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
   <Tooltip title="Edit" arrow>
     <IconButton 
-      sx={{ background: "#1976D2", color: "white", borderRadius: "50%", width: 38, height: 38, p: 0.5 }}
+      sx={{ background: "#1976D2", color: "white", borderRadius: "50%", width: 32, height: 32, p: 0.5 }}
       onClick={() => handleEditClick(item)}
     >
       <Edit sx={{ fontSize: 18 }} />
@@ -120,7 +120,7 @@ const BookingFormTable= ({ data }) => {
 
   <Tooltip title="WhatsApp" arrow>
     <IconButton 
-      sx={{ background: "#25D366", color: "white", borderRadius: "50%", width: 38, height: 38, p: 0.5 }}
+      sx={{ background: "#25D366", color: "white", borderRadius: "50%", width: 32, height: 32, p: 0.5 }}
       onClick={() => handleWhatsAppClick(item)}
     >
       <WhatsApp sx={{ fontSize: 18 }} />
@@ -129,7 +129,7 @@ const BookingFormTable= ({ data }) => {
 
   <Tooltip title="Email" arrow>
     <IconButton 
-      sx={{ background: "#D44638", color: "white", borderRadius: "50%", width: 38, height: 38, p: 0.5 }}
+      sx={{ background: "#D44638", color: "white", borderRadius: "50%", width: 32, height: 32, p: 0.5 }}
       onClick={() => handleEmailClick(item)}
     >
       <Email sx={{ fontSize: 18 }} />

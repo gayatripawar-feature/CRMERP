@@ -355,7 +355,8 @@ const handleCoAllotteeAadharChange = (e) => {
       }
       console.log("Clicked Section Index:", index);
       console.log("Selected Tab Before Update:", selectedTab);
-      setExpandedSection(index);  
+      // setExpandedSection(index);  
+      setExpandedSection(index); 
   
      
     if (sections[index].label === "Follow Up History") {
@@ -723,15 +724,16 @@ const handleCoAllotteeAadharChange = (e) => {
         setClosingExecutive(event.target.value);
       };
     
-      // const handleToggleSection = (index) => {
-      //   setExpandedSection(expandedSection === index ? null : index);
-      // };
+      
       
   const handleToggle = () => {
+    
     setIsExpanded((prev) => !prev);
+   
+
   };
 
-
+  
     return (
       <div className="main-content">
         <h6>Sales Module / Booking Management</h6>
@@ -751,58 +753,11 @@ const handleCoAllotteeAadharChange = (e) => {
                 {expandedSection === index ? section.label : null}
               </Button>
             ))}
-          </div>
-       
-{/*     
-      
-        <Button
-              variant="contained"
-              color="success"
-              sx={{
-                borderRadius: "20px",
-                transition: "width 0.3s ease, background 0.3s ease",
-                width: isExpanded ? "160px" : "50px",
-                minWidth: "50px",
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                padding: "10px 15px",
-                marginTop: "20px",
-                marginBottom: "28px",
-                fontSize: "14px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                textTransform: "none",
-                position: "relative",
-                // background: "linear-gradient(0deg, rgba(22,9,240,1) 0%, rgba(49,110,244,1) 100%)",
-                background: "linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
-                boxShadow:
-                  "inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)",
-                "&:hover": {
-                  // background: "linear-gradient(0deg, rgba(2,126,251,1) 0%, rgba(0,3,255,1) 100%)",
-                  background: "linear-gradient(0deg, rgb(230, 4, 255) 0%, rgb(245, 182, 24) 100%)",
-                },
-                "&::after": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                  background: "rgba(255, 255, 255, 0.2)",
-                  transform: "scale(0.1)",
-                  transition: "transform 0.3s ease",
-                  zIndex: -1,
-                },
-                "&:hover::after": {
-                  transform: "scale(1)",
-                },
-              }}
-              onClick={handleToggle}
-              startIcon={isExpanded ? <FaRegUser/> : <FaRegUser />}
-            >
-              {isExpanded && "Registration"}
-            </Button> */}
+          </div> 
+    
+
+
+
   
        
   {expandedSection === 0 && selectedTab === "firm" && (

@@ -303,7 +303,7 @@ const MenuProps = {
       transition: 'background 0.3s ease', // Smooth background transition
       background: activeIcon === 'project' ? '#3621a9' : '#f8f9fa', // Same background color for both
       padding: '8px 16px', // Padding to space out icon and label
-      borderRadius: '20px', // Rounded corners for the entire container
+      // borderRadius: '20px', // Rounded corners for the entire container
     }}
   >
     <div
@@ -342,7 +342,7 @@ const MenuProps = {
       transition: 'background 0.3s ease', // Smooth background transition
       background: activeIcon === 'shared' ? '#3621a9' : '#f8f9fa', // Same background color for both
       padding: '8px 16px', // Padding to space out icon and label
-      borderRadius: '20px', // Rounded corners for the entire container
+      // borderRadius: '20px', // Rounded corners for the entire container
     }}
   >
     <div
