@@ -2,14 +2,18 @@
 
 
 
-
-
 // import React from "react";
 // import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, IconButton, Box } from "@mui/material";
 // import EditIcon from '@mui/icons-material/Edit';
 // import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 // import EmailIcon from '@mui/icons-material/Email';
+// import { Tooltip } from "react-bootstrap";
 
+// const data=[
+//   {
+      
+//   },
+// ]
 // const LostVisitTable = ({ data }) => {
 //   return (
 //     <TableContainer component={Paper}>
@@ -46,18 +50,20 @@
 //           {data.map((item, index) => (
 //             <TableRow key={index}>
 //               {/* ACTION Column with Icons */}
-//               <TableCell>
+//              <TableCell>
 //                 <Box sx={{ display: 'flex', gap: '8px', justifyContent: 'flex-start' }}>
 //                   <IconButton
 //                     aria-label="edit"
 //                     onClick={() => console.log("Edit clicked")}
 //                     sx={{
-//                       backgroundColor: '#4caf50', 
-//                       '&:hover': { backgroundColor: '#388e3c' }, 
-//                       color: 'white'
+//                       backgroundColor: '#4caf50',
+//                       '&:hover': { backgroundColor: '#388e3c' },
+//                       color: 'white',
+//                       fontSize: '18px', // Smaller size
+//                       padding: '4px' // Reducing padding to make icons smaller
 //                     }}
 //                   >
-//                     <EditIcon />
+//                     <EditIcon sx={{ fontSize: 'inherit' }} />
 //                   </IconButton>
 //                   <IconButton
 //                     aria-label="whatsapp"
@@ -65,10 +71,12 @@
 //                     sx={{
 //                       backgroundColor: '#25D366',
 //                       '&:hover': { backgroundColor: '#128C7E' },
-//                       color: 'white'
+//                       color: 'white',
+//                       fontSize: '18px', // Smaller size
+//                       padding: '4px' // Reducing padding to make icons smaller
 //                     }}
 //                   >
-//                     <WhatsAppIcon />
+//                     <WhatsAppIcon sx={{ fontSize: 'inherit' }} />
 //                   </IconButton>
 //                   <IconButton
 //                     aria-label="email"
@@ -76,13 +84,17 @@
 //                     sx={{
 //                       backgroundColor: '#00796b',
 //                       '&:hover': { backgroundColor: '#004d40' },
-//                       color: 'white'
+//                       color: 'white',
+//                       fontSize: '18px', // Smaller size
+//                       padding: '4px' // Reducing padding to make icons smaller
 //                     }}
 //                   >
-//                     <EmailIcon />
+//                     <EmailIcon sx={{ fontSize: 'inherit' }} />
 //                   </IconButton>
 //                 </Box>
-//               </TableCell>
+//               </TableCell> 
+               
+         
 //               <TableCell>{item.lastFollowUp}</TableCell>
 //               <TableCell>{item.status}</TableCell>
 //               <TableCell>{item.remark}</TableCell>
@@ -122,8 +134,17 @@ import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper
 import EditIcon from '@mui/icons-material/Edit';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EmailIcon from '@mui/icons-material/Email';
+import { Tooltip } from "react-bootstrap";
 
-const LostVisitTable = ({ data }) => {
+
+const data = [
+  {
+   
+  },
+]
+
+const LostVisitTable = () => {
+  console.log(data);
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -160,49 +181,51 @@ const LostVisitTable = ({ data }) => {
             <TableRow key={index}>
               {/* ACTION Column with Icons */}
               <TableCell>
-                <Box sx={{ display: 'flex', gap: '8px', justifyContent: 'flex-start' }}>
-                  <IconButton
-                    aria-label="edit"
-                    onClick={() => console.log("Edit clicked")}
-                    sx={{
-                      backgroundColor: '#4caf50',
-                      '&:hover': { backgroundColor: '#388e3c' },
-                      color: 'white',
-                      fontSize: '18px', // Smaller size
-                      padding: '4px' // Reducing padding to make icons smaller
-                    }}
-                  >
-                    <EditIcon sx={{ fontSize: 'inherit' }} />
-                  </IconButton>
-                  <IconButton
-                    aria-label="whatsapp"
-                    onClick={() => window.open(`https://wa.me/${item.mobile}`, '_blank')}
-                    sx={{
-                      backgroundColor: '#25D366',
-                      '&:hover': { backgroundColor: '#128C7E' },
-                      color: 'white',
-                      fontSize: '18px', // Smaller size
-                      padding: '4px' // Reducing padding to make icons smaller
-                    }}
-                  >
-                    <WhatsAppIcon sx={{ fontSize: 'inherit' }} />
-                  </IconButton>
-                  <IconButton
-                    aria-label="email"
-                    onClick={() => window.open(`mailto:${item.email}`, '_blank')}
-                    sx={{
-                      backgroundColor: '#00796b',
-                      '&:hover': { backgroundColor: '#004d40' },
-                      color: 'white',
-                      fontSize: '18px', // Smaller size
-                      padding: '4px' // Reducing padding to make icons smaller
-                    }}
-                  >
-                    <EmailIcon sx={{ fontSize: 'inherit' }} />
-                  </IconButton>
-                </Box>
+                <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
+                  <Tooltip title="Edit">
+                    <IconButton 
+                      size="small" 
+                      sx={{ backgroundColor: "#1976D2", color: "white", borderRadius: "50%", "&:hover": { backgroundColor: "#1565C0" } }} 
+                      onClick={() => console.log("Edit clicked")}
+                    >
+                      <EditIcon sx={{ fontSize: "18px" }} />
+                    </IconButton>
+                  </Tooltip>
+  
+                  <Tooltip title="WhatsApp" arrow>
+                    <IconButton 
+                      size="small"
+                      sx={{ 
+                        backgroundColor: "#25D366", 
+                        borderRadius: "50%", 
+                        color: "white", 
+                        "&:hover": { backgroundColor: "#1EBE57" },
+                        width: "32px", height: "32px"
+                      }} 
+                      onClick={() => window.open(`https://wa.me/${item.mobile}`, '_blank')}
+                    >
+                      <WhatsAppIcon sx={{ fontSize: "20px" }} />
+                    </IconButton>
+                  </Tooltip>
+
+                  <Tooltip title="Email" arrow>
+                    <IconButton 
+                      size="small"
+                      sx={{ 
+                        backgroundColor: "#EA4335", 
+                        borderRadius: "50%", 
+                        color: "white", 
+                        "&:hover": { backgroundColor: "#D93025" },
+                        width: "32px", height: "32px"
+                      }} 
+                      onClick={() => window.open(`mailto:${item.email}`, '_blank')}
+                    >
+                      <EmailIcon sx={{ fontSize: "20px" }} />
+                    </IconButton>
+                  </Tooltip>
+                </div>
               </TableCell>
-              <TableCell>{item.lastFollowUp}</TableCell>
+              <TableCell>{item.lastFollowUp || ""}</TableCell>
               <TableCell>{item.status}</TableCell>
               <TableCell>{item.remark}</TableCell>
               <TableCell>{item.nextFollowUp}</TableCell>
@@ -211,10 +234,10 @@ const LostVisitTable = ({ data }) => {
               <TableCell>{item.leadNo}</TableCell>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.salesExe}</TableCell>
-              <TableCell>{item.mobile}</TableCell>
-              <TableCell>{item.whatsapp}</TableCell>
+              <TableCell>{item.mobile  || ""}</TableCell>
+              <TableCell>{item.whatsapp  || ""}</TableCell>
               <TableCell>{item.alternateContact}</TableCell>
-              <TableCell>{item.email}</TableCell>
+              <TableCell>{item.email  || ""}</TableCell>
               <TableCell>{item.address}</TableCell>
               <TableCell>{item.occupation}</TableCell>
               <TableCell>{item.company}</TableCell>

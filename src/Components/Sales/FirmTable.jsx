@@ -1,16 +1,51 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,IconButton } from '@mui/material';
+import { Tooltip } from '@mui/material';
+
+import EditIcon from '@mui/icons-material/Edit';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import EmailIcon from '@mui/icons-material/Email';
+const firms = [
+  {
+    timestamp: "2025-03-28 10:30 AM",
+    name: "ABC Enterprises",
+    address: "123 Business St, Cityville",
+    firmPanNo: "ABCDE1234F",
+    firmGstNo: "22ABCDE1234F1Z5",
+    firmPan: "ABCDE1234F",
+    firmGst: "22ABCDE1234F1Z5",
+    firmLightBill: "Paid",
+    partner: "John Doe",
+    aadhaarNo: "1234 5678 9012",
+    age: 45,
+    occupation: "Businessman",
+    mobileNo: "9876543210",
+    mailId: "abc@enterprises.com",
+    residentialAddress: "456 Market Rd, Cityville",
+    panNo: "ABCDE1234F",
+    photo: "", 
+    lightBill: "Yes",
+  },
+  {
+    timestamp:"",
+    name :"",
+  }
+
+,{
+  timestamp :" ",
+  name :" ",
+}
+ 
+];
 
 
 
-
-const FirmTable = ({ firms }) => {
+const FirmTable = ( ) => {
   return (
     <TableContainer component={Paper}>
     <Table>
       <TableHead>
-       
-        {/* <TableRow sx={{ background: "linear-gradient(180deg, #3621a9 0%,rgb(139, 115, 243) 100%)" }}> */}
+      
          <TableRow sx={{background:"#3621a9"}}>
           <TableCell  sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap"  }}>ACTION</TableCell>
           <TableCell  sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>TIMESTAMP</TableCell>
@@ -38,102 +73,75 @@ const FirmTable = ({ firms }) => {
       <TableBody>
         {firms.map((firm, index) => (
           <TableRow key={index} >
-            {/* <TableCell >{firm.action}</TableCell> */}
-             <TableCell sx={{ padding: "15px" }}>
-                           
-            
-            
-            
-            <div style={{ display: "flex", gap: "5px" }}>
-                  
-                  <Tooltip title="Edit" arrow>
-                    <IconButton 
-                      color="primary" 
-                      onClick={() => console.log("Edit clicked")} 
-                      sx={{
-                        backgroundColor: "primary.main", 
-                        padding: "5px",  
-                        borderRadius: "50%", 
-                        color: "white", 
-                        fontSize: "18px" 
-                      }}
-                    >
-                      <FaEdit />
-                    </IconButton>
-                  </Tooltip>
-            
-                  <Tooltip title="WhatsApp" arrow>
-                    <IconButton 
-                      color="success" 
-                      onClick={() => window.open(`https://wa.me/${item.mobileNo}`, "_blank")}
-                      sx={{
-                        backgroundColor: "success.main", 
-                        padding: "5px",  
-                        borderRadius: "50%", 
-                        color: "white", 
-                        fontSize: "18px" 
-                      }}
-                    >
-                      <FaWhatsapp />
-                    </IconButton>
-                  </Tooltip>
-            
-               
-                  <Tooltip title="Email" arrow>
-                    <IconButton 
-                      color="primary" 
-                      onClick={() => window.location.href = `mailto:${item.email}`}
-                      sx={{
-                        backgroundColor: "primary.main", 
-                        padding: "5px",  
-                        borderRadius: "50%", 
-                        color: "white", 
-                        fontSize: "18px"
-                      }}
-                    >
-                      <FaEnvelope />
-                    </IconButton>
-                  </Tooltip>
-            
-               
-                  <Tooltip title="Assign To" arrow>
-                    <IconButton 
-                      color="secondary" 
-                      onClick={() => console.log("Assign To clicked")}
-                      sx={{
-                        backgroundColor: "#FFD700", 
-                        padding: "5px",  
-                        borderRadius: "50%", 
-                        color: "white", 
-                        fontSize: "18px"
-                      }}
-                    >
-                      <FaUserCircle />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-                  </TableCell>
-            
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.timestamp}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.name}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.address}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.firmPanNo}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.firmGstNo}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.firmPan}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.firmGst}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.firmLightBill}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.partner}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.aadhaarNo}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.name}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.age}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.occupation}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.mobileNo}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.mailId}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.residentialAddress}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.panNo}</TableCell>
-            <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.aadhaarNo}</TableCell>
+        
+
+
+                 <TableCell>
+               <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
+                
+             <Tooltip title="Edit">
+               <IconButton 
+                 size="small" 
+                 sx={{ backgroundColor: "#1976D2", color: "white", borderRadius: "50%", "&:hover": { backgroundColor: "#1565C0" } }} 
+                 onClick={() => handleEdit(item)}
+               >
+                 <EditIcon sx={{ fontSize: "18px" }} />
+               </IconButton>
+             </Tooltip>
+             
+                 <Tooltip title="WhatsApp" arrow>
+                   <IconButton 
+                     size="small"
+                     sx={{ 
+                       backgroundColor: "#25D366", 
+                       borderRadius: "50%", 
+                       color: "white", 
+                       "&:hover": { backgroundColor: "#1EBE57" },
+                       width: "32px", height: "32px"
+                     }} 
+                     onClick={() => handleWhatsApp(firm)}
+                   >
+                     <WhatsAppIcon sx={{ fontSize: "20px" }} />
+                   </IconButton>
+                 </Tooltip>
+             
+                 <Tooltip title="Email" arrow>
+                   <IconButton 
+                     size="small"
+                     sx={{ 
+                       backgroundColor: "#EA4335", 
+                       borderRadius: "50%", 
+                       color: "white", 
+                       "&:hover": { backgroundColor: "#D93025" },
+                       width: "32px", height: "32px"
+                     }} 
+                     onClick={() => handleEmail(firm)}
+                   >
+                     <EmailIcon sx={{ fontSize: "20px" }} />
+                   </IconButton>
+                 </Tooltip>
+               </div>
+             </TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.timestamp || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.name || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.address || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.firmPanNo || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.firmGstNo}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.firmPan || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.firmGst || "" }</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.firmLightBill ||" "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.partner || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.aadhaarNo || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.name || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.age || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.occupation|| " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.mobileNo|| " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.mailId || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.residentialAddress || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.panNo || " "}</TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>{firm.aadhaarNo || " " }</TableCell>
             <TableCell>
-              <img src={firm.photo} alt="Firm Photo" width="50" height="50" />
+              {/* <img src={firm.photo} alt="" width="50" height="50" /> */}
             </TableCell>
             <TableCell>{firm.lightBill}</TableCell>
           </TableRow>

@@ -57,7 +57,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import EditIcon from '@mui/icons-material/Edit';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EmailIcon from '@mui/icons-material/Email';
-
+import { Tooltip } from '@mui/material';
 
 const firms = [
     {
@@ -74,12 +74,13 @@ const firms = [
       email: "john@example.com",
       sourceName: "Google Ads",
     },
-    // You can add more firm data here
+   
+  
   ];
 
   
 
-const Lostleadstable = ({ firms }) => {
+const Lostleadstable = () => {
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -102,18 +103,56 @@ const Lostleadstable = ({ firms }) => {
         <TableBody>
           {firms.map((firm, index) => (
             <TableRow key={index}>
-              {/* Action column with icons */}
-              <TableCell>
-                <IconButton color="primary" onClick={() => handleEdit(firm)}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton color="primary" onClick={() => handleWhatsApp(firm)}>
-                  <WhatsAppIcon />
-                </IconButton>
-                <IconButton color="primary" onClick={() => handleEmail(firm)}>
-                  <EmailIcon />
-                </IconButton>
-              </TableCell>
+             
+             <TableCell>
+  <div style={{ display: "flex", gap: "3px", alignItems: "center" }}>
+   
+<Tooltip title="Edit">
+  <IconButton 
+    size="small" 
+    sx={{ backgroundColor: "#1976D2", color: "white", borderRadius: "50%", "&:hover": { backgroundColor: "#1565C0" } }} 
+    onClick={() => handleEdit(item)}
+  >
+    <EditIcon sx={{ fontSize: "18px" }} />
+  </IconButton>
+</Tooltip>
+
+    <Tooltip title="WhatsApp" arrow>
+      <IconButton 
+        size="small"
+        sx={{ 
+          backgroundColor: "#25D366", 
+          borderRadius: "50%", 
+          color: "white", 
+          "&:hover": { backgroundColor: "#1EBE57" },
+          width: "32px", height: "32px"
+        }} 
+        onClick={() => handleWhatsApp(firm)}
+      >
+        <WhatsAppIcon sx={{ fontSize: "20px" }} />
+      </IconButton>
+    </Tooltip>
+
+    <Tooltip title="Email" arrow>
+      <IconButton 
+        size="small"
+        sx={{ 
+          backgroundColor: "#EA4335", 
+          borderRadius: "50%", 
+          color: "white", 
+          "&:hover": { backgroundColor: "#D93025" },
+          width: "32px", height: "32px"
+        }} 
+        onClick={() => handleEmail(firm)}
+      >
+        <EmailIcon sx={{ fontSize: "20px" }} />
+      </IconButton>
+    </Tooltip>
+  </div>
+</TableCell>
+
+
+
               <TableCell>{firm.lastFollowUp}</TableCell> {/* Last Follow Up */}
               <TableCell>{firm.status}</TableCell> {/* Status */}
               <TableCell>{firm.remark}</TableCell> {/* Remark */}

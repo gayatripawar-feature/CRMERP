@@ -207,8 +207,8 @@ const MenuProps = {
         </div>
       </div> */}
 
-<div className="d-flex align-items-center gap-4">
-  {/* Project Icon */}
+{/* <div className="d-flex align-items-center gap-4">
+ 
   <div
     className="d-flex align-items-center gap-2 p-2"
     onClick={() => handleToggle('project')}
@@ -233,7 +233,7 @@ const MenuProps = {
         boxShadow: 'inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)',
       }}
     >
-      <FaProjectDiagram size={26} color="white" /> {/* Icon color changed to white */}
+      <FaProjectDiagram size={26} color="white" /> 
     </div>
     {activeIcon === 'project' && (
       <span
@@ -248,7 +248,7 @@ const MenuProps = {
     )}
   </div>
 
-  {/* Share Icon */}
+
   <div
     className="d-flex align-items-center gap-2 p-2"
     onClick={() => handleToggle('shared')}
@@ -273,7 +273,7 @@ const MenuProps = {
         boxShadow: 'inset 2px 2px 2px 0px rgba(114, 10, 252, 0.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1)',
       }}
     >
-      <FaShareAlt size={26} color="white" /> {/* Icon color changed to white */}
+      <FaShareAlt size={26} color="white" /> 
     </div>
     {activeIcon === 'shared' && (
       <span
@@ -286,6 +286,86 @@ const MenuProps = {
         Revisit Status
       </span>
     )}
+  </div>
+</div> */}
+
+<div className="d-flex align-items-center gap-4">
+  {/* Project Icon and Label Together */}
+  <div
+    className="d-flex align-items-center gap-2 p-2"
+    onClick={() => handleToggle('project')}
+    style={{
+      cursor: 'pointer',
+      borderRadius: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      transition: 'background 0.3s ease', // Smooth background transition
+      background: activeIcon === 'project' ? '#3621a9' : '#f8f9fa', // Same background color for both
+      padding: '8px 16px', // Padding to space out icon and label
+      borderRadius: '20px', // Rounded corners for the entire container
+    }}
+  >
+    <div
+      className="d-flex justify-content-center align-items-center rounded-circle p-2 shadow"
+      style={{
+        background: activeIcon === 'project' ? 'white' : '#3621a9', // Icon background changes to white when active
+        padding: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <FaProjectDiagram size={26} color={activeIcon === 'project' ? '#3621a9' : 'white'} /> {/* Icon color changes based on active state */}
+    </div>
+    <span
+      style={{
+        color: activeIcon === 'project' ? '#fff' : '#3621a9', // Text color changes based on active state
+        fontSize: '16px',
+        marginLeft: '8px', // Space between icon and label
+      }}
+    >
+      Booking Status
+    </span>
+  </div>
+
+  {/* Share Icon and Label Together */}
+  <div
+    className="d-flex align-items-center gap-2 p-2"
+    onClick={() => handleToggle('shared')}
+    style={{
+      cursor: 'pointer',
+      borderRadius: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      transition: 'background 0.3s ease', // Smooth background transition
+      background: activeIcon === 'shared' ? '#3621a9' : '#f8f9fa', // Same background color for both
+      padding: '8px 16px', // Padding to space out icon and label
+      borderRadius: '20px', // Rounded corners for the entire container
+    }}
+  >
+    <div
+      className="d-flex justify-content-center align-items-center rounded-circle p-2 shadow"
+      style={{
+        background: activeIcon === 'shared' ? 'white' : '#3621a9', // Icon background changes to white when active
+        padding: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <FaShareAlt size={26} color={activeIcon === 'shared' ? '#3621a9' : 'white'} /> {/* Icon color changes based on active state */}
+    </div>
+    <span
+      style={{
+        color: activeIcon === 'shared' ? '#fff' : '#3621a9', // Text color changes based on active state
+        fontSize: '16px',
+        marginLeft: '8px', // Space between icon and label
+      }}
+    >
+      Revisit Status
+    </span>
   </div>
 </div>
 

@@ -16,7 +16,35 @@ import EditIcon from "@mui/icons-material/Edit";
 import EmailIcon from "@mui/icons-material/Email";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 
-const DisplayEnquiryTable = ({ data }) => {
+const data = [
+  {
+    remarkHistory: "2024-03-28 10:30 AM",
+    enquiryNo: "ENQ12345",
+    leadNo: "LD98765",
+    assignToHistory: "John Doe",
+    salesExecutiveName: "Jane Smith",
+    name: "Alice Johnson",
+    mobile: "9876543210",
+    alternateContactNo: "9876543200",
+    whatsappNo: "9876543210",
+    email: "alice@example.com",
+    address: "123 Main Street, City",
+    occupation: "Software Engineer",
+    company: "Tech Solutions",
+    interestedIn: "3 BHK",
+    budget: "₹75 Lakh",
+    reasonForPurchase: "Relocation",
+    referenceBySource: "Google Ads",
+    nameOfCp: "XYZ Realtors",
+    planningToBuyWithin: "3 Months",
+    customerFeedback: "Looking for more options.",
+  },
+  
+];
+
+
+
+const DisplayEnquiryTable = () => {
   
   // Handlers for each action (Edit, Email, Assign)
   const handleEdit = (row) => {
@@ -64,7 +92,7 @@ const DisplayEnquiryTable = ({ data }) => {
           {data.map((item, index) => (
             <TableRow key={index}>
               {/* ACTION COLUMN */}
-              <TableCell>
+              {/* <TableCell>
                 <Tooltip title="Edit">
                   <IconButton onClick={() => handleEdit(item)} color="primary">
                     <EditIcon />
@@ -80,7 +108,44 @@ const DisplayEnquiryTable = ({ data }) => {
                     <AssignmentIcon />
                   </IconButton>
                 </Tooltip>
-              </TableCell>
+              </TableCell> */}
+
+<TableCell>
+  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+  
+    <Tooltip title="Edit">
+  <IconButton 
+    size="small" 
+    sx={{ backgroundColor: "#1976D2", color: "white", borderRadius: "50%", "&:hover": { backgroundColor: "#1565C0" } }} 
+    onClick={() => handleEdit(item)}
+  >
+    <EditIcon sx={{ fontSize: "18px" }} />
+  </IconButton>
+</Tooltip>
+
+
+    <Tooltip title="Email">
+      <IconButton 
+        size="small" 
+        sx={{ backgroundColor: "#EA4335", color: "white", borderRadius: "50%", "&:hover": { backgroundColor: "#D93025" } }} 
+        onClick={() => handleEmail(item)}
+      >
+        <EmailIcon sx={{ fontSize: "18px" }} />
+      </IconButton>
+    </Tooltip>
+
+    <Tooltip title="Assign To">
+      <IconButton 
+        size="small" 
+        sx={{ backgroundColor: "#FFC107", color: "white", borderRadius: "50%", "&:hover": { backgroundColor: "#E0A800" } }} 
+        onClick={() => handleAssign(item)}
+      >
+        <AssignmentIcon sx={{ fontSize: "18px" }} />
+      </IconButton>
+    </Tooltip>
+  </div>
+</TableCell>
+
               
               {/* TIMESTAMP */}
               <TableCell>{item.remarkHistory}</TableCell>
