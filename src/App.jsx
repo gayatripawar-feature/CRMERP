@@ -46,6 +46,7 @@ import DailyCollection from "./Components/CRM/DailyCollection";
 import FlatAllotementReport from "./Components/CRM/FlatAllotementReport";
 import Parkingreport from "./Components/CRM/Parkingreport";
 import MISReport from "./Components/CRM/MISReport";
+import GeneratePdf from "./Components/Sales/GeneratePdf";
 const App = () => {
 
   useEffect(() => {

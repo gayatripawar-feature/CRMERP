@@ -1,11 +1,11 @@
 
 
 
-import React, { useState,useRef,useEffect } from "react";
+// import React, { useState,useRef,useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Button, Modal, Form, Row, Col, Table } from "react-bootstrap";
 import {TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,Typography } from '@mui/material';
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -16,7 +16,16 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TextField, Grid, Box } from '@mui/material';
-// const [selectedTemplate, setSelectedTemplate] = useState(null);
+
+import generatePDF from "./GeneratePdf"; // Import the default export
+
+import VisitDisplayPdf from "./VisitDisplayPdf";
+const handleGeneratePDF = (cardId) => {
+  console.log("Generating PDF for card ID:", cardId);
+  generatePDF(cardId);
+};
+
+
 
 
 const templates = [
@@ -189,6 +198,11 @@ const templates = [
 const projectData = {}; // Or fetch it from a state or API
 
 const Template = () => {
+
+
+
+
+
   const [openModal, setOpenModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
   const [formData, setFormData] = useState({
@@ -218,30 +232,30 @@ const Template = () => {
   
   
 
-  const handleOpenModal = (content) => {
-    console.log("Opening modal with content:", content);
+  // const handleOpenModal = (content) => {
+  //   console.log("Opening modal with content:", content);
   
-    if (content === "PDF") {
-      // Check if the template is selected
-      if (!selectedTemplate) {
-        console.log("PDF content not found. Ensure a template is selected.");
-        return; // Stop the process if no template is selected
-      }
+  //   if (content === "PDF") {
+    
+  //     if (!selectedTemplate) {
+  //       console.log("PDF content not found. Ensure a template is selected.");
+  //       return; 
+  //     }
       
-      // If everything is fine, generate the PDF
-      generatePDF(); 
-    } else {
-      setModalContent(content); // For other content types, set modal content normally
-    }
+      
+  //     generatePDF(); 
+  //   } else {
+  //     setModalContent(content); 
+  //   }
   
-    setOpenModal(true);
+  //   setOpenModal(true);
   
-    if (content === "visit") {
-      setFormData({ projectName: "", wing: "", flatNo: "", type: "", date: "" });
-    }
+  //   if (content === "visit") {
+  //     setFormData({ projectName: "", wing: "", flatNo: "", type: "", date: "" });
+  //   }
   
-    console.log(`Opening modal with content: ${content}`);
-  };
+  //   console.log(`Opening modal with content: ${content}`);
+  // };
   
   
   const handleCloseModal = () => {
@@ -358,40 +372,38 @@ const Template = () => {
 
 
 
-const pdfRef = useRef(null);
 
-const generatePDF = () => {
-  console.log("generating the pdf"); // This should show up in the console
-  const input = pdfRef.current;
+// const generatePDF = () => {
+//   console.log("generating the pdf"); // This should show up in the console
+//   const input = pdfRef.current;
 
-  if (!input) {
-    console.error("PDF content not found.");
-    return;
-  }
+//   if (!input) {
+//     console.error("PDF content not found.");
+//     return;
+//   }
 
-  // Wait for content to fully render before capturing it
-  setTimeout(() => {
-    html2canvas(input, { 
-      scale: 2, // Increase quality of the canvas
-      scrollX: 0, 
-      scrollY: 0 
-    }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
+//   // Wait for content to fully render before capturing it
+//   setTimeout(() => {
+//     html2canvas(input, { 
+//       scale: 2, // Increase quality of the canvas
+//       scrollX: 0, 
+//       scrollY: 0 
+//     }).then((canvas) => {
+//       const imgData = canvas.toDataURL("image/png");
 
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+//       const pdf = new jsPDF("p", "mm", "a4");
+//       const imgWidth = 210; // A4 width in mm
+//       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+//       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
 
-      // Save the generated PDF
-      pdf.save("RateApprovalForm.pdf");
-    }).catch((error) => {
-      console.error("Error generating the PDF:", error);
-    });
-  }, 500); // Small delay to ensure content is ready
-};
-
+//       // Save the generated PDF
+//       pdf.save("RateApprovalForm.pdf");
+//     }).catch((error) => {
+//       console.error("Error generating the PDF:", error);
+//     });
+//   }, 500); // Small delay to ensure content is ready
+// };
 
 
 
@@ -493,6 +505,35 @@ const modalTitles = {
 };
 
 
+
+
+  // const handleOpenModal = (content) => {
+  //   console.log("Opening modal with content:", content);
+  
+  //   if (content === "PDF") {
+    
+  //     if (!selectedTemplate) {
+  //       console.log("PDF content not found. Ensure a template is selected.");
+  //       return; 
+  //     }
+      
+      
+  //     generatePDF(); 
+  //   } else {
+  //     setModalContent(content); 
+  //   }
+  
+  //   setOpenModal(true);
+  
+  //   if (content === "visit") {
+  //     setFormData({ projectName: "", wing: "", flatNo: "", type: "", date: "" });
+  //   }
+  
+  //   console.log(`Opening modal with content: ${content}`);
+  // };
+  
+
+
 const selectedTemplate = templates.find(
   (template) => template.displayType === modalContent || template.formtype === modalContent
   
@@ -502,6 +543,31 @@ console.log("selectedTemplate:", selectedTemplate);
 
 const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] || "Form" : "Form";
 
+const handleOpenModal = (content) => {
+  
+  console.log("Opening modal with content:", content);
+
+  if (content === "PDF") {
+  
+    if (!selectedTemplate) {
+      console.log("PDF content not found. Ensure a template is selected.");
+      return; 
+    }
+    
+    
+    generatePDF(); 
+  } else {
+    setModalContent(content); 
+  }
+
+  setOpenModal(true);
+
+  if (content === "visit") {
+    setFormData({ projectName: "", wing: "", flatNo: "", type: "", date: "" });
+  }
+
+  console.log(`Opening modal with content: ${content}`);
+};
 
 
 
@@ -509,13 +575,15 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
 
 
 
+
+    
+
     <div className="container mt-4">
       <h2>Sales Templates</h2>
       
       
    
-
-
+{/*       
 <div className="row g-4 mt-5">
   {templates.map((template) => (
     <div className="col-12 col-sm-6 col-md-4" key={template.id}>
@@ -531,9 +599,7 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
               // >
               //   Download PDF
               // </Button>
-//               <Button variant="primary" onClick={() => generatePDF()}>
-//   Download PDF
-// </Button>
+
 <Button variant="primary" onClick={() => handleOpenModal("PDF")}>
       Download PDF
     </Button>
@@ -550,6 +616,120 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
                         ? template.displayType
                         : "PDF"
                     )
+                  }
+                >
+                  {button}
+                </Button>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</div> */}
+
+{/* <div className="row g-4 mt-5">
+      {templates.map((template) => (
+        <div className="col-12 col-sm-6 col-md-4" key={template.id}>
+          <div className="card shadow-sm">
+            <div className="card-body">
+             
+              <h5 className="card-title text-primary">{template.title}</h5>
+              
+             
+              <p className="card-text">{template.description}</p>
+
+              <div className="d-flex gap-3 justify-content-start">
+                {template.id === 1 ? (
+                  // Special button for cardId 1 (You can adjust as needed)
+                  <Button variant="primary" onClick={() => handleGeneratePDF(template.id)}>
+                    Download PDF
+                  </Button>
+                ) : (
+                  template.buttons.map((button, index) => (
+                    <Button
+                      key={index}
+                      variant="primary"
+                      onClick={() =>
+                        button === "PDF" ? handleGeneratePDF(template.id) : handleOpenModal(
+                          button === "Form"
+                            ? template.formtype
+                            : button === "Display"
+                            ? template.displayType
+                            : "PDF"
+                        )
+                      }
+                    >
+                      {button}
+                    </Button>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div> */}
+
+<div className="row g-4 mt-5">
+  {templates.map((template) => (
+    <div className="col-12 col-sm-6 col-md-4" key={template.id}>
+      <div className="card shadow-sm">
+        <div className="card-body">
+          {/* 🛠 Wrap this section with the correct ID for PDF generation */}
+          <div id={`display-section-${template.id}`} className="display-content">
+            <h5 className="card-title text-primary">{template.title}</h5>
+            <p className="card-text">{template.description}</p>
+{/* <p className="card-content">{template.modalContent}</p> */}
+{/* <p className="card-content">
+  {template.displayType} 
+</p> */}
+
+{/* Directly render the component based on the displayType */}
+{template.displayType === 'visitDisplay' && <VisitDisplayPdf/>}
+  {/* {template.displayType === 'type2' && <Component2 />} */}
+
+           {/* Add extra details that should be captured in the PDF */}
+           {selectedTemplate?.displayType === template.displayType && (
+  <div>
+    {console.log("selectedTemplate:", selectedTemplate)}  {/* Check if selectedTemplate is set */}
+    {console.log("template.displayType:", template.displayType)}  {/* Check template's displayType */}
+    {console.log("Condition matched for displayType:", selectedTemplate?.displayType === template.displayType)}  {/* Verify if the condition matches */}
+
+    <p><strong>Additional Details:</strong></p>
+    <ul>
+      <li>Payment Schedule</li>
+      <li>Terms & Conditions</li>
+      <li>Important Notes</li>
+    </ul>
+  </div>
+)}
+
+
+          </div>
+
+          <div className="d-flex gap-3 justify-content-start">
+            {template.id === 1 ? (
+              // Special button for cardId 1 (You can adjust as needed)
+              <Button variant="primary" onClick={() => handleGeneratePDF(template.id)}>
+                Download PDF
+              </Button>
+            ) : (
+              template.buttons.map((button, index) => (
+                <Button
+                  key={index}
+                  variant="primary"
+                  onClick={() =>
+                    button === "PDF"
+                      ? handleGeneratePDF(template.id) // Direct call for PDF button
+                      : handleOpenModal(
+                          button === "Form"
+                            ? template.formtype
+                            : button === "Display"
+                            ? template.displayType
+                            : "PDF"
+                        )
                   }
                 >
                   {button}
@@ -958,8 +1138,8 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
     </div>
 
    
-<div ref={pdfRef} style={{ padding: "20px", background: "#fff" }}>
- {/* <Table bordered style={{ width: '100%' }}>
+{/* <div ref={pdfRef} style={{ padding: "20px", background: "#fff" }}> */}
+ <Table bordered style={{ width: '100%' }}>
   <tbody>
    
     <tr>
@@ -1127,15 +1307,15 @@ const modalTitle = selectedTemplate ? modalTitles[selectedTemplate.displayType] 
   <td>MD.</td>
 </tr>
   </tbody>
-</Table>  */}
-
+</Table> 
+{/* 
 <h1>Test PDF Content</h1>
 <p>This is a simple test to verify PDF generation.</p>
 
 
-</div>
+</div> */}
 
-  </div>
+</div>
 )}
 
 

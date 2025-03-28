@@ -257,6 +257,17 @@ th, td {
   max-width: 20%;  /* This limits the maximum width */
 }
 
+
+.display-content {
+  display: block !important;
+  position: relative;
+  background: white;
+  padding: 20px;
+  width: 100%;
+}
+
+
+
 /* Optional: Add responsiveness for smaller screen sizes */
 @media (max-width: 1200px) {
   .card-column {
@@ -278,3 +289,6 @@ th, td {
     max-width: 100%;
   }
 }
+
+
+
