@@ -23,6 +23,11 @@ import InfoIcon from '@mui/icons-material/Info';  // Using InfoIcon
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { TextField, FormControl, InputLabel } from '@mui/material';
+// import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
   return response.json();
@@ -46,13 +51,24 @@ const [openForm, setOpenForm] = useState(false)
 const [setAmount, setSetAmount] = useState(false);  // State for Modal
 const [setAmountForm, setSetAmountForm] = useState(false);
 const [selectedTitle, setSelectedTitle] = useState("Mr."); 
+const [error, setError] = useState(false);
+const [chequeNoError, setChequeNoError] = useState(false);
+const [receiptNoError, setReceiptNoError] = useState(false);
+
+
   const rowsPerPage = 10;
   
   // State for Modal
   const [openModal, setOpenModal] = useState(false);
+  // const [selectedLoan, setSelectedLoan] = useState({
+  //   receivedDate: null, // Initialize with null or any default date
+  // });
+
   const [selectedLoan, setSelectedLoan] = useState({
-    receivedDate: null, // Initialize with null or any default date
+    chequeNo: '', // separate field for Cheque No
+    receiptNo: '' // separate field for Receipt No
   });
+  
   const [selectedLevel, setSelectedLevel] = useState("");
   useEffect(() => {
     loadLoansData();
@@ -96,9 +112,9 @@ const [selectedTitle, setSelectedTitle] = useState("Mr.");
   const handleCollapseToggle = () => {
     setIsCollapsed((prev) => !prev);
   };
-  const handleChange = (event) => {
-    setSelectedLevel(event.target.value);
-  };
+  // const handleChange = (event) => {
+  //   setSelectedLevel(event.target.value);
+  // };
 
   const handleOpen = () => {
     setSetAmount(true); // Open the modal
@@ -164,7 +180,57 @@ const handleToggle = () => {
     }
   };
 
+  // const handleChange = (e) => {
+  //   const value = e.target.value;
 
+  //   // ✅ Allow only numbers
+  //   if (/^\d*$/.test(value)) {
+  //     setSelectedLoan({ ...selectedLoan, flatNo: value });
+  //     setSelectedLevel(event.target.value);
+  //   }
+  // };
+
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+
+    if (/^\d*$/.test(value)) {
+      // ✅ If valid (numbers only), update state and clear error
+      setSelectedLoan({ ...selectedLoan, flatNo: value });
+      setSelectedLevel(event.target.value);
+      setError(false);
+    } else {
+      // ❌ If invalid, show error message
+      setError(true);
+    }
+  };
+ 
+  const handleChequeno = (e) => {
+    const value = e.target.value;
+  
+    // Allow only alphanumeric characters (letters and numbers)
+    if (/^[a-zA-Z0-9]*$/.test(value)) {
+      setSelectedLoan({ ...selectedLoan, chequeNo: value });
+      setChequeNoError(false); // Clear Cheque No error
+    } else {
+      setChequeNoError(true); // Set error for Cheque No
+    }
+  };
+  
+  
+  
+  const handleReceiptNo = (e) => {
+    const value = e.target.value;
+  
+    // Validate Receipt No (allow only numbers, if that's the requirement)
+    if (/^\d*$/.test(value)) {
+      setSelectedLoan({ ...selectedLoan, receiptNo: value });
+      setReceiptNoError(false); // Clear Receipt No error
+    } else {
+      setReceiptNoError(true); // Set error for Receipt No
+    }
+  };
+  
   
   // const handleSubmit = () => {
   //   // Show success toast
@@ -410,13 +476,33 @@ const handleToggle = () => {
 
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       <div style={{ display: "flex", gap: "20px" }}>
-        <TextField
+        {/* <TextField
           label="Receipt No"
           fullWidth
           value={selectedLoan?.flatNo || ""}
-          onChange={(e) => setSelectedLoan({ ...selectedLoan, flatNo: e.target.value })}
-        />
+          // onChange={(e) => setSelectedLoan({ ...selectedLoan, flatNo: e.target.value })}
+           onChange={handleChange}
+           error={error} // ✅ Shows red border if error is true
+           helperText={error ? "Only numbers are allowed" : ""} 
+        /> */}
       
+      {/* <TextField
+  label="Receipt No"
+  fullWidth
+  value={selectedLoan?.receiptNo || ""}  // bind to receiptNo
+  onChange={handleReceiptNo}  // use handleReceiptNo for Receipt No
+  error={error}  // ✅ Shows red border if error is true
+  helperText={error ? "Only numbers are allowed" : ""}
+/> */}
+<TextField
+  label="Receipt No"
+  fullWidth
+  value={selectedLoan?.receiptNo || ""}  // bind to receiptNo
+  onChange={handleReceiptNo}  // use handleReceiptNo for Receipt No
+  error={receiptNoError}  // Use receiptNoError for error display
+  helperText={receiptNoError ? "Only numbers are allowed" : ""}
+/>
+
 
 <FormControl fullWidth>
   <InputLabel>Name of Customer</InputLabel>
@@ -460,12 +546,36 @@ const handleToggle = () => {
 
 <div style={{ display: "flex", gap: "20px" }}>
   
-  <TextField
+  {/* <TextField
     label="Cheque No."
     fullWidth
     value={selectedLoan?.coAlloteeName || ""}
-    onChange={(e) => setSelectedLoan({ ...selectedLoan, coAlloteeName: e.target.value })}
-  />
+    onChange={handleChequeno}
+           error={error} // ✅ Shows red border if error is true
+           helperText={error ? "Only numbers are allowed" : ""} 
+  /> */}
+{/* 
+<TextField
+  label="Cheque No"
+  fullWidth
+  value={selectedLoan?.flatNo || ""}
+  onChange={handleChequeno}  // ✅ Use the updated handleChequeno
+  error={error}  // ✅ Shows red border if error is true
+  helperText={error ? "Only alphanumeric characters are allowed" : ""}
+/> */}
+
+<TextField
+  label="Cheque No"
+  fullWidth
+  value={selectedLoan?.chequeNo || ""}  // bind to chequeNo
+  onChange={handleChequeno}  // use handleChequeno for Cheque No
+  error={chequeNoError}  // Use chequeNoError for error display
+  helperText={chequeNoError ? "Only alphanumeric characters are allowed" : ""}
+/>
+
+
+
+
 </div>
 
 
@@ -480,7 +590,7 @@ const handleToggle = () => {
           onChange={(e) => setSelectedLoan({ ...selectedLoan, demandRaising: e.target.value })}
         />
       
-
+{/* 
 <FormControl fullWidth>
   <InputLabel shrink>Date of Received</InputLabel>
   <TextField
@@ -489,8 +599,18 @@ const handleToggle = () => {
     value={selectedLoan?.totalDuePayment || ""}
     onChange={(e) => setSelectedLoan({ ...selectedLoan, totalDuePayment: e.target.value })}
   />
-</FormControl>
-
+</FormControl> */}
+<FormControl fullWidth>
+      <InputLabel shrink>Date of Received</InputLabel>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DatePicker
+          label="Date of Received"
+          value={selectedLoan?.totalDuePayment || null} // Use null if no date selected
+          onChange={(date) => setSelectedLoan({ ...selectedLoan, totalDuePayment: date })}
+          renderInput={(params) => <TextField {...params} />} // Render the TextField inside the DatePicker
+        />
+      </LocalizationProvider>
+    </FormControl>
 
       </div>
 

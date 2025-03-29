@@ -214,11 +214,14 @@ import {  FaClipboardList, FaCalendarCheck, FaRegHandshake, FaRegClock, FaTasks,
 
 import {  FaMicrophone } from "react-icons/fa";
 import VoiceNavigation from "./VoiceNavigation";
+// import { useNavigate } from "react-router-dom";
 
 
 
 
 const Dashboard = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [results, setResults] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
   const [sections, setSections] = useState({
     admin: false,
@@ -227,6 +230,8 @@ const Dashboard = () => {
     crm: false,
   });
   const [showVoiceRecognition, setShowVoiceRecognition] = useState(false);
+  const [query, setQuery] = useState("");
+  // const [results, setResults] = useState([]);
   const navigate = useNavigate();
 
   // Memoized toggle functions
@@ -242,6 +247,14 @@ const Dashboard = () => {
   }, [navigate]);
 
 
+  // const menuItems = [
+  //   { to: "/developer/sharespace", icon: <FaCode />, label: "Share Space" },
+  //   { to: "/developer/basicinfo", icon: <FaInfoCircle />, label: "Basic Information" },
+  //   { to: "/developer/projectinventory", icon: <FaBuilding />, label: "Project Inventory" },
+  //   { to: "/developer/costsheet", icon: <FaFileInvoiceDollar />, label: "Cost Sheet Details" },
+  //   { to: "/developer/salesmis", icon: <FaChartLine />, label: "Sales MIS" },
+  //   { to: "/developer/marketing", icon: <FaBullhorn />, label: "Marketing" },
+  // ];
 
 
   // handleClose function that will be passed to VoiceNavigation as a prop
@@ -251,7 +264,140 @@ const Dashboard = () => {
   };
 
 
+  // const moduleData = [
+  //   {name :"CRM" ,path: "CRM"},
+  //   {name :"Share Space" ,path: "CRM > Share Space"},
+  //   { name : "Home Loan Applicability" , path :"CRM > Home Loan Applicability"},
+  //   { name : "CRM" , path :"CRM > CRM"},
+  //   { name : "OCR Collection" , path :"CRM > OCR Collection"},
+  //   { name : "Agreement" , path :"CRM > Agreement"},
+  //   { name : "Registration" , path :"CRM > Registration"},
+  //   { name: "Engineer & Architect Letter", path: " CRM > Engineer & Architect Letter" },
+  //   { name: "Demand Raised", path: " CRM > Demand Raised" },
+  //   { name: "Daily Collection", path: " CRM > Daily Collection" },
+  //   { name: "Flat Allotement Report", path: " CRM > Flat Allotement Report" },
+  //   { name: "Parking Report", path: " CRM > Parking Report" },
+  //   { name: "MIS Report", path: " CRM > MIS Report" },
 
+  //   {name : "Sales" , path :"Sales"},
+  //   {name: "Dashboard" , path :" Sales > Dashboard"},
+  //   {name: "Calendar" , path :" Sales > Calendar"},
+  //   {name: "Share Space" , path :" Sales > Share Space"},
+  //   {name: "Shared By Developer" , path :" Sales > Shared By Developer"},
+  //   {name: "Leads" , path :" Sales > Leads"},
+  //   {name: "Leads Follow Up" , path :" Sales > Leads Follow Up"},
+  //   {name: "Lost Leads" , path :" Sales > Lost Leads"}, 
+  //   {name: "First Visit" , path :" Sales >First Visit"}, 
+  //   {name: "First Visit Follow Up" , path :" Sales > First Visit Follow Up"},
+  //   {name: "First Visit Steps" , path :" Sales > First Visit Steps"},
+  //   {name: "Lost Visits" , path :" Sales > Lost visits"},
+  //   {name: "Templates" , path :" Sales > Templates"},
+  //   { name: "Booking Form", path: "Sales > Booking Form" },
+  //   { name: "Channel Partner", path: "Sales > Channel Partner" },
+
+
+    
+  // ];
+
+  const moduleData = [
+    { name: "CRM", path: "CRM", to: "/crm" },
+    { name: "Share Space", path: "CRM > Share Space", to: "/crm/sharespace" },
+    { name: "Home Loan Applicability", path: "CRM > Home Loan Applicability", to: "/crm/homeloan" },
+    { name: "OCR Collection", path: "CRM > OCR Collection", to: "/crm/ocrcollection" },
+    { name: "Agreement", path: "CRM > Agreement", to: "/crm/agreement" },
+    { name: "Registration", path: "CRM > Registration", to: "/crm/registration" },
+    { name: "Engineer & Architect Letter", path: "CRM > Engineer & Architect Letter", to: "/crm/engineer-architect" },
+    { name: "Demand Raised", path: "CRM > Demand Raised", to: "/crm/demand-raised" },
+    { name: "Daily Collection", path: "CRM > Daily Collection", to: "/crm/daily-collection" },
+    { name: "Flat Allotment Report", path: "CRM > Flat Allotment Report", to: "/crm/flat-allotment" },
+    { name: "Parking Report", path: "CRM > Parking Report", to: "/crm/parking-report" },
+    { name: "MIS Report", path: "CRM > MIS Report", to: "/crm/mis-report" },
+  
+    { name: "Sales", path: "Sales", to: "/sales" },
+    { name: "Dashboard", path: "Sales > Dashboard", to: "/sales/dashboard" },
+    { name: "Calendar", path: "Sales > Calendar", to: "/sales/calendar" },
+    { name: "Share Space", path: "Sales > Share Space", to: "/sales/sharespace" },
+    { name: "Shared By Developer", path: "Sales > Shared By Developer", to: "/sales/shared-by-developer" },
+    { name: "Leads", path: "Sales > Leads", to: "/sales/leads" },
+    { name: "Leads Follow Up", path: "Sales > Leads Follow Up", to: "/sales/leads-followup" },
+    { name: "Lost Leads", path: "Sales > Lost Leads", to: "/sales/lost-leads" },
+    { name: "First Visit", path: "Sales > First Visit", to: "/sales/first-visit" },
+    { name: "First Visit Follow Up", path: "Sales > First Visit Follow Up", to: "/sales/first-visit-followup" },
+    { name: "First Visit Steps", path: "Sales > First Visit Steps", to: "/sales/first-visit-steps" },
+    { name: "Lost Visits", path: "Sales > Lost Visits", to: "/sales/lost-visits" },
+    { name: "Templates", path: "Sales > Templates", to: "/sales/templates" },
+    { name: "Booking Form", path: "Sales > Booking Form", to: "/sales/booking-form" },
+    { name: "Channel Partner", path: "Sales > Channel Partner", to: "/sales/channel-partner" },
+  ];
+  
+
+// const handleSearch = (e) => {
+//   const query = e.target.value;
+//   setSearchQuery(query);
+
+//   if (query.trim() === "") {
+//     setResults([]);
+//   } else {
+//     const filteredResults = moduleData.filter((module) =>
+//       module.name.toLowerCase().includes(query.toLowerCase())
+//     );
+//     setResults(filteredResults);
+//   }
+// };
+
+// const handleSearch = (e) => {
+//   const query = e.target.value;
+//   setSearchQuery(query);
+
+//   if (query.trim() === "") {
+//     setResults([]);
+//   } else {
+//     const filteredResults = moduleData.filter((module) =>
+//       module.name.toLowerCase().includes(query.toLowerCase())
+//     );
+//     setResults(filteredResults);
+//   }
+// };
+// const handleSearch = (event) => {
+//   const searchTerm = event.target.value.toLowerCase();
+//   setQuery(searchTerm);
+
+//   if (searchTerm) {
+//     const filteredResults = menuItems.filter((item) =>
+//       item.label.toLowerCase().includes(searchTerm)
+//     );
+//     setResults(filteredResults);
+//   } else {
+//     setResults([]);
+//   }
+// };
+const handleSearch = (event) => {
+  const searchTerm = event.target.value.toLowerCase();
+  setQuery(searchTerm);
+
+  if (searchTerm) {
+    const filteredResults = moduleData.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm)
+    );
+    setResults(filteredResults);
+  } else {
+    setResults([]);
+  }
+};
+const handleRedirect = (path) => {
+  navigate(path); // Redirect to selected path
+  setQuery(""); // Clear search input after selection
+  setResults([]); // Hide search results
+};
+// const handleRedirect = (path) => {
+//   // Convert "Sales > Lost visits" into a proper URL path
+//   const formattedPath = path.replace(/\s*>\s*/g, "/").toLowerCase(); // Replace " > " with "/"
+//   navigate(`/${formattedPath}`); // Redirect to the formatted path
+// };
+
+// const handleRedirect = (to) => {
+//   navigate(to); // Navigate directly to the 'to' path
+// };
   return (
     <div className="d-flex flex-column vh-100 ">
       {/* Top Navbar */}
@@ -283,12 +429,87 @@ const Dashboard = () => {
     </button>
     <span className="navbar-brand mb-0 h1">CRM ERP</span>
   </div>
-  <div className="mx-auto w-50">
-    <input type="text" className="form-control" placeholder="Search..." />
-  </div>
+  {/* <div className="mx-auto w-50">
+    <input type="text" className="form-control" placeholder="Search..."  onChange={onSearch}/>
+  </div> */}
+
+<div className="position-relative">
+      {/* ✅ Search Input inside the same component */}
+      <div className="mx-auto w-100">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search..."
+          onChange={handleSearch} // ✅ No need to pass props
+        />
+      </div>
+
+      {/* ✅ Display Search Results */}
+      {/* {results.length > 0 && (
+        <ul className="list-group mt-2">
+          {results.map((item, index) => (
+            <li key={index} className="list-group-item">
+              {item.path}
+            </li>
+          ))}
+        </ul>
+
+
+      )} */}
+
+{/* {results.length > 0 && (
+    <ul
+      className="list-group mt-2 position-absolute bg-white w-100 shadow"
+      style={{ zIndex: 1050, maxHeight: "200px", overflowY: "auto" }}
+    >
+      {results.map((item, index) => (
+        <li key={index} className="list-group-item">
+          {item.path}
+        </li>
+      ))}
+    </ul>
+  )} */}
+
+ 
+  {/* {results.length > 0 && (
+        <ul
+          className="list-group mt-2 position-absolute bg-white w-100 shadow"
+          style={{ zIndex: 1050, maxHeight: "200px", overflowY: "auto" }}
+        >
+          {results.map((item, index) => (
+            <li
+              key={index}
+              className="list-group-item cursor-pointer"
+              onClick={() => handleRedirect(item.to)}
+              style={{ cursor: "pointer" }}
+            >
+              {item.label}
+            </li>
+          ))}
+        </ul>
+      )} */}
+
+{results.length > 0 && (
+        <ul
+          className="list-group mt-2 position-absolute bg-white w-100 shadow"
+          style={{ zIndex: 1050, maxHeight: "200px", overflowY: "auto" }}
+        >
+          {results.map((item, index) => (
+            <li
+              key={index}
+              className="list-group-item cursor-pointer"
+              onClick={() => handleRedirect(item.to)}
+              style={{ cursor: "pointer" }}
+            >
+              {/* ✅ Show breadcrumb-style path */}
+              {item.path}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   <div className="d-flex align-items-center">
-    {/* Microphone Icon */}
-    {/* <FaMicrophone size={20} className="me-3 text-white" /> */}
+   
     <FaMicrophone
             size={20}
             className="me-3 text-white"
