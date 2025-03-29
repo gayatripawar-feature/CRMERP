@@ -317,18 +317,60 @@ const Template = () => {
     ),
   };
 
-  const selectedTemplate = templates.find(
-    (template) =>
+//   const selectedTemplate = templates.find(
+//     (template) =>
+//       template.displayType === modalContent ||
+//       template.formtype === modalContent
+//   );
+//   console.log("selectedTemplate:", selectedTemplate);
+//   const modalTitle = selectedTemplate
+//     ? modalTitles[selectedTemplate.displayType] || "Form"
+//     : "Form";
+//   const handleOpenModal = (template) => {
+    
+//     const content = template.displayType;
+//     if (content === "PDF") {
+//       if (!selectedTemplate) {
+//         console.log("PDF content not found. Ensure a template is selected.");
+//         return;
+//       }
+//       generatePDF();
+//     } else {
+//       setModalContent(content);
+//       setTemplateId(template.id);
+//     }
+//     setOpenModal(true);
+//     if (content === "visit") {
+//       setFormData({
+//         projectName: "",
+//         wing: "",
+//         flatNo: "",
+//         type: "",
+//         date: "",
+//       });
+//     }
+//     console.log(`Opening modal with content: ${content}`);
+//   };
+
+const selectedTemplate = templates.find((template) => {
+    console.log("Checking template:", template);
+    return (
       template.displayType === modalContent ||
       template.formtype === modalContent
-  );
+    );
+  });
+  
   console.log("selectedTemplate:", selectedTemplate);
+  
   const modalTitle = selectedTemplate
     ? modalTitles[selectedTemplate.displayType] || "Form"
     : "Form";
-  const handleOpenModal = (template) => {
-    
+  
+  const handleOpenModal = (template,contentType) => {
+    console.log("Clicked template:", template);
     const content = template.displayType;
+    console.log("Opening Modal with content:", contentType); // Debugging Log
+    setModalContent(contentType);
     if (content === "PDF") {
       if (!selectedTemplate) {
         console.log("PDF content not found. Ensure a template is selected.");
@@ -336,10 +378,13 @@ const Template = () => {
       }
       generatePDF();
     } else {
+        
       setModalContent(content);
       setTemplateId(template.id);
     }
+  
     setOpenModal(true);
+  
     if (content === "visit") {
       setFormData({
         projectName: "",
@@ -349,8 +394,10 @@ const Template = () => {
         date: "",
       });
     }
+  
     console.log(`Opening modal with content: ${content}`);
   };
+  
   return (
     <div className="container mt-4">
       <h2>Sales Templates</h2>
@@ -439,8 +486,12 @@ const Template = () => {
         </Modal.Header>
         <Modal.Body>
           {modalContent === "visit" && (
+
+
+           
             <Form>
               <Row>
+            
                 <Col sm={6}>
                   <Form.Group controlId="formProjectName">
                     <Form.Label>Project Name</Form.Label>
@@ -1438,3 +1489,6 @@ const Template = () => {
   );
 };
 export default Template;
+
+
+

@@ -72,7 +72,7 @@ const Marketing = () => {
   };
 
   const handleEdit = (index) => {
-    alert(`Edit clicked for row ${index}`);
+    // alert(`Edit clicked for row ${index}`);
   };
 
   return (

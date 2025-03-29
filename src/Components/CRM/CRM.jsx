@@ -6,14 +6,22 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, TextField ,Tooltip,IconButton} from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, MenuItem, TextField ,Tooltip,IconButton,Typography} from '@mui/material';
 import { FaEye,FaEyeSlash } from 'react-icons/fa'; 
 import EditIcon from '@mui/icons-material/Edit';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EmailIcon from '@mui/icons-material/Email';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { MdDashboard } from 'react-icons/md';
-
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Grid from '@mui/material/Grid'; // For Material-UI Grid
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import { Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
 
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
@@ -46,7 +54,10 @@ const CRM = () => {
     const [editingIndex, setEditingIndex] = useState(null);
     const [inputValue, setInputValue] = useState("");
     const [isExpanded, setIsExpanded] = useState(true); 
+    const [showForm, setShowForm] = useState(false);
 
+      const [dateOfFlatBooking, setDateOfFlatBooking] = useState(null);
+        const [closingExecutive, setClosingExecutive] = useState('');
 
   useEffect(() => {
     loadLoansData();
@@ -69,6 +80,13 @@ const CRM = () => {
   };
   
 
+  const handleClose = () => {
+    setShowForm(false);  // Close the modal by setting showForm to false
+  };
+
+  const handleClosingExecutiveChange = (event) => {
+    setClosingExecutive(event.target.value);
+  };
 
 
   const getFilterOptions = (type) => {
@@ -875,45 +893,653 @@ const loansData = [
 <TableBody>
   {loansData.map((item, index) => (
     <TableRow key={index}>
-      {/* ACTION Column */}
-      {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        <div style={{ display: 'flex', gap: '4px', justifyContent: 'flex-start' }}>
-          <Tooltip title="Edit" arrow>
-            <IconButton sx={{ color: 'primary.main', fontSize: '18px' }} onClick={() => handleEdit(item)}>
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="WhatsApp" arrow>
-            <IconButton sx={{ color: 'success.main', fontSize: '18px' }} onClick={() => handleWhatsapp(item)}>
-              <WhatsAppIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Email" arrow>
-            <IconButton sx={{ color: 'primary.main', fontSize: '18px' }} onClick={() => handleEmail(item)}>
-              <EmailIcon />
-            </IconButton>
-          </Tooltip>
-        </div>
-      </TableCell> */}
+     
 <TableCell sx={{ whiteSpace: 'nowrap' }}>
   <div style={{ display: 'flex', gap: '4px', justifyContent: 'flex-start' }}>
-    <Tooltip title="Edit" arrow>
-      <IconButton
-        sx={{
-          color: 'primary.main',
-          fontSize: '1px',
-          backgroundColor: 'rgba(0, 0, 0, 0.08)', // Light gray background for Edit
-          borderRadius: '50%', // Makes the icon rounded
-          padding: '2px',
-          '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.12)', // Darker gray on hover
-          },
-        }}
-        onClick={() => handleEdit(item)}
+   
+
+<Tooltip title="Edit" arrow>
+  <IconButton
+    sx={{
+      color: 'primary.main',
+      fontSize: '1px',
+      backgroundColor: 'rgba(0, 0, 0, 0.08)',
+      borderRadius: '50%',
+      padding: '2px',
+      '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.12)',
+      },
+    }}
+    onClick={() => setShowForm(true)} // Set form visibility to true
+  >
+    <EditIcon />
+  </IconButton>
+  </Tooltip>
+
+ {/* Modal (Dialog) */}
+ <Dialog open={showForm} onClose={handleClose} maxWidth="md" fullWidth>
+        <DialogTitle>Edit Personal Information</DialogTitle>
+        <DialogContent>
+          <Paper
+            className="p-4"
+            elevation={4}
+            style={{ borderRadius: '12px', paddingBottom: '20px' }}
+          >
+          
+
+            {/* <div className="firm-form mt-4 p-3" style={{ maxHeight: "500px", overflowY: "auto", paddingRight: "10px" }}> */}
+      {/* <Paper className="p-4" elevation={4} style={{ borderRadius: "12px", paddingBottom: "20px" }}> */}
+        <Typography variant="h5" gutterBottom sx={{ paddingTop: 3 }}>
+        Section 1: Personal Information
+        </Typography>
+  
+       
+        
+        <Grid container spacing={2}>
+  <Grid item xs={6}>
+    <TextField
+      label="Enquiry No."
+      fullWidth
+      variant="outlined"
+      required
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="closing-executive-label">Project Name</InputLabel>
+      <Select
+        labelId="closing-executive-label"
+        id="closing-executive"
+        label="Select Sales Person"
       >
-        <EditIcon />
-      </IconButton>
-    </Tooltip>
+        {/* Sales Person options */}
+        <MenuItem value="Shilpha Mewada 1">Project Name</MenuItem>
+        <MenuItem value="Tic Tac Toe Sohan">Project Name</MenuItem>
+        <MenuItem value="Shilpha Mewada">Sohan Enterprised</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  <Grid item xs={6}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DatePicker
+        label="Date Of Flat Booking"
+        renderInput={(params) => <TextField {...params} fullWidth variant="outlined" />}
+      />
+    </LocalizationProvider>
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="NAME OF ALOTEE"
+      fullWidth
+      variant="outlined"
+      required
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      type="datetime-local" // Use datetime-local for date and time input
+      label="Source Name"
+      fullWidth
+      variant="outlined"
+      required
+      InputLabelProps={{
+        shrink: true, // Ensures label is above the input
+      }}
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DatePicker
+        label="Date Of Birth"
+        renderInput={(params) => <TextField {...params} fullWidth variant="outlined" />}
+      />
+    </LocalizationProvider>
+  </Grid>
+
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel htmlFor="occupation">Occupation</InputLabel>
+      <TextField
+        id="occupation"
+        label="Occupation"
+        variant="outlined"
+        required
+      />
+    </FormControl>
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="PAN No."
+      variant="outlined"
+      inputProps={{ maxLength: 10 }} // Prevent entering more than 10 characters
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="AADHAR No."
+      variant="outlined"
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="Mobile No"
+      fullWidth
+      variant="outlined"
+      inputProps={{
+        maxLength: 10, // Limit to 10 digits in the input field
+      }}
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="Alternate Mobile No"
+      fullWidth
+      variant="outlined"
+      inputProps={{
+        maxLength: 10, // Limit to 10 digits in the input field
+      }}
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="WhatsApp No."
+      fullWidth
+      variant="outlined"
+      inputProps={{
+        maxLength: 10, // Limit to 10 digits
+      }}
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="Email ID"
+      fullWidth
+      variant="outlined"
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="AADHAR No."
+      fullWidth
+      variant="outlined"
+      inputProps={{
+        maxLength: 12, // Limit to 12 digits
+      }}
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="Address"
+      fullWidth
+      variant="outlined"
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="Name of Co-Allottee"
+      fullWidth
+      variant="outlined"
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="Date Of Birth (Co-Allottee)"
+      fullWidth
+      variant="outlined"
+      type="date"
+      InputLabelProps={{
+        shrink: true, // Ensures the label stays above the field when a date is selected
+      }}
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="Occupation (Co-Allottee)"
+      fullWidth
+      variant="outlined"
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="PAN No. (Co-Allottee)"
+      fullWidth
+      variant="outlined"
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="AADHAR No. (Co-Allottee)"
+      fullWidth
+      variant="outlined"
+      inputProps={{ maxLength: 12 }} // Ensures AADHAR No. can't exceed 12 digits
+    />
+  </Grid>
+
+  <Grid item xs={6}>
+    <TextField
+      label="MOBILE No. & EMAIL (Co-Allottee)"
+      fullWidth
+      variant="outlined"
+    />
+  </Grid>
+</Grid>
+
+<hr/>
+
+<Typography variant="h5" gutterBottom sx={{ paddingTop: 3 }}>
+Section 2: Particulars of Flat
+        </Typography>
+
+        <Grid container spacing={2}>
+  {/* Carpet Area (Sq. Mtr.) */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="carpet-area-label">Carpet Area in (Sq. Mtr.)</InputLabel>
+      <Select labelId="carpet-area-label" id="carpet-area" label="Carpet Area in (Sq. Mtr.)">
+        <MenuItem value="100">100</MenuItem>
+        <MenuItem value="150">150</MenuItem>
+        <MenuItem value="200">200</MenuItem>
+        <MenuItem value="250">250</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Wing */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="wing-label">Wing</InputLabel>
+      <Select labelId="wing-label" id="wing" label="Wing">
+        <MenuItem value="A">A</MenuItem>
+        <MenuItem value="B">B</MenuItem>
+        <MenuItem value="C">C</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Flat No. */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="flat-no-label">FLAT No.</InputLabel>
+      <Select labelId="flat-no-label" id="flat-no" label="FLAT No.">
+        <MenuItem value="101">101</MenuItem>
+        <MenuItem value="102">102</MenuItem>
+        <MenuItem value="103">103</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Type */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="type-label">Type</InputLabel>
+      <Select labelId="type-label" id="type" label="Type">
+        <MenuItem value="2BHK">2BHK</MenuItem>
+        <MenuItem value="3BHK">3BHK</MenuItem>
+        <MenuItem value="4BHK">4BHK</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Sold Rate */}
+  <Grid item xs={6}>
+    <TextField label="Sold Rate" fullWidth variant="outlined" type="number" />
+  </Grid>
+
+  {/* Enclosed Balcony (Sq. Mtr.) */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="enclosed-balcony-label">Enclosed Balcony in (Sq. Mtr.)</InputLabel>
+      <Select labelId="enclosed-balcony-label" id="enclosed-balcony" label="Enclosed Balcony in (Sq. Mtr.)">
+        <MenuItem value="10">10</MenuItem>
+        <MenuItem value="15">15</MenuItem>
+        <MenuItem value="20">20</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Open Balcony (Sq. Mtr.) */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="open-balcony-label">Open Balcony in (Sq. Mtr.)</InputLabel>
+      <Select labelId="open-balcony-label" id="open-balcony" label="Open Balcony in (Sq. Mtr.)">
+        <MenuItem value="5">5</MenuItem>
+        <MenuItem value="10">10</MenuItem>
+        <MenuItem value="15">15</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Terrace (Sq. Mtr.) */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="terrace-label">Terrace in (Sq. Mtr.)</InputLabel>
+      <Select labelId="terrace-label" id="terrace" label="Terrace in (Sq. Mtr.)">
+        <MenuItem value="30">30</MenuItem>
+        <MenuItem value="40">40</MenuItem>
+        <MenuItem value="50">50</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Parking */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="parking-label">Parking</InputLabel>
+      <Select labelId="parking-label" id="parking" label="Parking">
+        <MenuItem value="Stack Parking">Stack Parking</MenuItem>
+        <MenuItem value="Open car parking">Open car parking</MenuItem>
+        <MenuItem value="Covered car parking">Covered car parking</MenuItem>
+        <MenuItem value="Basement car parking">Basement car parking</MenuItem>
+        <MenuItem value="Other">Other</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Floor */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="floor-label">Floor</InputLabel>
+      <Select labelId="floor-label" id="floor" label="Floor">
+        <MenuItem value="1st">1st</MenuItem>
+        <MenuItem value="2nd">2nd</MenuItem>
+        <MenuItem value="3rd">3rd</MenuItem>
+        <MenuItem value="4th">4th</MenuItem>
+        <MenuItem value="5th">5th</MenuItem>
+        <MenuItem value="6th">6th</MenuItem>
+        <MenuItem value="7th">7th</MenuItem>
+        <MenuItem value="8th">8th</MenuItem>
+        <MenuItem value="9th">9th</MenuItem>
+        <MenuItem value="10th">10th</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+</Grid>
+
+
+<hr/>
+  
+  
+
+<Typography variant="h5" gutterBottom sx={{ paddingTop: 3 }}>
+        Section 3: Consideration
+      </Typography>
+
+      <Grid container spacing={2}>
+  {/* Total Consideration (Auto Calculated) */}
+  <Grid item xs={6}>
+    <TextField
+      label="Total Consideration / Agreement Value"
+      fullWidth
+      variant="outlined"
+      type="number"
+    />
+  </Grid>
+
+  {/* Booking Amount / Advance Payment */}
+  <Grid item xs={6}>
+    <TextField
+      label="Booking Amount / Advance Payment"
+      fullWidth
+      variant="outlined"
+      type="number"
+    />
+  </Grid>
+
+  {/* Stamp Duty (7% of Agreement Cost) */}
+  <Grid item xs={6}>
+    <TextField
+      label="Stamp Duty (7% of Agreement Cost)"
+      fullWidth
+      variant="outlined"
+    />
+  </Grid>
+
+  {/* Registration Fee */}
+  <Grid item xs={6}>
+    <TextField
+      label="Registration Fee (Auto Calculated)"
+      fullWidth
+      variant="outlined"
+    />
+  </Grid>
+
+  {/* GST Amount */}
+  <Grid item xs={6}>
+    <TextField
+      label="GST Amount (Auto Calculated)"
+      fullWidth
+      variant="outlined"
+    />
+  </Grid>
+</Grid>
+
+
+      {/* Section 4: Documents */}
+      <Typography variant="h5" gutterBottom sx={{ paddingTop: 3 }}>
+        Section 4: Documents
+      </Typography>
+      <Grid container spacing={2}>
+  {/* PAN Card */}
+  <Grid item xs={6}>
+    <Typography variant="body1">PAN Card (of both)</Typography>
+    <Button 
+      variant="contained" 
+      component="label"
+      sx={{ backgroundColor: "white", color: "black", "&:hover": { backgroundColor: "#f0f0f0" } }}
+    >
+      Choose File
+      <input type="file" hidden />
+    </Button>
+  </Grid>
+
+  {/* AADHAR Card */}
+  <Grid item xs={6}>
+    <Typography variant="body1">AADHAR Card (of both)</Typography>
+    <Button 
+      variant="contained" 
+      component="label"
+      sx={{ backgroundColor: "white", color: "black", "&:hover": { backgroundColor: "#f0f0f0" } }}
+    >
+      Choose File
+      <input type="file" hidden />
+    </Button>
+  </Grid>
+
+  {/* Marriage Certificate */}
+  <Grid item xs={6}>
+    <Typography variant="body1">MARRIAGE CERTIFICATE (If Available)</Typography>
+    <Button 
+      variant="contained" 
+      component="label"
+      sx={{ backgroundColor: "white", color: "black", "&:hover": { backgroundColor: "#f0f0f0" } }}
+    >
+      Choose File
+      <input type="file" hidden />
+    </Button>
+  </Grid>
+
+  {/* Passport Size Photo */}
+  <Grid item xs={6}>
+    <Typography variant="body1">PASSPORT SIZE PHOTO (of both)</Typography>
+    <Button 
+      variant="contained" 
+      component="label"
+      sx={{ backgroundColor: "white", color: "black", "&:hover": { backgroundColor: "#f0f0f0" } }}
+    >
+      Choose File
+      <input type="file" hidden />
+    </Button>
+  </Grid>
+
+  {/* Any Other Documents */}
+  <Grid item xs={6}>
+    <Typography variant="body1">Any Other</Typography>
+    <Button 
+      variant="contained" 
+      component="label"
+      sx={{ backgroundColor: "white", color: "black", "&:hover": { backgroundColor: "#f0f0f0" } }}
+    >
+      Choose File
+      <input type="file" hidden />
+    </Button>
+  </Grid>
+</Grid>
+
+
+
+      {/* Section 5: Booking Payment Mode */}
+      <Typography variant="h5" gutterBottom sx={{ paddingTop: 3 }}>
+        Section 5: Booking Payment Mode
+      </Typography>
+
+      <Grid container spacing={2}>
+  {/* Booking Amount */}
+  <Grid item xs={6}>
+    <TextField
+      label="Booking Amount"
+      fullWidth
+      variant="outlined"
+      type="number"
+    />
+  </Grid>
+
+  {/* Payment Mode */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="payment-mode-label">Payment Mode</InputLabel>
+      <Select
+        labelId="payment-mode-label"
+        id="payment-mode"
+        label="Payment Mode"
+      >
+        <MenuItem value="Cheque">Cheque</MenuItem>
+        <MenuItem value="Bank Transfer">Bank Transfer</MenuItem>
+        <MenuItem value="Cash">Cash</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Cheque/TRN No. */}
+  <Grid item xs={6}>
+    <TextField
+      label="Cheque/TRN No."
+      fullWidth
+      variant="outlined"
+    />
+  </Grid>
+
+  {/* Cheque/TRN Date */}
+  <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <Grid item xs={6}>
+      <DatePicker
+        label="Cheque/TRN Date"
+        renderInput={(params) => (
+          <TextField 
+            {...params} 
+            fullWidth 
+            variant="outlined" 
+            sx={{ width: '100%' }} 
+          />
+        )}
+      />
+    </Grid>
+  </LocalizationProvider>
+
+  {/* Bank Name */}
+  <Grid item xs={6}>
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="bank-name-label">Bank Name</InputLabel>
+      <Select
+        labelId="bank-name-label"
+        id="bank-name"
+        label="Bank Name"
+      >
+        <MenuItem value="State Bank of India (SBI)">State Bank of India (SBI)</MenuItem>
+        <MenuItem value="HDFC">HDFC Bank</MenuItem>
+        <MenuItem value="ICICI Bank">ICICI Bank</MenuItem>
+        <MenuItem value="Punjab National Bank">Punjab National Bank</MenuItem>
+        <MenuItem value="Bank of Baroda">Bank of Baroda</MenuItem>
+        <MenuItem value="Axis Bank">Axis Bank</MenuItem>
+        <MenuItem value="Canara Bank">Canara Bank</MenuItem>
+        <MenuItem value="Union Bank of India">Union Bank of India</MenuItem>
+        <MenuItem value="Bank of India">Bank of India</MenuItem>
+        <MenuItem value="Kotak Mahindra Bank">Kotak Mahindra Bank</MenuItem>
+        <MenuItem value="IndusInd Bank">IndusInd Bank</MenuItem>
+        <MenuItem value="Yes Bank">Yes Bank</MenuItem>
+        <MenuItem value="IDBI Bank">IDBI Bank</MenuItem>
+        <MenuItem value="Indian Bank">Indian Bank</MenuItem>
+        <MenuItem value="Central Bank of India">Central Bank of India</MenuItem>
+        <MenuItem value="Indian Overseas Bank">Indian Overseas Bank</MenuItem>
+        <MenuItem value="Federal Bank">Federal Bank</MenuItem>
+        <MenuItem value="UCO Bank">UCO Bank</MenuItem>
+        <MenuItem value="Bandhan Bank">Bandhan Bank</MenuItem>
+      </Select>
+    </FormControl>
+  </Grid>
+
+  {/* Bank Details */}
+  <Grid item xs={6}>
+    <TextField
+      label="Bank Details"
+      fullWidth
+      variant="outlined"
+    />
+  </Grid>
+</Grid>
+
+  
+  
+  
+  
+        
+    
+          </Paper>
+        </DialogContent>
+       
+        <DialogActions>
+  <Button 
+    onClick={handleClose} 
+    color="primary"
+    sx={{ backgroundColor: '#f0f0f0', '&:hover': { backgroundColor: '#dcdcdc' } }}
+  >
+    Close
+  </Button>
+  <Button
+          variant="contained"
+          className="m-3"
+          color="success"
+          onClick={() => {
+            // Simply show the toast message without calling validation functions
+            toast.success("Details are submitted!", { position: "top-right", autoClose: 3000 });
+            
+            // If you want to close the form (or any other logic), you can add it here
+            setShowFirmForm(false); // Example of hiding the form after submission
+          }}
+        >
+          Submit
+        </Button>
+</DialogActions>
+
+      </Dialog>
+   
     <Tooltip title="WhatsApp" arrow>
       <IconButton
         sx={{

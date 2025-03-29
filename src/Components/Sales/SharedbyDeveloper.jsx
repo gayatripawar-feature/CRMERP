@@ -13,8 +13,8 @@ import DisplayTable from "./DisplayTable";
 import LandownerTable from "./LandownerTable";
 import FlatAllotment from './FlatAllotement';
 import { ToastContainer, toast } from 'react-toastify';
-
-
+import { jsPDF } from "jspdf";
+// import "jspdf-autotable";
 // import { FaUsers, FaHome } from 'react-icons/fa'; // FontAwesome
 // import { AiOutlineFileSearch } from 'react-icons/ai'; // AntDesign
 // import { IoIosBuild } from 'react-icons/io'; // Ionicons
@@ -201,15 +201,84 @@ setShowFlatForm(false); // Ensure this is not reset elsewhere if you want the ta
    {selectedTab === "landowner" && <LandownerTable />}
    {selectedTab === "allotement" && <FlatAllotement/>}
 
-  const handleDownloadPDF = () => {
-    const link = document.createElement("a");
-    link.href = "/path/to/demand_letter.pdf";
-    link.download = "Demand_Letter.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+ 
 
+
+  const handleDownloadPDF = () => {
+    // Create a new jsPDF instance
+    const doc = new jsPDF();
+  
+    // Data you want to add to the PDF
+    const timestamp = new Date().toLocaleDateString();  // Current date (e.g., "3/29/2025")
+
+    const projectName = "";
+    const name = "";
+    const mobileNo = "";
+    const flatsAlloted = "";  // Example number of flats allotted
+    const reraCarpetArea = "";  // Example RERA Carpet Area
+    const wing = "";
+    const flatNo = "";
+    const typeOfFlat = "";
+  
+    // Column headers and data
+    const columns = [
+      "Timestamp", "Project Name", "Name", "Mobile No", 
+      "No of Flats Allotted", "RERA Carpet Area", "Wing", "Flat No", "Type of Flat"
+    ];
+  
+    const data = [
+      timestamp, projectName, name, mobileNo, 
+      flatsAlloted, reraCarpetArea, wing, flatNo, typeOfFlat
+    ];
+  
+    // Add title to the PDF
+    doc.setFontSize(18);
+    doc.text("Flat Allotment Information", 10, 10);
+  
+    // Set font for table
+    doc.setFontSize(12);
+  
+    // Set column widths (adjust to fit the page width)
+    const columnWidths = [25, 30, 20, 20, 20, 20, 20, 20, 20]; // Adjust these to fit your content
+  
+    // Function to split text into multiple lines if it exceeds column width
+    const splitTextToFit = (text, maxWidth) => {
+      const lines = doc.splitTextToSize(text, maxWidth);
+      return lines;
+    };
+    const rowHeight = 15;  // Row height, increase to add padding inside rows
+
+  // Extra padding between rows
+  const extraRowSpacing = 5; 
+  
+    // Draw column headers
+    let xPos = 10;
+    let yPos = 40;
+  
+    columns.forEach((col, index) => {
+      doc.rect(xPos, yPos, columnWidths[index], 20); // Draw a rectangle for header
+      let headerLines = splitTextToFit(col, columnWidths[index] - 4); // Adjusting padding
+      doc.text(headerLines, xPos + 2, yPos + 7); // Add column header text (split if necessary)
+      xPos += columnWidths[index]; // Move x position for next column
+    });
+  
+    // Draw data rows
+    xPos = 10;
+    yPos += 20;
+  
+    data.forEach((value, index) => {
+      doc.rect(xPos, yPos, columnWidths[index], 10); // Draw a rectangle for data
+      let dataLines = splitTextToFit(value, columnWidths[index] - 4); // Adjusting padding
+      doc.text(dataLines, xPos + 2, yPos + 7); // Add data text (split if necessary)
+      xPos += columnWidths[index]; // Move x position for next column
+    });
+  
+       // Add extra spacing between rows
+       yPos += rowHeight + extraRowSpacing;
+    // Save or download the generated PDF
+    doc.save("Flat_Allotment_Info.pdf");
+  };
+  
   const handleAddPartner = () => {
     setPartners([...partners, { name: "", age: "", occupation: "", mobile: "", email: "", address: "", pan: "", aadhaar: "" }]);
   };

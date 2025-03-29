@@ -711,31 +711,68 @@ const LeadsFollowUp = () => {
     </Grid>
 
     <Grid item xs={6}>
-      <TextField
-        label="status"
-        fullWidth
-        variant="outlined"
-        value={firmPan}
-              onChange={handleFirmPanChange}
-              error={!!firmPanError}  // Show error if there is an error
-              helperText={firmPanError}
-      />
-    </Grid>
+  <FormControl fullWidth variant="outlined">
+    <InputLabel id="status-label">Status</InputLabel>
+    <Select
+      labelId="status-label"
+      id="status"
+      label="Status"
+      fullWidth
+      variant="outlined"
+    >
+      <MenuItem value="Follow Up">Follow Up</MenuItem>
+      <MenuItem value="Not Interested">Not Interested</MenuItem>
+      <MenuItem value="Callback Request">Callback Request</MenuItem>
+      <MenuItem value="Unreachable">Unreachable</MenuItem>
+      <MenuItem value="Booked History in Other Project">Booked History in Other Project</MenuItem>
+      <MenuItem value="Not Answer">Not Answer</MenuItem>
+      <MenuItem value="Invalid Number">Invalid Number</MenuItem>
+    </Select>
+  </FormControl>
+</Grid>
+
+   
     <Grid item xs={6}>
-      <TextField
-        label="Assign To"
-        fullWidth
-        variant="outlined"
-      />
-    </Grid>
+  <FormControl fullWidth variant="outlined">
+    <InputLabel id="assign-to-label">Assign To</InputLabel>
+    <Select
+      labelId="assign-to-label"
+      id="assign-to"
+      label="Assign To"
+      fullWidth
+      variant="outlined"
+    >
+      <MenuItem value="Shilpha Mewada 1">Shilpha Mewada 1</MenuItem>
+      <MenuItem value="Tic Tac Toe Sohan">Tic Tac Toe Sohan</MenuItem>
+      <MenuItem value="Shilpha Mewada">Shilpha Mewada</MenuItem>
+      <MenuItem value="VIVEK TAPKIR">VIVEK TAPKIR</MenuItem>
+      <MenuItem value="Shubham Taware">Shubham Taware</MenuItem>
+      <MenuItem value="Ashwini Khot">Ashwini Khot</MenuItem>
+      <MenuItem value="Amol Pawar">Amol Pawar</MenuItem>
+      <MenuItem value="Sachin Awale">Sachin Awale</MenuItem>
+    </Select>
+  </FormControl>
+</Grid>
+
     
-    <Grid item xs={6}>
-      <TextField
-        label="Lead type"
-        fullWidth
-        variant="outlined"
-      />
-    </Grid>
+<Grid item xs={6}>
+  <FormControl fullWidth variant="outlined">
+    <InputLabel id="lead-type-label">Lead Type</InputLabel>
+    <Select
+      labelId="lead-type-label"
+      id="lead-type"
+      label="Lead Type"
+      fullWidth
+      variant="outlined"
+    >
+      <MenuItem value="Hot">Hot</MenuItem>
+      <MenuItem value="Cold">Cold</MenuItem>
+      <MenuItem value="Warm">Warm</MenuItem>
+      <MenuItem value="Lost">Lost</MenuItem>
+    </Select>
+  </FormControl>
+</Grid>
+
 
 
     <Grid item xs={6}>

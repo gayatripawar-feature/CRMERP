@@ -214,7 +214,7 @@ import {  FaClipboardList, FaCalendarCheck, FaRegHandshake, FaRegClock, FaTasks,
 
 import {  FaMicrophone } from "react-icons/fa";
 import VoiceNavigation from "./VoiceNavigation";
-// import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -231,7 +231,7 @@ const Dashboard = () => {
   });
   const [showVoiceRecognition, setShowVoiceRecognition] = useState(false);
   const [query, setQuery] = useState("");
-  // const [results, setResults] = useState([]);
+
   const navigate = useNavigate();
 
   // Memoized toggle functions
@@ -300,77 +300,48 @@ const Dashboard = () => {
   // ];
 
   const moduleData = [
-    { name: "CRM", path: "CRM", to: "/crm" },
+    // { name: "CRM", path: "CRM", to: "/crm" }xxxxxxxxxxxxxxxx ,
     { name: "Share Space", path: "CRM > Share Space", to: "/crm/sharespace" },
     { name: "Home Loan Applicability", path: "CRM > Home Loan Applicability", to: "/crm/homeloan" },
-    { name: "OCR Collection", path: "CRM > OCR Collection", to: "/crm/ocrcollection" },
+    { name: "OCR Collection", path: "CRM > OCR Collection", to: "/crm/OCR" },
     { name: "Agreement", path: "CRM > Agreement", to: "/crm/agreement" },
     { name: "Registration", path: "CRM > Registration", to: "/crm/registration" },
-    { name: "Engineer & Architect Letter", path: "CRM > Engineer & Architect Letter", to: "/crm/engineer-architect" },
+    { name: "Engineer & Architect Letter", path: "CRM > Engineer & Architect Letter", to: "/crm/Architect" },
     { name: "Demand Raised", path: "CRM > Demand Raised", to: "/crm/demand-raised" },
-    { name: "Daily Collection", path: "CRM > Daily Collection", to: "/crm/daily-collection" },
-    { name: "Flat Allotment Report", path: "CRM > Flat Allotment Report", to: "/crm/flat-allotment" },
-    { name: "Parking Report", path: "CRM > Parking Report", to: "/crm/parking-report" },
-    { name: "MIS Report", path: "CRM > MIS Report", to: "/crm/mis-report" },
+    { name: "Daily Collection", path: "CRM > Daily Collection", to: "/crm/dailycollection" },
+    { name: "Flat Allotment Report", path: "CRM > Flat Allotment Report", to: "/crm/flatallotementreport" },
+    { name: "Parking Report", path: "CRM > Parking Report", to: "/crm/parkingreport" },
+    { name: "MIS Report", path: "CRM > MIS Report", to: "/crm/misreport" },
   
     { name: "Sales", path: "Sales", to: "/sales" },
-    { name: "Dashboard", path: "Sales > Dashboard", to: "/sales/dashboard" },
-    { name: "Calendar", path: "Sales > Calendar", to: "/sales/calendar" },
+    { name: "Dashboard", path: "Sales > Dashboard", to: "/sales/salesdashboard" },
+    { name: "Calendar", path: "Sales > Calendar", to: "/sales/salescalander" },
     { name: "Share Space", path: "Sales > Share Space", to: "/sales/sharespace" },
-    { name: "Shared By Developer", path: "Sales > Shared By Developer", to: "/sales/shared-by-developer" },
+    { name: "Shared By Developer", path: "Sales > Shared By Developer", to: "/sales/sharedbydeveloper" },
     { name: "Leads", path: "Sales > Leads", to: "/sales/leads" },
-    { name: "Leads Follow Up", path: "Sales > Leads Follow Up", to: "/sales/leads-followup" },
-    { name: "Lost Leads", path: "Sales > Lost Leads", to: "/sales/lost-leads" },
-    { name: "First Visit", path: "Sales > First Visit", to: "/sales/first-visit" },
-    { name: "First Visit Follow Up", path: "Sales > First Visit Follow Up", to: "/sales/first-visit-followup" },
-    { name: "First Visit Steps", path: "Sales > First Visit Steps", to: "/sales/first-visit-steps" },
-    { name: "Lost Visits", path: "Sales > Lost Visits", to: "/sales/lost-visits" },
-    { name: "Templates", path: "Sales > Templates", to: "/sales/templates" },
-    { name: "Booking Form", path: "Sales > Booking Form", to: "/sales/booking-form" },
-    { name: "Channel Partner", path: "Sales > Channel Partner", to: "/sales/channel-partner" },
+    { name: "Leads Follow Up", path: "Sales > Leads Follow Up", to: "/sales/leadsfollowup" },
+    { name: "Lost Leads", path: "Sales > Lost Leads", to: "/sales/lostleads" },
+    { name: "First Visit", path: "Sales > First Visit", to: "/sales/firstvisits" },
+    { name: "First Visit Follow Up", path: "Sales > First Visit Follow Up", to: "/sales/firstvisitfollowup" },
+    { name: "First Visit Steps", path: "Sales > First Visit Steps", to: "/sales/firstvisitsteps" },
+    { name: "Lost Visits", path: "Sales > Lost Visits", to: "/sales/saleslostvisits" },
+    { name: "Templates", path: "Sales > Templates", to: "/sales/salestemplates" },
+    { name: "Booking Form", path: "Sales > Booking Form", to: "/sales/bookingform" },
+    { name: "Channel Partner", path: "Sales > Channel Partner", to: "/sales/channelpartner" },
+
+    {name : "Banker Details" , path :"Admin > Banker Details" , to :"/admin/banker"},
+    {name :"Sales Person" ,path : "Admin > Sales Person" ,to :"/admin/salesperson"},
+
+    { name: "Share Space", path : "Developer/ Share Space" ,to: "/developer/sharespace",  },
+    {name: "Basic Information", path :"Developer / Basic Information", to: "/developer/basicinfo",  },
+    { name: "Project Inventory" ,  path :"Developer /Project Inventory", to: "/developer/projectinventory", },
+    { name: "Cost Sheet Details" , path :"Developer/Cost Sheet Details", to: "/developer/costsheet", },
+    { name: "Sales MIS", path :"Developer/Sales MIS" ,to: "/developer/salesmis",  },
+    { name: "Marketing" ,path :"Developer/Marketing", to: "/developer/marketing",  }
   ];
   
 
-// const handleSearch = (e) => {
-//   const query = e.target.value;
-//   setSearchQuery(query);
 
-//   if (query.trim() === "") {
-//     setResults([]);
-//   } else {
-//     const filteredResults = moduleData.filter((module) =>
-//       module.name.toLowerCase().includes(query.toLowerCase())
-//     );
-//     setResults(filteredResults);
-//   }
-// };
-
-// const handleSearch = (e) => {
-//   const query = e.target.value;
-//   setSearchQuery(query);
-
-//   if (query.trim() === "") {
-//     setResults([]);
-//   } else {
-//     const filteredResults = moduleData.filter((module) =>
-//       module.name.toLowerCase().includes(query.toLowerCase())
-//     );
-//     setResults(filteredResults);
-//   }
-// };
-// const handleSearch = (event) => {
-//   const searchTerm = event.target.value.toLowerCase();
-//   setQuery(searchTerm);
-
-//   if (searchTerm) {
-//     const filteredResults = menuItems.filter((item) =>
-//       item.label.toLowerCase().includes(searchTerm)
-//     );
-//     setResults(filteredResults);
-//   } else {
-//     setResults([]);
-//   }
-// };
 const handleSearch = (event) => {
   const searchTerm = event.target.value.toLowerCase();
   setQuery(searchTerm);
@@ -385,42 +356,14 @@ const handleSearch = (event) => {
   }
 };
 const handleRedirect = (path) => {
-  navigate(path); // Redirect to selected path
-  setQuery(""); // Clear search input after selection
-  setResults([]); // Hide search results
+  navigate(path);
+  setQuery(""); 
+  setResults([]); 
 };
-// const handleRedirect = (path) => {
-//   // Convert "Sales > Lost visits" into a proper URL path
-//   const formattedPath = path.replace(/\s*>\s*/g, "/").toLowerCase(); // Replace " > " with "/"
-//   navigate(`/${formattedPath}`); // Redirect to the formatted path
-// };
 
-// const handleRedirect = (to) => {
-//   navigate(to); // Navigate directly to the 'to' path
-// };
   return (
     <div className="d-flex flex-column vh-100 ">
-      {/* Top Navbar */}
-      {/* <nav className="navbar navbar-dark bg-primary px-3"> */}
-      {/* <nav className="navbar navbar-dark  px-3" style={{background:"#3621a9"}}>
-        <div className="d-flex align-items-center">
-          <button className="btn btn-dark me-3" onClick={toggleSidebar}>
-            <FaBars size={20} />
-          </button>
-          <span className="navbar-brand mb-0 h1">CRM ERP</span>
-        </div>
-        <div className="mx-auto w-50">
-          <input type="text" className="form-control" placeholder="Search..." />
-        </div>
-        <div>
-          
-          <img
-            src="/unnamed.png"
-            alt="Profile"
-            className="rounded-circle profile"
-          />
-        </div>
-      </nav> */}
+     
 <nav className="navbar navbar-dark px-3" style={{ background: "#3621a9" }}>
 
   <div className="d-flex align-items-center">
@@ -429,65 +372,38 @@ const handleRedirect = (path) => {
     </button>
     <span className="navbar-brand mb-0 h1">CRM ERP</span>
   </div>
-  {/* <div className="mx-auto w-50">
-    <input type="text" className="form-control" placeholder="Search..."  onChange={onSearch}/>
-  </div> */}
+  
 
 <div className="position-relative">
-      {/* ✅ Search Input inside the same component */}
-      <div className="mx-auto w-100">
+     
+      {/* <div className="mx-auto w-100">
         <input
           type="text"
           className="form-control"
           placeholder="Search..."
-          onChange={handleSearch} // ✅ No need to pass props
+          onChange={handleSearch} 
         />
-      </div>
+      </div> */}
+      <div className="mx-auto w-100">
+    <input
+      type="text"
+      className="form-control ps-5" // Add left padding to make space for the icon
+      placeholder="Search..."
+      onChange={handleSearch}
+    />
+    <FaMicrophone
+      size={30}
+      className="position-absolute top-50 end-0 translate-middle-y text-black p-1"
+      style={{ cursor: "pointer", paddingLeft: "10px"}}
+      onClick={() => setShowVoiceRecognition(true)}
+    />
+  </div>
 
-      {/* ✅ Display Search Results */}
-      {/* {results.length > 0 && (
-        <ul className="list-group mt-2">
-          {results.map((item, index) => (
-            <li key={index} className="list-group-item">
-              {item.path}
-            </li>
-          ))}
-        </ul>
 
+   
 
-      )} */}
-
-{/* {results.length > 0 && (
-    <ul
-      className="list-group mt-2 position-absolute bg-white w-100 shadow"
-      style={{ zIndex: 1050, maxHeight: "200px", overflowY: "auto" }}
-    >
-      {results.map((item, index) => (
-        <li key={index} className="list-group-item">
-          {item.path}
-        </li>
-      ))}
-    </ul>
-  )} */}
 
  
-  {/* {results.length > 0 && (
-        <ul
-          className="list-group mt-2 position-absolute bg-white w-100 shadow"
-          style={{ zIndex: 1050, maxHeight: "200px", overflowY: "auto" }}
-        >
-          {results.map((item, index) => (
-            <li
-              key={index}
-              className="list-group-item cursor-pointer"
-              onClick={() => handleRedirect(item.to)}
-              style={{ cursor: "pointer" }}
-            >
-              {item.label}
-            </li>
-          ))}
-        </ul>
-      )} */}
 
 {results.length > 0 && (
         <ul
@@ -510,12 +426,12 @@ const handleRedirect = (path) => {
     </div>
   <div className="d-flex align-items-center">
    
-    <FaMicrophone
+    {/* <FaMicrophone
             size={20}
             className="me-3 text-white"
             style={{ cursor: "pointer" }}
             onClick={() => setShowVoiceRecognition(true)}
-          />
+          /> */}
     {/* Profile Image */}
     <img
       src="/unnamed.png"
@@ -554,8 +470,7 @@ const handleRedirect = (path) => {
         isOpen={sections.admin}
         toggleOpen={() => toggleSection('admin')}
         subItems={[
-          // { to: "/admin/salesperson", icon: <FaUserShield />, label: "Sales Person" },
-          // { to: "/admin/banker", icon: <FaUserShield />, label: "Banker Details" }
+          
           { to: "/admin/salesperson", icon: <FaUserTie />, label: "Sales Person" },
           { to: "/admin/banker", icon: <FaLandmark />, label: "Banker Details" }
           
@@ -569,12 +484,7 @@ const handleRedirect = (path) => {
         isOpen={sections.developer}
         toggleOpen={() => toggleSection('developer')}
         subItems={[
-          // { to: "/developer/sharespace", icon: <FaCode />, label: "Share Space" },
-          // { to: "/developer/basicinfo", icon: <FaCode />, label: "Basic Information" },
-          // {to :"/developer/projectinventory",icon : <FaCode />,label:"Project Inventory" },
-          // {to :"/developer/costsheet",icon : <FaCode />,label:"Cost Sheet Details" },
-          // {to :"/developer/salesmis",icon : <FaCode />,label:"Sales MIS" },
-          // {to :"/developer/marketing",icon : <FaCode />,label:"Marketing" },
+         
           { to: "/developer/sharespace", icon: <FaCode />, label: "Share Space" },
           { to: "/developer/basicinfo", icon: <FaInfoCircle />, label: "Basic Information" },
           { to: "/developer/projectinventory", icon: <FaBuilding />, label: "Project Inventory" },
@@ -591,27 +501,10 @@ const handleRedirect = (path) => {
         isOpen={sections.sales}
         toggleOpen={() => toggleSection('sales')}
         subItems={[
-          // { to: "/sales/lostvisits", icon: <FaChartLine />, label: "Lost Visits" },
-          // { to: "/sales/salesdashboard", icon: <FaChartLine />, label: "Dashboard" },
-          // { to: "/sales/salescalander", icon: <FaChartLine />, label: "Calandar" },
-       
-          // { to: "/sales/sharespace", icon: <FaChartLine />, label: "Share Space" },
+        
           { to: "/sales/salesdashboard", icon: <FaTachometerAlt />, label: "Dashboard" }, 
 { to: "/sales/salescalander", icon: <FaCalendarAlt />, label: "Calendar" }, 
 { to: "/sales/sharespace", icon: <FaPeopleArrows />, label: "Share Space" } ,
-// {to : "/sales/sharedbydeveloper" , icon :<FaPeopleArrows />, label: "Shared By Developer" },
-// {to : "/sales/leads" , icon :<FaPeopleArrows />, label: "Leads" },
-// {to : "/sales/leadsfollowup" , icon :<FaPeopleArrows />, label: "Leads Follow Up" },
-// {to : "/sales/lostleads" , icon :<FaPeopleArrows />, label: "Lost Leads" },
-// {to : "/sales/firstvisits" , icon :<FaPeopleArrows />, label: "First Visit" },
-// {to : "/sales/firstvisitfollowup" , icon :<FaPeopleArrows />, label: "First Visit Follow Up" },
-// {to : "/sales/firstvisitsteps" , icon :<FaPeopleArrows />, label: "First Visit Steps" },
-// {to : "/sales/saleslostvisits" , icon :<FaPeopleArrows />, label: "Lost Visits" },
-// {to : "/sales/salestemplates" , icon :<FaPeopleArrows />, label: "Templates" },
-// {to : "/sales/bookingform" , icon :<FaPeopleArrows />, label: "Booking Form" },
-
-
-
   { to: "/sales/sharedbydeveloper", icon: <FaUsers />, label: "Shared By Developer" },
   { to: "/sales/leads", icon: <FaClipboardList />, label: "Leads" },
   { to: "/sales/leadsfollowup", icon: <FaCalendarCheck />, label: "Leads Follow Up" },
@@ -634,14 +527,7 @@ const handleRedirect = (path) => {
         isOpen={sections.crm}
         toggleOpen={() => toggleSection('crm')}
         subItems={[
-        //   { to: "/crm/sharespace", icon: <FaUser />, label: "Share Space" },
-        //   { to: "/crm/registration", icon: <FaUser />, label: "Registration" },
-        // { to: "/crm/crm", icon: <FaUser />, label: "CRM" },
-        // { to: "/crm/HomeLoan", icon: <FaUser />, label: "Home Loan Applicability" },
-        // { to: "/crm/OCR", icon: <FaUser />, label: "OCR Collection" },
-        // { to: "/crm/Agreement", icon: <FaUser />, label: "Agreement" },
-        // { to: "/crm/Architect", icon: <FaUser />, label: "Engineer & Architect Letter" },
-        // { to: "/crm/Demand", icon: <FaUser />, label: "Demand Raised" },
+       
         { to: "/crm/sharespace", icon: <FaUsers />, label: "Share Space" },
    
     { to: "/crm/HomeLoan", icon: <FaHome />, label: "Home Loan Applicability" },
@@ -660,8 +546,7 @@ const handleRedirect = (path) => {
    
     </ul>
 
-    {/* Logout Option */}
-    {/* <div className="mt-auto"> */}
+   
     <div style={{ marginTop: "auto", marginBottom: "50px" }}>
 
       <button className="btn btn-danger w-100 d-flex align-items-center justify-content-center" onClick={handleLogout}>

@@ -133,11 +133,25 @@ const handleBudgetChange = (event) => {
   };
 
 
+  // const downloadSampleCsv = () => {
+  //   const sampleData = "Name,Email,Phone\nJohn Doe,john@example.com,1234567890";
+  //   const blob = new Blob([sampleData], { type: "text/csv" });
+  //   const url = URL.createObjectURL(blob);
+
+  //   const a = document.createElement("a");
+  //   a.href = url;
+  //   a.download = "lead_template.csv";
+  //   document.body.appendChild(a);
+  //   a.click();
+  //   document.body.removeChild(a);
+  // };
+
   const downloadSampleCsv = () => {
-    const sampleData = "Name,Email,Phone\nJohn Doe,john@example.com,1234567890";
+    const sampleData = `Sales Exp.,Name,Mobile,Alternate Mobile Number,WhatsApp No.,Email,Address,Occupation,Company,Interested In,Budget,Reason,Reference,Name of CP,Planning to Buy,Follow Up Details\n`;
+  
     const blob = new Blob([sampleData], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-
+  
     const a = document.createElement("a");
     a.href = url;
     a.download = "lead_template.csv";
@@ -145,8 +159,7 @@ const handleBudgetChange = (event) => {
     a.click();
     document.body.removeChild(a);
   };
-
-
+  
 
   const handleChange = (e) => {
     const value = e.target.value;

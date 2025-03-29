@@ -88,19 +88,32 @@ const ProjectInventory = () => {
   };
 
 
+  // const downloadSampleCsv = () => {
+  //   const sampleData = "Name,Email,Phone\nJohn Doe,john@example.com,1234567890";
+  //   const blob = new Blob([sampleData], { type: "text/csv" });
+  //   const url = URL.createObjectURL(blob);
+
+  //   const a = document.createElement("a");
+  //   a.href = url;
+  //   a.download = "inventory_template.csv";
+  //   document.body.appendChild(a);
+  //   a.click();
+  //   document.body.removeChild(a);
+  // };
   const downloadSampleCsv = () => {
-    const sampleData = "Name,Email,Phone\nJohn Doe,john@example.com,1234567890";
+    const sampleData = `Project Name,Wing,Floor,Flat No,RERA Carpet Area (Sq m),RERA Carpet Area (Sq ft),Total Saleable Area,Saleable Ratio,Unit Type,Configuration,Status,Ownership,Att Terrace Carpet Area,Balcony Area,Porch Area, Top Terrace Carpet Area,Super BuiltUp,Open /Enclosed balcony as sanctioned,Podium Garde\n`;
+  
     const blob = new Blob([sampleData], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-
+  
     const a = document.createElement("a");
     a.href = url;
-    a.download = "sample.csv";
+    a.download = "inventory_template.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   };
-
+  
  
   return (
     <div className="main-content">
