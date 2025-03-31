@@ -1,7 +1,31 @@
 import React from "react";
-import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper } from "@mui/material";
-
+import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper,Tooltip,IconButton } from "@mui/material";
+import { EditIcon } from "lucide-react";
 const DisplayTable = ({ data }) => {
+
+  const data1 = [{
+    action: 'Edit',
+    firmName: 'ABC Firm',
+    timestamp: '2025-03-31 10:00 AM',
+    projectName: 'Project X',
+    projectAddress: '123, Street, City',
+    oldSurveyNumber: '12345',
+    newSurveyNumber: '54321',
+    village: 'Village A',
+    taluka: 'Taluka B',
+    district: 'District C',
+    sanctionAuthority: 'Authority 1',
+    east: '10m',
+    west: '20m',
+    north: '15m',
+    south: '30m',
+    latitude: '28.7041° N',
+    longitude: '77.1025° E',
+    landmark: 'Near Park',
+    phaseNo: 'Phase 1',
+    wingNo: 'Wing A',
+    mahareraNo: 'MH123456',
+  }];
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -9,8 +33,9 @@ const DisplayTable = ({ data }) => {
           {/* <TableRow sx={{ bgcolor: "primary.main" }}> */}
            <TableRow sx={{background:"#3621a9"}}>
             <TableCell  sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>ACTION</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>FIRM NAME</TableCell>
             <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>TIMESTAMP</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>FIRM NAME</TableCell>
+       
             <TableCell  sx={{ color: "white", fontWeight: "bold" , whiteSpace: "nowrap"}}>PROJECT NAME</TableCell>
             <TableCell  sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>PROJECT ADDRESS</TableCell>
             <TableCell  sx={{ color: "white", fontWeight: "bold", whiteSpace: "nowrap" }}>OLD SURVEY NUMBER</TableCell>
@@ -32,9 +57,22 @@ const DisplayTable = ({ data }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((item, index) => (
+          {data1.map((item, index) => (
             <TableRow key={index}>
-              <TableCell>{item.action}</TableCell>
+              {/* <TableCell>{item.action}</TableCell> */}
+               <TableCell>
+                      
+                            
+                         <Tooltip title="Edit">
+                           <IconButton 
+                             size="small" 
+                             sx={{ backgroundColor: "#1976D2", color: "white", borderRadius: "50%", "&:hover": { backgroundColor: "#1565C0" } }} 
+                             onClick={() => handleEdit(item)}
+                           >
+                             <EditIcon sx={{ fontSize: "18px" }} />
+                           </IconButton>
+                         </Tooltip>
+                         </TableCell>
               <TableCell>{item.firmName}</TableCell>
               <TableCell>{item.timestamp}</TableCell>
               <TableCell>{item.projectName}</TableCell>

@@ -76,9 +76,9 @@
 
 // export default FirmTable;
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton ,Tooltip} from '@mui/material';
 import { Edit, Visibility } from '@mui/icons-material'; // Import icons for Edit and Visibility
-
+import { EditIcon } from 'lucide-react';
 const FirmTable = () => {
   // Dummy data
   const firms = [
@@ -157,10 +157,24 @@ const FirmTable = () => {
           {firms.map((firm, index) => (
             <TableRow key={index}>
               {/* Action Column with Edit Icon */}
-              <TableCell>
+              {/* <TableCell>
                 <IconButton onClick={() => handleEdit(firm.id)}>
                   <Edit />
-                </IconButton>
+                </IconButton> */}
+                   <TableCell>
+                             
+                                
+                             <Tooltip title="Edit">
+                               <IconButton 
+                                 size="small" 
+                                 sx={{ backgroundColor: "#1976D2", color: "white", borderRadius: "50%", "&:hover": { backgroundColor: "#1565C0" } }} 
+                                 onClick={() => handleEdit(item)}
+                               >
+                                 <EditIcon sx={{ fontSize: "18px" }} />
+                               </IconButton>
+                             </Tooltip>
+                           
+                            
               </TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.timestamp}</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>{firm.name}</TableCell>
