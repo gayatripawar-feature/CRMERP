@@ -69,7 +69,7 @@ const VoiceNavigation = ({ onClose }) => {
    "Sales": "/sales",
     "Dashboard": "/sales/salesdashboard" ,
      "Calendar" :"/sales/salescalander" ,
-    "Share Space":  "/sales/sharespace" ,
+    // "Share Space":  "/sales/sharespace" ,
     "Shared By Developer": "/sales/sharedbydeveloper" ,
     "Leads": "/sales/leads",
  "Leads Follow Up": "/sales/leadsfollowup" ,

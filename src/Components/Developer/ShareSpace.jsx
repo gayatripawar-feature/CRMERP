@@ -449,62 +449,113 @@ const MenuProps = {
           <button className="btn btn-success me-2" onClick={handleSubmit}>Submit</button>
        
           <button className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
-          {/* <ToastContainer /> */}
+
+           
+        
         </div>
       )}
 
    
 
 {showProjectTable && activeIcon === 'project' && (
-  <div className="mt-4">
-    {/* Table */}
-    <table className="table table-bordered table-sm">
-      <thead style={{ background:"#3621a9"}}>
-        <tr >
-          <th className="fw-bold bg-primary text-center fs-5">Action</th>
-          <th className="fw-bold bg-primary text-center fs-5">Timestamp</th>
-          <th className="fw-bold bg-primary text-center fs-5">Share To</th>
-          <th className="fw-bold bg-primary text-center fs-5">Type of Document</th>
-          <th className="fw-bold bg-primary text-center fs-5">Document</th>
-        </tr>
-      </thead>
-      <tbody>
-        {currentRows.map((row, index) => (
-          <tr key={index}>
-            <td>
-              {/* Edit Icon in the Action Column */}
-              <button
-                className="btn btn-warning btn-sm"
-                onClick={() => {
-                  // You can define the edit logic here, for example:
-                  console.log('Editing action:', row);
-                  // Maybe open an edit form or modal
-                }}
-              >
-                <FaEdit size={20} />
-              </button>
-            </td>
-            <td>{row.timestamp}</td>
-            <td>{row.shareTo}</td>
-            <td>{row.documentType}</td>
-            <td>
-              {/* View Icon in the Document Column */}
-              <button
-                className="btn btn-info btn-sm"
-                onClick={() => {
-                  // Define the view logic here, for example:
-                  console.log('Viewing document:', row.document);
-                  // Maybe open the document in a modal or new tab
-                }}
-              >
-                <FaEye size={20} />
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+  // <div className="mt-4">
+  //   {/* Table */}
+  //   <table className="table table-bordered table-sm">
+  //     <thead style={{ background:"#3621a9"}}>
+  //       <tr >
+  //         <th className="fw-bold bg-primary text-center fs-5">Action</th>
+  //         <th className="fw-bold bg-primary text-center fs-5">Timestamp</th>
+  //         <th className="fw-bold bg-primary text-center fs-5">Share To</th>
+  //         <th className="fw-bold bg-primary text-center fs-5">Type of Document</th>
+  //         <th className="fw-bold bg-primary text-center fs-5">Document</th>
+  //       </tr>
+  //     </thead>
+  //     <tbody>
+  //       {currentRows.map((row, index) => (
+  //         <tr key={index}>
+  //           <td>
+  //             {/* Edit Icon in the Action Column */}
+  //             <button
+  //               className="btn btn-warning btn-sm"
+  //               onClick={() => {
+  //                 // You can define the edit logic here, for example:
+  //                 console.log('Editing action:', row);
+  //                 // Maybe open an edit form or modal
+  //               }}
+  //             >
+  //               <FaEdit size={20} />
+  //             </button>
+  //           </td>
+  //           <td>{row.timestamp}</td>
+  //           <td>{row.shareTo}</td>
+  //           <td>{row.documentType}</td>
+  //           <td>
+  //             {/* View Icon in the Document Column */}
+  //             <button
+  //               className="btn btn-info btn-sm"
+  //               onClick={() => {
+  //                 // Define the view logic here, for example:
+  //                 console.log('Viewing document:', row.document);
+  //                 // Maybe open the document in a modal or new tab
+  //               }}
+  //             >
+  //               <FaEye size={20} />
+  //             </button>
+  //           </td>
+  //         </tr>
+  //       ))}
+  //     </tbody>
+  //   </table>
+  // </div>
+
+  <div className='mt-4'>
+    <TableContainer component={Paper} className="mt-4">
+      <Table>
+        <TableHead style={{ backgroundColor: '#3621a9' }}>
+          <TableRow>
+            <TableCell align="center" style={{ fontWeight: 'bold', color: 'white' }}>Action</TableCell>
+            <TableCell align="center" style={{ fontWeight: 'bold', color: 'white' }}>Timestamp</TableCell>
+            <TableCell align="center" style={{ fontWeight: 'bold', color: 'white' }}>Share To</TableCell>
+            <TableCell align="center" style={{ fontWeight: 'bold', color: 'white' }}>Type of Document</TableCell>
+            <TableCell align="center" style={{ fontWeight: 'bold', color: 'white' }}>Document</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentRows.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell>
+                <IconButton
+                  color="warning"
+                  size="small"
+                  onClick={() => {
+                    console.log('Editing action:', row);
+                    // Maybe open an edit form or modal
+                  }}
+                >
+                  <FaEdit size={20} />
+                </IconButton>
+              </TableCell>
+              <TableCell>{row.timestamp}</TableCell>
+              <TableCell>{row.shareTo}</TableCell>
+              <TableCell>{row.documentType}</TableCell>
+              <TableCell>
+                <IconButton
+                  color="info"
+                  size="small"
+                  onClick={() => {
+                    console.log('Viewing document:', row.document);
+                    // Maybe open the document in a modal or new tab
+                  }}
+                >
+                  <FaEye size={20} />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    </div>
 )}
 
 

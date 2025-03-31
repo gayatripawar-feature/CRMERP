@@ -85,6 +85,12 @@ const [ifscCodeError, setIfscCodeError] = useState("");
   });
 
 
+  const [formData, setFormData] = useState({
+    area: "",
+    wing: "",
+    flatNumber: "",
+    flatType: "",
+  });
   // const handleFirmNameChange = (e) => {
   //   const value = e.target.value;
   //   setFirmName(value);
@@ -1999,14 +2005,135 @@ Submit Landowner Info
                 <TableCell  sx={{ color: "white", fontWeight: "bold" }}>FLAT NO.</TableCell>
                 <TableCell  sx={{ color: "white", fontWeight: "bold" }}> TYPE OF FLAT</TableCell>
               </TableRow>
+
+{/* <TableRow sx={{ bgcolor: "primary.main" }}>
+            <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+              <FormControl fullWidth>
+                <InputLabel>RERA CARPET AREA</InputLabel>
+                <Select
+                  name="area"
+                  value={formData.area}
+                  onChange={handleChange}
+                  sx={{ color: "white" }}
+                >
+                  <MenuItem value="500">500 SQ FT</MenuItem>
+                  <MenuItem value="1000">1000 SQ FT</MenuItem>
+                  <MenuItem value="1500">1500 SQ FT</MenuItem>
+                </Select>
+              </FormControl>
+            </TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+              <FormControl fullWidth>
+                <InputLabel>WING</InputLabel>
+                <Select
+                  name="wing"
+                  value={formData.wing}
+                  onChange={handleChange}
+                  sx={{ color: "white" }}
+                >
+                  <MenuItem value="A">A</MenuItem>
+                  <MenuItem value="B">B</MenuItem>
+                  <MenuItem value="C">C</MenuItem>
+                </Select>
+              </FormControl>
+            </TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+              <FormControl fullWidth>
+                <InputLabel>FLAT NO.</InputLabel>
+                <Select
+                  name="flatNumber"
+                  value={formData.flatNumber}
+                  onChange={handleChange}
+                  sx={{ color: "white" }}
+                >
+                  <MenuItem value="101">101</MenuItem>
+                  <MenuItem value="102">102</MenuItem>
+                  <MenuItem value="103">103</MenuItem>
+                </Select>
+              </FormControl>
+            </TableCell>
+            <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+              <FormControl fullWidth>
+                <InputLabel>TYPE OF FLAT</InputLabel>
+                <Select
+                  name="flatType"
+                  value={formData.flatType}
+                  onChange={handleChange}
+                  sx={{ color: "white" }}
+                >
+                  <MenuItem value="2 BHK">2 BHK</MenuItem>
+                  <MenuItem value="3 BHK">3 BHK</MenuItem>
+                  <MenuItem value="4 BHK">4 BHK</MenuItem>
+                </Select>
+              </FormControl>
+            </TableCell>
+          </TableRow> */}
             </TableHead>
             <TableBody>
-            <TableRow>
+            {/* <TableRow>
             <TableCell><TextField fullWidth variant="outlined" /></TableCell>
         <TableCell><TextField fullWidth variant="outlined" /></TableCell>
         <TableCell><TextField fullWidth variant="outlined" /></TableCell>
         <TableCell><TextField fullWidth variant="outlined" /></TableCell>
-      </TableRow>
+      </TableRow> */}
+      <TableRow >
+      <TableCell sx={{ color: "black", fontWeight: "bold" }}>
+              <FormControl fullWidth>
+                <InputLabel>RERA CARPET AREA (SQ FT)</InputLabel>
+                <Select
+                  name="area"
+                  value={formData.area}
+                  onChange={handleChange}
+                  label="RERA CARPET AREA (SQ FT)"
+                >
+                  <MenuItem value="">RERA CARPET AREA (SQ FT)</MenuItem>
+                 
+                </Select>
+              </FormControl>
+            </TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>
+              <FormControl fullWidth>
+                <InputLabel>WING</InputLabel>
+                <Select
+                  name="wing"
+                  value={formData.wing}
+                  onChange={handleChange}
+                  label="WING"
+                >
+                  <MenuItem value="A">Wing</MenuItem>
+                
+                </Select>
+              </FormControl>
+            </TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>
+              <FormControl fullWidth>
+                <InputLabel>FLAT NO.</InputLabel>
+                <Select
+                  name="flatNumber"
+                  value={formData.flatNumber}
+                  onChange={handleChange}
+                  label="FLAT NO."
+                >
+                  <MenuItem value="101">Flat No</MenuItem>
+                
+                </Select>
+              </FormControl>
+            </TableCell>
+            <TableCell sx={{ color: "black", fontWeight: "bold" }}>
+              <FormControl fullWidth>
+                <InputLabel>TYPE OF FLAT</InputLabel>
+                <Select
+                  name="flatType"
+                  value={formData.flatType}
+                  onChange={handleChange}
+                  label="TYPE OF FLAT"
+                >
+                  <MenuItem value="2 BHK">TYPE OF FLAT</MenuItem>
+                 
+                </Select>
+              </FormControl>
+            </TableCell>
+          </TableRow>
             </TableBody>
           </Table>
         </TableContainer>

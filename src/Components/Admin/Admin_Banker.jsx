@@ -5,7 +5,7 @@
 
 import React, { useState ,useEffect} from "react";
 import { FaPlus } from "react-icons/fa";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton ,Box} from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { Button, Modal } from "react-bootstrap";
 import {  toast } from "react-toastify";
@@ -15,7 +15,7 @@ const Admin_Banker = () => {
   // const [bankers, setBankers] = useState([]);
   const [bankers, setBankers] = useState([{ bankerName: '', bankerMobile: '' }]);
   const [error, setError] = useState('');
-
+  const [bankerErrors, setBankerErrors] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,8 +25,40 @@ const Admin_Banker = () => {
     status: "Active",
   });
 
+
+  const [editClicked, setEditClicked] = useState(false);
+  const [selectedBanker, setSelectedBanker] = useState(null);
+  useEffect(() => {
+    console.log("Modal state changed:", editClicked); // Logs whenever the state changes
+  }, [editClicked]);
+
+
+  // const handleEditClick = () => {
+  //   console.log("edit clicked");
+  //   setEditClicked(true); // ✅ Now this executes correctly
+  // };
+  
+
+  // const handleClose = () => {
+  //   console.log("Modal closed");
+  //   setEditClicked(false);
+  // };
+
+  const handleEditClick = (banker) => {
+    console.log("edit clicked");
+    setSelectedBanker(banker); // Store selected banker
+    setEditClicked(true);
+    console.log("Modal state changed:", true);
+  };
+  
+  const handleClose = () => {
+    console.log("Modal closed");
+    setEditClicked(false);
+    setSelectedBanker(null); // Reset selected banker on close
+  };
+  
   const handleAddNew = () => setShowForm(true);
-  const handleCancel = () => setShowForm(false);
+  // const handleCancel = () => setShowForm(false);
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleAddBanker = () => {
@@ -63,6 +95,7 @@ const Admin_Banker = () => {
     }
   };
   
+
   
   const handleRemoveBanker = (index) => {
     const updatedBankers = bankers.filter((_, i) => i !== index);
@@ -73,10 +106,18 @@ const Admin_Banker = () => {
   const openModal = () => {
     
   };
-  const closeModal = () => {
+  // const closeModal = () => {
    
+  // };
+  const closeModal = () => {
+    console.log("Modal closed");
+    setSelectedBanker(null);  // Reset the selected banker to close the modal
   };
-
+  const handleCancel = () => {
+    console.log("Modal canceled");
+    setSelectedBanker(null);  // Reset the selected banker to close the modal
+  };
+  
 
   useEffect(() => {
     if (showForm) {
@@ -97,6 +138,32 @@ const Admin_Banker = () => {
     toast.success("Data submitted successfully!");
   };
   
+  const handleBankerName = (index, field, value) => {
+    if (field === "bankerName") {
+      const regex = /^[A-Za-z\s]*$/; // Allows only letters and spaces
+  
+      if (!regex.test(value)) {
+        setBankerErrors((prevErrors) => {
+          const newErrors = [...prevErrors];
+          newErrors[index] = "Only characters and spaces are allowed.";
+          return newErrors;
+        });
+        return;
+      } else {
+        setBankerErrors((prevErrors) => {
+          const newErrors = [...prevErrors];
+          newErrors[index] = ""; // Clear error if valid
+          return newErrors;
+        });
+      }
+    }
+  
+    setBankers((prevBankers) =>
+      prevBankers.map((banker, i) =>
+        i === index ? { ...banker, [field]: value } : banker
+      )
+    );
+  };
   return (
     <div className="container my-4">
       <div className="row mb-3">
@@ -161,7 +228,7 @@ const Admin_Banker = () => {
             }}
           >
             <h5 className="modal-title">Add Banker Details</h5>
-            <button type="button" className="btn-close" onClick={closeModal}></button>
+            <button type="button" className="btn-close" onClick={handleClose}></button>
      
           </div>
 
@@ -194,7 +261,7 @@ const Admin_Banker = () => {
 
                   {bankers.map((banker, index) => (
                     <div className="row mb-3" key={index}>
-                      <div className="col-md-4">
+                      {/* <div className="col-md-4">
                         <label className="form-label">Banker Name:</label>
                         <input
                           type="text"
@@ -203,6 +270,18 @@ const Admin_Banker = () => {
                           onChange={(e) => handleBankerChange(index, "bankerName", e.target.value)}
                           required
                         />
+                      </div> */}
+                      <div className="col-md-4">
+                        <label className="form-label">Banker Name:</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={banker.bankerName}
+                          onChange={(e) => handleBankerName(index, "bankerName", e.target.value)}
+                          required
+                          
+                        />
+                         {bankerErrors[index] && <p style={{ color: "red", fontSize: "12px" }}>{bankerErrors[index]}</p>}
                       </div>
                       <div className="col-md-4">
                         <label className="form-label">Mobile No:</label>
@@ -262,11 +341,11 @@ const Admin_Banker = () => {
 
 
    
-      {!showForm && (
+      {/* {!showForm && (
         <TableContainer component={Paper} sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
           <Table>
             <TableHead >
-              {/* <TableRow> */}
+            
                <TableRow sx={{background:"#3621a9"}}>
                 <TableCell sx={{ color: "white", fontWeight: "bold" }}>
                 Action</TableCell>
@@ -280,47 +359,399 @@ const Admin_Banker = () => {
             </TableHead>
             <TableBody>
               <TableRow>
-                {/* <TableCell>
-                  <IconButton color="primary">
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton color="error">
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell> */}
+              {bankers.map((banker, index) => (
+                <TableRow key={index}>
                 <TableCell>
                   <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    {/* Edit Icon */}
-                    <IconButton
+                
+                    {/* <IconButton
                       color="primary"
                       style={{
-                        backgroundColor: "#1976d2", // Set the background color to the primary color
-                        borderRadius: "50%", // Make the icon circular
-                        padding: "6px", // Adjust padding to create the circle effect
+                        backgroundColor: "#1976d2", 
+                        borderRadius: "50%", 
+                        padding: "6px", 
                       }}
+                      onClick={handleEditClick} 
                     >
-                      <EditIcon style={{ color: "white" }} /> {/* Set icon color to white */}
-                    </IconButton>
-                
-                    {/* Delete Icon */}
+                      <EditIcon style={{ color: "white" }} /> 
+                    </IconButton> 
+                <IconButton
+  color="primary"
+  style={{
+    backgroundColor: "#1976d2",
+    borderRadius: "50%",
+    padding: "6px",
+  }}
+  onClick={() => handleEditClick(banker)} // Pass the banker data
+>
+  <EditIcon style={{ color: "white" }} />
+</IconButton>
+
+                 
                     <IconButton
                       color="error"
                       style={{
-                        backgroundColor: "#d32f2f", // Set the background color to the error color
-                        borderRadius: "50%", // Make the icon circular
-                        padding: "6px", // Adjust padding to create the circle effect
+                        backgroundColor: "#d32f2f", 
+                        borderRadius: "50%", 
+                        padding: "6px", 
                       }}
                     >
-                      <DeleteIcon style={{ color: "white" }} /> {/* Set icon color to white */}
+                      <DeleteIcon style={{ color: "white" }} /> 
                     </IconButton>
+
+
+            
+                    <Modal open={editClicked} onClose={handleClose}>
+  <Box
+    sx={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      bgcolor: "white",
+      p: 3,
+      borderRadius: 2,
+      boxShadow: 24,
+      zIndex: 9999,
+      width: "300px",
+    }}
+  >
+    <h2>Edit Information</h2>
+    {selectedBanker && (
+      <>
+        <p>Banker Name: {selectedBanker.bankerName}</p>
+        <p>Mobile: {selectedBanker.bankerMobile}</p>
+      </>
+    )}
+    <button onClick={handleClose}>Close</button>
+  </Box>
+</Modal>
+
                   </div>
+
+            
                 </TableCell>
                 
               </TableRow>
+              </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
-      )}
+      )} */}
+
+
+
+{!showForm && (
+  <TableContainer component={Paper} sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
+    <Table>
+      <TableHead>
+        <TableRow sx={{ background: "#3621a9" }}>
+          <TableCell sx={{ color: "white", fontWeight: "bold" }}>Action</TableCell>
+          <TableCell sx={{ color: "white", fontWeight: "bold" }}>Timestamp</TableCell>
+          <TableCell sx={{ color: "white", fontWeight: "bold" }}>Bank Name</TableCell>
+          <TableCell sx={{ color: "white", fontWeight: "bold" }}>Address</TableCell>
+          <TableCell sx={{ color: "white", fontWeight: "bold" }}>Banker Name</TableCell>
+          <TableCell sx={{ color: "white", fontWeight: "bold" }}>Mobile No</TableCell>
+          <TableCell sx={{ color: "white", fontWeight: "bold" }}>APF Letter</TableCell>
+        </TableRow>
+      </TableHead>
+      {/* <TableBody>
+        {bankers.map((banker, index) => (
+          <TableRow key={index}>
+            <TableCell>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <IconButton
+                  color="primary"
+                  style={{
+                    backgroundColor: "#1976d2",
+                    borderRadius: "50%",
+                    padding: "6px",
+                  }}
+                  onClick={() => handleEditClick(banker)} // Pass the banker data
+                >
+                  <EditIcon style={{ color: "white" }} />
+                </IconButton>
+
+                <IconButton
+                  color="error"
+                  style={{
+                    backgroundColor: "#d32f2f",
+                    borderRadius: "50%",
+                    padding: "6px",
+                  }}
+                >
+                  <DeleteIcon style={{ color: "white" }} />
+                </IconButton>
+              </div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody> */}
+
+<TableBody>
+  {bankers.map((banker, index) => (
+    <TableRow key={index} style={{ position: "relative" }}>
+      <TableCell>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <IconButton
+            color="primary"
+            style={{
+              backgroundColor: "#1976d2",
+              borderRadius: "50%",
+              padding: "6px",
+            }}
+            onClick={() => handleEditClick(banker)}
+          >
+            <EditIcon style={{ color: "white" }} />
+          </IconButton>
+
+          <IconButton
+            color="error"
+            style={{
+              backgroundColor: "#d32f2f",
+              borderRadius: "50%",
+              padding: "6px",
+            }}
+          >
+            <DeleteIcon style={{ color: "white" }} />
+          </IconButton>
+        </div>
+      </TableCell>
+
+      {/* Display edit form directly in the table row when edit is clicked */}
+      {selectedBanker === banker && (
+  <div
+    style={{
+      position: "fixed",  // Fixed positioning to overlay above the table
+      top: "40%",  // Position in the center of the viewport
+      left: "50%",
+      transform: "translate(-50%, -50%)",  // Center the modal
+      backgroundColor: "white",  // Background color for the modal
+      padding: "20px",  // Padding inside the modal
+      borderRadius: "8px",  // Optional: rounded corners
+      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",  // Optional: shadow to make it pop
+      zIndex: 9999,  // Ensure it's above all other content
+      width: "800px",  // Set a fixed width for the modal
+    }}
+  >
+    {/* Modal Header */}
+    <div
+      className="modal-header bg-primary text-white"
+      style={{
+        borderTopLeftRadius: "10px",
+        borderTopRightRadius: "10px",
+        padding: "15px 20px",  // Adding padding for better spacing
+        height: "80px",
+        display: "flex",  // Use flex to align items
+        justifyContent: "space-between",  // Space out the title and close button
+        alignItems: "center",
+      }}
+    >
+      <h5 className="modal-title ">Add Banker Details</h5>
+      <button type="button" className="btn-close" onClick={closeModal}></button>
+      
+
+    </div>
+
+    
+    <div className="modal-body">
+      <div className="container">
+        <div
+          className="p-3"
+          style={{
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            backgroundColor: "#f9f9f9",
+          }}
+        >
+          <form className="pt-4">
+            <div className="row mb-3">
+              <div className="col-md-4">
+                <label className="form-label">Bank Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label">Address</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label">APF Letter</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  name="apfLetter"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Loop through the bankers */}
+            {bankers.map((banker, index) => (
+              <div className="row mb-3" key={index}>
+                <div className="col-md-4">
+                  <label className="form-label">Banker Name:</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={banker.bankerName}
+                    onChange={(e) => handleBankerName(index, "bankerName", e.target.value)}
+                    required
+                  />
+                  {bankerErrors[index] && (
+                    <p style={{ color: "red", fontSize: "12px" }}>
+                      {bankerErrors[index]}
+                    </p>
+                  )}
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Mobile No:</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={banker.bankerMobile}
+                    onChange={(e) => handleBankerChange(index, "bankerMobile", e.target.value)}
+                    required
+                  />
+                  {error && <p style={{ color: 'red' }}>{error}</p>}
+                </div>
+                {index > 0 && (
+                  <div className="col-md-4 pt-4">
+                    <button
+                      type="button"
+                      className="btn btn-danger mt-2"
+                      onClick={() => handleRemoveBanker(index)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* Add Another Banker Button */}
+            <div className="mb-3 text-center pt-3 pb-3">
+              <button type="button" className="btn btn-primary" onClick={handleAddBanker}>
+                + Add Another Banker
+              </button>
+            </div>
+
+            {/* Submit and Cancel Buttons */}
+            <div className="d-flex justify-content-center gap-3">
+              <button type="submit" className="btn btn-success" onClick={handleSubmit}>
+                Submit
+              </button>
+              <button type="button" className="btn btn-secondary" onClick={handleCancel}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+
+    </TableRow>
+  ))}
+</TableBody>
+
+
+    </Table>
+  </TableContainer>
+)}
+
+
+
+
+
+{/* <Modal open={editClicked} onClose={handleClose}>
+        <Box
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: 24,
+            zIndex: 9999, 
+            width: '300px',
+          }}
+        >
+          <h2>Edit Information</h2>
+          <p>Edit your data...</p>
+
+          <button onClick={handleClose}>Close</button>
+        </Box>
+      </Modal>   */}
+       {/* Conditionally render the modal */}
+       {/* {editClicked && (
+        <Box
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            boxShadow: 24,
+            zIndex: 9999,
+            width: "300px",
+          }}
+        >
+          <h2>Edit Information</h2>
+          <p>Edit your data...</p>
+
+          
+          <button onClick={handleClose}>Close</button>
+        </Box>
+      )} */}
+      {/* {editClicked && (
+  <Modal open={editClicked} onClose={handleClose}>
+    <Box
+      style={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        backgroundColor: "white",
+        padding: "20px",
+        borderRadius: "8px",
+        boxShadow: 24,
+        zIndex: 9999,
+        width: "300px",
+      }}
+    >
+      <h2>Edit Information</h2>
+      <p>Edit your data...</p>
+
+     
+      <button onClick={handleClose}>Close</button>
+    </Box>
+  </Modal>
+)} */}
+
+
+
     </div>
   );
 };

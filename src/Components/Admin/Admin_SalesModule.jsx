@@ -3,9 +3,9 @@
 
 import React, { useState ,useEffect} from "react";
 import { FaPlus } from "react-icons/fa";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton ,Box} from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-import { TextField, Button, Grid, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { TextField, Button, Grid, MenuItem, Select, InputLabel, FormControl,NativeSelect } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 
 
@@ -88,26 +88,43 @@ const handleChange = (e) => {
     }));
 
     // Update state with value regardless of the validation (allow user to keep typing)
+    console.log("Updating:", name, "to:", value);
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+      
+      
     }));
   }
 
-  // Handle Email input: Validate email format
+ 
+  // else if (name === "email") {
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // Basic email validation
+  //   if (emailRegex.test(value) || value === "") {
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       [name]: value,
+  //     }));
+  //     setEmailError('');  // Clear any previous error
+  //   } else {
+  //     setEmailError("Invalid email format: Please enter a valid email address.");
+  //   }
+  // }
+
   else if (name === "email") {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // Basic email validation
-    if (emailRegex.test(value) || value === "") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-      setEmailError('');  // Clear any previous error
-    } else {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  
+  
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,  // Always update the input value
+    }));
+  
+    if (!emailRegex.test(value) && value.length > 0) {
       setEmailError("Invalid email format: Please enter a valid email address.");
+    } else {
+      setEmailError("");  
     }
   }
-
   // Handle other fields (Designation, Joining Date, etc.)
   else {
     setFormData((prevData) => ({
@@ -158,7 +175,7 @@ const handleEmailBlur = () => {
       mobile: "",
       designation: "",
       joiningDate: "",
-      status: "Active",
+      status: "",
     });
     console.log("toast");
     toast.success("data submitted successfully");
@@ -306,7 +323,7 @@ const handleEmailBlur = () => {
                     />
                   </Grid>
 
-                  <Grid item xs={6}>
+                  {/* <Grid item xs={6}>
                     <TextField
                       label="Joining Date"
                       fullWidth
@@ -320,7 +337,21 @@ const handleEmailBlur = () => {
                         
                       }}
                     />
-                  </Grid>
+                  </Grid> */}
+<Grid item xs={6}>
+  <TextField
+    label="Joining Date"
+    fullWidth
+    type="date"
+    name="joiningDate"
+    value={formData.joiningDate}
+    onChange={handleChange}
+    sx={{ marginTop: '10px' }} // Applied padding here
+    InputLabelProps={{
+      shrink: true,
+    }}
+  />
+</Grid>
 
                   <Grid item xs={6}>
                     <FormControl fullWidth>
@@ -336,6 +367,23 @@ const handleEmailBlur = () => {
                         <MenuItem value="Inactive">Inactive</MenuItem>
                       </Select>
                     </FormControl>
+    
+    {/* <Box sx={{padding: 1, border: "1px solid #ccc", borderRadius: 2, width: "100%" }}>
+      <FormControl fullWidth>
+        <InputLabel>Status</InputLabel>
+        <NativeSelect
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+          sx={{ marginTop: "10px" }}
+        >
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </NativeSelect>
+      </FormControl>
+    </Box> */}
+
+
                   </Grid>
                 </Grid>
 

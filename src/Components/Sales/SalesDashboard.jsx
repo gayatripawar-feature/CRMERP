@@ -4,7 +4,7 @@ import { Button, TextField, Box, Typography, Select, MenuItem } from "@mui/mater
 import { FaChartLine, FaUsers, FaChartPie, FaMapMarkerAlt } from "react-icons/fa";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  PieChart, Pie, Cell, BarChart, Bar
+  PieChart, Pie, Cell, BarChart, Bar,LabelList
 } from "recharts";
 
 
@@ -12,7 +12,8 @@ import { FormControl } from "@mui/material";
 
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from '@mui/material';
 import {  InputLabel} from "@mui/material";
-
+import SourceMetrics from "./SourceMetrics";
+import TimeSeriesChart from "./TimeSerieschart";
 
 
 
@@ -109,6 +110,7 @@ const data = [
 ];
 
 
+
 const barData = [
   { name: "Total Leads", count: 33, color: COLORS[0] },
   { name: "Visits", count: 18, color: COLORS[1] },
@@ -130,7 +132,7 @@ const barData = [
         
 
 
-<Button
+{/* <Button
   onClick={() => setSelectedTab(btn.label)}
   variant="outlined"
   color={selectedTab === btn.label ? "primary" : "success"}
@@ -146,7 +148,7 @@ const barData = [
     border: "none",
   }}
 >
-  <div
+   <div
     style={{
       width: "35px",
       height: "35px",
@@ -159,10 +161,45 @@ const barData = [
   >
     {btn.icon}
   </div>
-  {btn.label}  
+  {btn.label}   
+</Button> */}
+
+<Button
+  onClick={() => setSelectedTab(btn.label)}
+  variant="outlined"
+  color={selectedTab === btn.label ? "primary" : "success"}
+  className="m-2"
+  style={{
+    borderRadius: "20px",
+    minWidth: "150px",
+    padding: "6px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    
+   background:" linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+    border: "none", 
+    color: "white", 
+  }}
+>
+  <div
+    style={{
+      width: "35px",
+      height: "35px",
+      borderRadius: "50%",
+      background:" linear-gradient(0deg, #4b2ac2 0%, #5c39d3 100%)",
+      
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    {btn.icon}
+  </div>
+  <span>{btn.label}</span> 
 </Button>
 
-          </div>
+   </div>
         ))}
       </div>
 
@@ -205,22 +242,8 @@ const barData = [
 
   
             <Box mt={4}>
-              <Typography variant="h6" gutterBottom>
-                Lead Conversion Trend
-              </Typography>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend verticalAlign="top" height={36} />
-                  <Line type="monotone" dataKey="leads" stroke="#ff5733" strokeWidth={3} name="Leads" />
-                  <Line type="monotone" dataKey="plannedVisits" stroke="#3498db" strokeWidth={3} name="Planned Visits" />
-                  <Line type="monotone" dataKey="actualVisits" stroke="#2ecc71" strokeWidth={3} name="Actual Visits" />
-                  <Line type="monotone" dataKey="conversions" stroke="#f1c40f" strokeWidth={3} name="Conversions" />
-                </LineChart>
-              </ResponsiveContainer>
+              
+              <TimeSeriesChart />
             </Box>
           </Box>
         )}
@@ -242,9 +265,9 @@ const barData = [
       </Select>
     </Box>
 
-    {/* Charts Section */}
+  
     <Box display="flex" justifyContent="space-between" alignItems="center" gap={4}>
-      {/* Pie Chart - Lead Status Distribution with Shadow */}
+ 
       <Box width="50%" p={2} boxShadow={3} borderRadius={2} bgcolor="white">
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
@@ -391,9 +414,13 @@ const barData = [
        
 
 <Box width="50%">
-        <Typography variant="h6" align="center" gutterBottom>
+        {/* <Typography variant="h6" align="center" gutterBottom>
           Lead Distribution Overview
-        </Typography>
+        </Typography> */}
+        <Typography variant="h6" align="center" gutterBottom sx={{ fontWeight: 'bold' }}>
+  Lead Distribution Overview
+</Typography>
+
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8"    label={false}  >
@@ -408,70 +435,18 @@ const barData = [
         <Box sx={{ mt: 3 }} />
       </Box>
 
-      
-{/*         
-<Box width="50%">
-  <Typography variant="h6" align="center" gutterBottom>
-    Lead Metrics Breakdown
-  </Typography>
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart data={data}>
-      <XAxis
-        dataKey="name"
-        tick={{ fontSize: 10 }}
-        angle={-45}
-        textAnchor="end"
-        domain={[0, 'dataMax']} // Ensures X-axis starts from 0
-      />
-      <YAxis
-        tick={{ fontSize: 10 }}
-      />
-      <Tooltip />
-      <Legend />
-      <Bar dataKey="value" fill="#82ca9d">
-        {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-        ))}
-      </Bar>
-    </BarChart>
-  </ResponsiveContainer>
-</Box> */}
+ 
 
 
 
-{/* <Box width="50%">
-  <Typography variant="h6" align="center" gutterBottom>
-    Lead Metrics Breakdown
-  </Typography>
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart
-      data={data}
-      margin={{
-        top: 5,
-        right: 30,
-        left: 20,
-        bottom: 5,
-      }}
-      layout="horizontal"
-    >
-      <XAxis type="number" tick={{ fontSize: 10 }} domain={[0, 'dataMax']} />
-      <YAxis dataKey="name" tick={{ fontSize: 10 }} />
-      <Tooltip />
-      <Legend />
-      <Bar dataKey="value" fill="#82ca9d">
-        {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
-        ))}
-      </Bar>
-    </BarChart>
-  </ResponsiveContainer>
-</Box> */}
 
-{/* ---------- */}
+
+
 {/* 
-<Box width="50%">
+
+ <Box width="50%">
   <Typography variant="h6" align="center" gutterBottom>
-    Lead Metrics Breakdown
+   Complete Source Metrics Overview
   </Typography>
   <ResponsiveContainer width="100%" height={300}>
     <BarChart
@@ -484,114 +459,67 @@ const barData = [
       }}
       layout="horizontal"
     >
-      <XAxis type="number" tick={{ fontSize: 10 }} domain={[0, 'dataMax']} />
+      <XAxis
+        type="number"
+        tick={{ fontSize: 10 }}
+        domain={[0, 'dataMax']}
+      />
       <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} />
       <Tooltip />
       <Legend />
+
       
-     
-      <Bar dataKey="assigned" stackId="a" fill="#8884d8">
-        {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
-        ))}
+      <Bar
+        dataKey="Visit Assigned"
+        stackId="stack"
+        fill={COLORS[0]}
+      >
+        <LabelList dataKey="Visit Assigned" position="inside" fill="white" />
       </Bar>
-      <Bar dataKey="postponed" stackId="a" fill="#82ca9d">
-        {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
-        ))}
+
+      <Bar
+        dataKey="Visit Postponed"
+        stackId="stack"
+        fill={COLORS[1]}
+      >
+        <LabelList dataKey="Visit Postponed" position="inside" fill="white" />
       </Bar>
-      <Bar dataKey="remaining" stackId="a" fill="#ff7f50">
-        {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
-        ))}
+
+      <Bar
+        dataKey="Visit Cancelled"
+        stackId="stack"
+        fill={COLORS[2]}
+      >
+        <LabelList dataKey="Visit Cancelled" position="inside" fill="white" />
+      </Bar>
+
+      <Bar
+        dataKey="Re-scheduled"
+        stackId="stack"
+        fill={COLORS[3]}
+      >
+        <LabelList dataKey="Re-scheduled" position="inside" fill="white" />
+      </Bar>
+
+      <Bar
+        dataKey="Visit Done"
+        stackId="stack"
+        fill={COLORS[4]}
+      >
+        <LabelList dataKey="Visit Done" position="inside" fill="white" />
       </Bar>
     </BarChart>
   </ResponsiveContainer>
-</Box> */}
+  <Box sx={{ mt: 3 }} />
+</Box>  */}
 
-{/* -------------- */}
-{/* <Box width="50%">
-  <Typography variant="h6" align="center" gutterBottom>
-    Lead Metrics Breakdown
-  </Typography>
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart
-      data={data}
-      margin={{
-        top: 5,
-        right: 30,
-        left: 20,
-        bottom: 5,
-      }}
-      layout="horizontal"
-    >
-      <XAxis
-        type="number"
-        tick={{ fontSize: 10 }}
-        domain={[0, 'dataMax']}  // Ensure the X-axis goes from 0 to the max value of the data
-        ticks={[0, 5, 10, 15, 20, 25, 30, 35, 40]} // Adjust ticks as needed for the value range
-        interval={0}  // Ensures all ticks are visible
-      />
-      <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} />
-      <Tooltip />
-      <Legend />
-
-   
-      {data.map((entry, index) => (
-        <Bar
-          key={`bar-${index}`}
-          dataKey="value"  // This refers to the total value for each bar
-          fill={COLOR[index % COLOR.length]}  // Color from the COLOR array for each bar
-        >
-          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
-        </Bar>
-      ))}
-    </BarChart>
-  </ResponsiveContainer>
-</Box> */}
-
-
-<Box width="50%">
-  <Typography variant="h6" align="center" gutterBottom>
-    Lead Metrics Breakdown
-  </Typography>
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart
-      data={data}
-      margin={{
-        top: 5,
-        right: 30,
-        left: 20,
-        bottom: 5,
-      }}
-      layout="horizontal"
-    >
-      <XAxis
-        type="number"
-        tick={{ fontSize: 10 }}
-        domain={[0, 'dataMax']}  // Ensure the X-axis goes from 0 to the max value of the data
-        ticks={[0, 5, 10, 15, 20, 25, 30, 35, 40]} // Adjust ticks as needed for the value range
-        interval={0}  // Ensures all ticks are visible
-      />
-      <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} />
-      <Tooltip />
-      <Legend />
-
-      {/* Single horizontal bars for each category */}
-      {data.map((entry, index) => (
-        <Bar
-          key={`bar-${index}`}
-          dataKey="value"  // Reference the value field from the data
-          fill={COLOR[index % COLOR.length]}  // Use a color from the COLOR array for each bar
-        >
-          <Cell key={`cell-${index}`} fill={COLOR[index % COLOR.length]} />
-        </Bar>
-      ))}
-    </BarChart>
-  </ResponsiveContainer>
-</Box>
-
-
+{/* 
+<Box>
+  <SourceMatrics/>
+      </Box> */}
+      <Box width="50%">
+        <SourceMetrics />
+        </Box>
       </Box>
     </Box> 
 
@@ -601,7 +529,7 @@ const barData = [
 )}
 
 
-        {selectedTab === "Visit Tracker" && <Typography>Visit Tracker content here</Typography>}
+        {selectedTab === "Visit Tracker" && <Typography></Typography>}
       </Box>
     </div>
   );
