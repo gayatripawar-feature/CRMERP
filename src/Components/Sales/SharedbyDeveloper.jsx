@@ -43,11 +43,11 @@ const fetchLoansData = async () => {
 //   ];
 const sections = [
   // Updated icon for "Firm Display"
-  { label: "Firm Display", icon: <MdBusiness size={30} color="purple" />, createLabel: "Create Firm" }, 
+  // { label: "Firm Display", icon: <MdBusiness size={30} color="purple" />, createLabel: "Create Firm" }, 
 
   // Updated icon for "Project Display"
   { label: "Project Display", icon: <MdDescription size={30} color="orange" />, createLabel: "Create Project" },  
-
+  { label: "Firm Display", icon: <MdBusiness size={30} color="purple" />, createLabel: "Create Firm" }, 
   // Updated icon for "LandOwner Display"
   { label: "LandOwner Display", icon: <GiOfficeChair size={30} color="green" />, createLabel: "Create Landowner Info" },  
 
@@ -58,7 +58,8 @@ const sections = [
   { label: "Download PDF", icon: <HiOutlineDocumentDownload size={30} color="red" />, createLabel: "" }
 ];
 
-const tabNames = [ "firm", "display", "landowner","allotement"]; 
+const tabNames = [ "display", "firm", "landowner","allotement"]; 
+// const tabNames = [ "firm", "display", "landowner","allotement"]; 
   
 const SharedbyDeveloper = () => {
   const [loans, setLoans] = useState([]);
@@ -504,7 +505,7 @@ setShowFlatForm(false); // Ensure this is not reset elsewhere if you want the ta
 
 
      
-{expandedSection === 0 && selectedTab === "firm" && (
+{expandedSection === 0 && selectedTab === "display" && (
   <div className="content-container mt-3">
     {!showFirmForm ? (
       <>
@@ -515,7 +516,8 @@ setShowFlatForm(false); // Ensure this is not reset elsewhere if you want the ta
         </div>
 
         <div className="mt-3">
-          <FirmTable firms={loans} />
+          {/* <FirmTable firms={loans} /> */}
+          <DisplayTable data={projectData} />
         </div>
       </>
     ) : null }
@@ -528,7 +530,7 @@ setShowFlatForm(false); // Ensure this is not reset elsewhere if you want the ta
 
 
 
-{expandedSection === 1 && selectedTab === "display" && (
+{expandedSection === 1 && selectedTab === "firm" && (
   <div className="content-container mt-3">
     {!showProjectForm ? (
       <>
@@ -538,7 +540,8 @@ setShowFlatForm(false); // Ensure this is not reset elsewhere if you want the ta
 
         {/* Only display the table */}
         <div className="mt-3">
-          <DisplayTable data={projectData} />
+          {/* <DisplayTable data={projectData} /> */}
+            <FirmTable firms={loans} />
         </div>
       </>
     ) : null /* Do not show the form here when showProjectForm is true */}

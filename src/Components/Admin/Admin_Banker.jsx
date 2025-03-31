@@ -5,11 +5,11 @@
 
 import React, { useState ,useEffect} from "react";
 import { FaPlus } from "react-icons/fa";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton ,Box} from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton ,Box,Tooltip} from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { Button, Modal } from "react-bootstrap";
 import {  toast } from "react-toastify";
-
+import { Visibility } from '@mui/icons-material'; // Visibility icon
 const Admin_Banker = () => {
   const [showForm, setShowForm] = useState(false);
   // const [bankers, setBankers] = useState([]);
@@ -55,6 +55,7 @@ const Admin_Banker = () => {
     console.log("Modal closed");
     setEditClicked(false);
     setSelectedBanker(null); // Reset selected banker on close
+    setShowForm(false); 
   };
   
   const handleAddNew = () => setShowForm(true);
@@ -95,6 +96,11 @@ const Admin_Banker = () => {
     }
   };
   
+  
+  const handleViewClick = (url) => {
+    window.open(url, "_blank");
+  };
+
 
   
   const handleRemoveBanker = (index) => {
@@ -116,6 +122,7 @@ const Admin_Banker = () => {
   const handleCancel = () => {
     console.log("Modal canceled");
     setSelectedBanker(null);  // Reset the selected banker to close the modal
+    setShowForm(false); 
   };
   
 
@@ -261,16 +268,7 @@ const Admin_Banker = () => {
 
                   {bankers.map((banker, index) => (
                     <div className="row mb-3" key={index}>
-                      {/* <div className="col-md-4">
-                        <label className="form-label">Banker Name:</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={banker.bankerName}
-                          onChange={(e) => handleBankerChange(index, "bankerName", e.target.value)}
-                          required
-                        />
-                      </div> */}
+                    
                       <div className="col-md-4">
                         <label className="form-label">Banker Name:</label>
                         <input
@@ -341,105 +339,6 @@ const Admin_Banker = () => {
 
 
    
-      {/* {!showForm && (
-        <TableContainer component={Paper} sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
-          <Table>
-            <TableHead >
-            
-               <TableRow sx={{background:"#3621a9"}}>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                Action</TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>Timestamp</TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>Bank Name</TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>Address</TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>Banker Name</TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>	Mobile No</TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>	APF Letter</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-              {bankers.map((banker, index) => (
-                <TableRow key={index}>
-                <TableCell>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                
-                    {/* <IconButton
-                      color="primary"
-                      style={{
-                        backgroundColor: "#1976d2", 
-                        borderRadius: "50%", 
-                        padding: "6px", 
-                      }}
-                      onClick={handleEditClick} 
-                    >
-                      <EditIcon style={{ color: "white" }} /> 
-                    </IconButton> 
-                <IconButton
-  color="primary"
-  style={{
-    backgroundColor: "#1976d2",
-    borderRadius: "50%",
-    padding: "6px",
-  }}
-  onClick={() => handleEditClick(banker)} // Pass the banker data
->
-  <EditIcon style={{ color: "white" }} />
-</IconButton>
-
-                 
-                    <IconButton
-                      color="error"
-                      style={{
-                        backgroundColor: "#d32f2f", 
-                        borderRadius: "50%", 
-                        padding: "6px", 
-                      }}
-                    >
-                      <DeleteIcon style={{ color: "white" }} /> 
-                    </IconButton>
-
-
-            
-                    <Modal open={editClicked} onClose={handleClose}>
-  <Box
-    sx={{
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      bgcolor: "white",
-      p: 3,
-      borderRadius: 2,
-      boxShadow: 24,
-      zIndex: 9999,
-      width: "300px",
-    }}
-  >
-    <h2>Edit Information</h2>
-    {selectedBanker && (
-      <>
-        <p>Banker Name: {selectedBanker.bankerName}</p>
-        <p>Mobile: {selectedBanker.bankerMobile}</p>
-      </>
-    )}
-    <button onClick={handleClose}>Close</button>
-  </Box>
-</Modal>
-
-                  </div>
-
-            
-                </TableCell>
-                
-              </TableRow>
-              </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )} */}
-
 
 
 {!showForm && (
@@ -456,38 +355,7 @@ const Admin_Banker = () => {
           <TableCell sx={{ color: "white", fontWeight: "bold" }}>APF Letter</TableCell>
         </TableRow>
       </TableHead>
-      {/* <TableBody>
-        {bankers.map((banker, index) => (
-          <TableRow key={index}>
-            <TableCell>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <IconButton
-                  color="primary"
-                  style={{
-                    backgroundColor: "#1976d2",
-                    borderRadius: "50%",
-                    padding: "6px",
-                  }}
-                  onClick={() => handleEditClick(banker)} // Pass the banker data
-                >
-                  <EditIcon style={{ color: "white" }} />
-                </IconButton>
-
-                <IconButton
-                  color="error"
-                  style={{
-                    backgroundColor: "#d32f2f",
-                    borderRadius: "50%",
-                    padding: "6px",
-                  }}
-                >
-                  <DeleteIcon style={{ color: "white" }} />
-                </IconButton>
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody> */}
+      
 
 <TableBody>
   {bankers.map((banker, index) => (
@@ -668,6 +536,31 @@ const Admin_Banker = () => {
 )}
 
 
+<TableCell></TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell>
+<TableCell></TableCell>
+ <TableCell sx={{ textAlign: "center" }}>
+                <Tooltip title="View Document" arrow>
+                  <IconButton
+                    sx={{
+                      background: "#1976D2",
+                      color: "white",
+                      borderRadius: "50%",
+                      width: 32,
+                      height: 32,
+                      p: 0.5,
+                      border: "none",
+                    }}
+                    onClick={() => handleViewClick(bankers.website)}
+                  >
+                    <Visibility sx={{ fontSize: 18 }} />
+                  </IconButton>
+                </Tooltip>
+              </TableCell>
+
+
     </TableRow>
   ))}
 </TableBody>
@@ -680,75 +573,6 @@ const Admin_Banker = () => {
 
 
 
-
-{/* <Modal open={editClicked} onClose={handleClose}>
-        <Box
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: 24,
-            zIndex: 9999, 
-            width: '300px',
-          }}
-        >
-          <h2>Edit Information</h2>
-          <p>Edit your data...</p>
-
-          <button onClick={handleClose}>Close</button>
-        </Box>
-      </Modal>   */}
-       {/* Conditionally render the modal */}
-       {/* {editClicked && (
-        <Box
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "white",
-            padding: "20px",
-            borderRadius: "8px",
-            boxShadow: 24,
-            zIndex: 9999,
-            width: "300px",
-          }}
-        >
-          <h2>Edit Information</h2>
-          <p>Edit your data...</p>
-
-          
-          <button onClick={handleClose}>Close</button>
-        </Box>
-      )} */}
-      {/* {editClicked && (
-  <Modal open={editClicked} onClose={handleClose}>
-    <Box
-      style={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        backgroundColor: "white",
-        padding: "20px",
-        borderRadius: "8px",
-        boxShadow: 24,
-        zIndex: 9999,
-        width: "300px",
-      }}
-    >
-      <h2>Edit Information</h2>
-      <p>Edit your data...</p>
-
-     
-      <button onClick={handleClose}>Close</button>
-    </Box>
-  </Modal>
-)} */}
 
 
 

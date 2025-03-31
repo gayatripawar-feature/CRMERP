@@ -10,6 +10,10 @@ import FlatAllotment from './FlatAllotement';
 import { ToastContainer, toast } from 'react-toastify';
 
 import {  FaProjectDiagram, FaUserTie, FaHome, } from 'react-icons/fa';
+import { jsPDF } from "jspdf";
+
+import { GetApp as GetAppIcon } from '@mui/icons-material';
+import { PictureAsPdf as PictureAsPdfIcon } from '@mui/icons-material';
 
 const fetchLoansData = async () => {
   const response = await fetch('/api/getOCRCollection');
@@ -19,9 +23,9 @@ const fetchLoansData = async () => {
 const sections = [
   { label: "Firm Display", icon: <FaProjectDiagram size={20} />, createLabel: "Create Firm" },
   { label: "Project Display", icon: <FaHome size={20} />, createLabel: "Create Project" },
-  { label: "LandOwner Display", icon: <FaUserTie size={20} />, createLabel: "Create Landowner Info" },
+  { label: "Landowner Display", icon: <FaUserTie size={20} />, createLabel: "Create Landowner Info" },
   { label: "Flat Allotement Display", icon: <FaBuilding size={20} />, createLabel: "Create Flat Allotment Info" },
-  { label: "Download PDF", icon: <FaFileDownload size={20} />, createLabel: "" }
+  { label: "Download PDF", icon: <  PictureAsPdfIcon  size={20} />, createLabel: "" }
 ];
 
 
@@ -190,7 +194,7 @@ const handleTabClick = (index) => {
     setSelectedTab("display");
   } else if (sections[index].label === "Firm Display") {
     setSelectedTab("firm");
-  } else if (sections[index].label === "LandOwner Display") {
+  } else if (sections[index].label === "Landowner Display") {
     setSelectedTab("landowner");
   } else if (sections[index].label === "Flat Allotement Display") {
     setSelectedTab("allotement");
@@ -218,15 +222,94 @@ const handleTabClick = (index) => {
    {selectedTab === "landowner" && <LandownerTable />}
    {selectedTab === "allotement" && <FlatAllotement/>}
 
-  const handleDownloadPDF = () => {
-    const link = document.createElement("a");
-    link.href = "/path/to/demand_letter.pdf";
-    link.download = "Demand_Letter.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  // const handleDownloadPDF = () => {
+  //   const link = document.createElement("a");
+  //   link.href = "/path/to/demand_letter.pdf";
+  //   link.download = "flat_allotement_info.pdf";
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // };
 
+  
+    const handleDownloadPDF = () => {
+      // Create a new jsPDF instance
+      const doc = new jsPDF();
+    
+      // Data you want to add to the PDF
+      const timestamp = new Date().toLocaleDateString();  // Current date (e.g., "3/29/2025")
+  
+      const projectName = "";
+      const name = "";
+      const mobileNo = "";
+      const flatsAlloted = "";  // Example number of flats allotted
+      const reraCarpetArea = "";  // Example RERA Carpet Area
+      const wing = "";
+      const flatNo = "";
+      const typeOfFlat = "";
+    
+      // Column headers and data
+      const columns = [
+        "Timestamp", "Project Name", "Name", "Mobile No", 
+        "No of Flats Allotted", "RERA Carpet Area", "Wing", "Flat No", "Type of Flat"
+      ];
+    
+      const data = [
+        timestamp, projectName, name, mobileNo, 
+        flatsAlloted, reraCarpetArea, wing, flatNo, typeOfFlat
+      ];
+    
+      // Add title to the PDF
+      doc.setFontSize(18);
+      doc.text("Flat Allotment Information", 10, 10);
+    
+      // Set font for table
+      doc.setFontSize(12);
+    
+      // Set column widths (adjust to fit the page width)
+      const columnWidths = [25, 30, 20, 20, 20, 20, 20, 20, 20]; // Adjust these to fit your content
+    
+      // Function to split text into multiple lines if it exceeds column width
+      const splitTextToFit = (text, maxWidth) => {
+        const lines = doc.splitTextToSize(text, maxWidth);
+        return lines;
+      };
+      const rowHeight = 15;  // Row height, increase to add padding inside rows
+  
+    // Extra padding between rows
+    const extraRowSpacing = 5; 
+    
+      // Draw column headers
+      let xPos = 10;
+      let yPos = 40;
+    
+     
+      columns.forEach((col, index) => {
+        doc.rect(xPos, yPos, columnWidths[index], 20); // Draw a rectangle for header
+        let headerLines = splitTextToFit(col, columnWidths[index] - 4); // Adjusting padding
+        doc.text(headerLines, xPos + 2, yPos + 7); // Add column header text (split if necessary)
+        xPos += columnWidths[index]; // Move x position for next column
+      });
+    
+      // Draw data rows
+      xPos = 10;
+      yPos += 20;
+    
+      data.forEach((value, index) => {
+        doc.rect(xPos, yPos, columnWidths[index], 10); // Draw a rectangle for data
+        let dataLines = splitTextToFit(value, columnWidths[index] - 4); // Adjusting padding
+        doc.text(dataLines, xPos + 2, yPos + 7); // Add data text (split if necessary)
+        xPos += columnWidths[index]; // Move x position for next column
+      });
+    
+         // Add extra spacing between rows
+         yPos += rowHeight + extraRowSpacing;
+      // Save or download the generated PDF
+      doc.save("Flat_Allotment_Info.pdf");
+    };
+
+ 
+    
   const handleAddPartner = () => {
     setPartners([...partners, { name: "", age: "", occupation: "", mobile: "", email: "", address: "", pan: "", aadhaar: "" }]);
   };
@@ -856,193 +939,13 @@ const handleTabClick = (index) => {
         </div>
       </>
     ) : (
-    //   <div className="firm-form mt-4 p-3" style={{ maxHeight: "500px", overflowY: "auto", paddingRight: "10px" }}>
-    //     <Paper className="p-4" elevation={4} style={{ borderRadius: "12px", paddingBottom: "20px" }}>
-    //       <Typography variant="h5" gutterBottom>
-    //         Firm Details
-    //       </Typography>
-
-    //       {/* <Grid container spacing={2}>
-    //         {["Firm Name", "Firm Address", "Firm PAN No", "Firm GST No"].map((label, index) => (
-    //           <Grid item xs={6} key={index}>
-    //             <TextField label={label} fullWidth variant="outlined" />
-    //           </Grid>
-    //         ))} */}
-    //           <Grid container spacing={2}>
-    //   {["Firm Name", "Firm Address", "Firm PAN No", "Firm GST No"].map((label, index) => (
-    //     <Grid item xs={6} key={index}>
-    //       {label === "Firm Name" ? (
-    //         <TextField
-    //           label={label}
-    //           fullWidth
-    //           variant="outlined"
-    //           value={firmName}
-    //           onChange={(e) => setFirmName(e.target.value)} // Update the Firm Name
-    //           error={!!firmNameError} // Show error state for Firm Name field
-    //           helperText={firmNameError} // Display error message if any
-    //         />
-    //       ) : (
-    //         <TextField
-    //           label={label}
-    //           fullWidth
-    //           variant="outlined"
-    //         />
-    //       )}
-    //     </Grid>
-    //   ))}
-    // {/* </Grid> */}
-
-    //         {[{ label: "Firm PAN No Document", key: "firmPanNoDocument" },
-    //           { label: "Firm GST No Document", key: "firmGstNoDocument" },
-    //           { label: "Firm Light Bill for Address Proof", key: "firmLightBillForAddressProof" }]
-    //           .map((item, index) => (
-    //             <Grid item xs={6} key={index}>
-    //               <Typography variant="body2" gutterBottom>
-    //                 {item.label}
-    //               </Typography>
-    //               <label>
-    //                 <Input
-    //                   type="file"
-    //                   style={{ display: "none" }} // Hide the default input
-    //                   id={`file-input-${index}`} // Unique ID for each input
-    //                   onChange={(e) => handleFileChange(e, item.key)} // Handle file change
-    //                 />
-    //                 <Button variant="contained" color="light" component="span">
-    //                   Choose File
-    //                 </Button>
-    //               </label>
-
-    //               {/* Display selected file name */}
-    //               {fileNames[item.key] && (
-    //                 <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
-    //                   {fileNames[item.key]}
-    //                 </Typography>
-    //               )}
-    //             </Grid>
-    //           ))}
-    //       </Grid>
-
-    //       <Typography variant="h5" className="mt-4" gutterBottom>
-    //         Partner Details
-    //       </Typography>
-
-    //       {partners.map((partner, index) => (
-    //         <Paper key={index} className="p-3 mb-3" elevation={2} style={{ borderRadius: "10px" }}>
-    //           <Grid container spacing={2}>
-    //             {["Name", "Age", "Occupation", "Mobile No.", "Mail ID", "Residential Address", "PAN No.", "Aadhaar No."]
-    //               .map((label, i) => (
-    //                 <Grid item xs={6} key={i}>
-    //                   <TextField
-    //                     label={label}
-    //                     fullWidth
-    //                     variant="outlined"
-    //                     type={label === "Age" ? "number" : "text"}
-    //                     value={partner[label.toLowerCase().replace(/ /g, "")]} // Dynamically map to partner data
-    //                     onChange={(e) => {
-    //                       if (label === "Mobile No.") {
-    //                         handleMobileChange(e, index); // Handle Mobile No. validation
-    //                       } else {
-    //                         // Handle other field changes
-    //                       }
-    //                     }}
-    //                     error={label === "Name" && !!nameError} // Show error for Name field
-    //                     helperText={label === "Name" && nameError} // Show error message for Name
-    //                   />
-    //                 </Grid>
-    //               ))}
-
-    //             {[ 
-    //               "Firm PAN No Document", 
-    //               "Firm GST No Document", 
-    //               "Firm Light Bill for Address Proof" 
-    //             ]
-    //               .map((label, i) => (
-    //                 <Grid item xs={6} key={i}>
-    //                   <Typography variant="body2" gutterBottom>
-    //                     {label}
-    //                   </Typography>
-    //                   <label>
-    //                     <Input
-    //                       type="file"
-    //                       style={{ display: "none" }} // Hide the default input
-    //                       id={`file-input-${i}`} // Unique ID for each input
-    //                       onChange={(e) => handleFileChange(e, label)} // Handle file change
-    //                     />
-    //                     <Button variant="contained" color="light" component="span">
-    //                       Choose File
-    //                     </Button>
-    //                   </label>
-
-    //                   {/* Display selected file name */}
-    //                   {fileNames[label] && (
-    //                     <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
-    //                       {fileNames[label]}
-    //                     </Typography>
-    //                   )}
-    //                 </Grid>
-    //               ))}
-
-    //             {partners.length > 1 && (
-    //               <Grid item xs={12} className="text-right">
-    //                 <Button variant="contained" color="error" onClick={() => handleRemovePartner(index)}>
-    //                   <FaTrash /> Remove Partner
-    //                 </Button>
-    //               </Grid>
-    //             )}
-    //           </Grid>
-    //         </Paper>
-    //       ))}
-
-    //       <Button className="m-3 m-2" variant="contained" color="primary" onClick={handleAddPartner}>
-    //         <FaPlus /> Add Partner
-    //       </Button>
-
-    //       <Button
-    //         variant="contained"
-    //         className="m-3"
-    //         color="success"
-    //         onClick={() => {
-    //           if (validateForm()) {
-    //             setShowFirmForm(false);
-    //             toast.success("Details are submitted!", { position: "top-right", autoClose: 3000 });
-    //           }
-    //         }}
-    //       >
-    //         Submit
-    //       </Button>
-    //     </Paper>
-    //   </div>
-
     <div className="firm-form mt-4 p-3" style={{ maxHeight: "500px", overflowY: "auto", paddingRight: "10px" }}>
     <Paper className="p-4" elevation={4} style={{ borderRadius: "12px", paddingBottom: "20px" }}>
       <Typography variant="h5" gutterBottom>
         Firm Details
       </Typography>
 
-      {/* <Grid container spacing={2}>
-        {["Firm Name", "Firm Address", "Firm PAN No", "Firm GST No"].map((label, index) => (
-          <Grid item xs={6} key={index}>
-            {label === "Firm Name" ? (
-              <TextField
-                label={label}
-                fullWidth
-                variant="outlined"
-                value={firmName}
-                onChange={(e) => setFirmName(e.target.value)} // Update the Firm Name
-                error={!!firmNameError} // Show error state for Firm Name field
-                helperText={firmNameError} // Display error message if any
-              />
-            ) : (
-              <TextField
-                label={label}
-                fullWidth
-                variant="outlined"
-              />
-            )}
-          </Grid>
-        ))}
-      </Grid> */}
-      
+    
       <Grid container spacing={2}>
   <Grid item xs={6}>
     <TextField
@@ -1084,42 +987,15 @@ const handleTabClick = (index) => {
 </Grid>
 
 
-      {/* {[{ label: "Firm PAN No Document", key: "firmPanNoDocument" },
-        { label: "Firm GST No Document", key: "firmGstNoDocument" },
-        { label: "Firm Light Bill for Address Proof", key: "firmLightBillForAddressProof" }]
-        .map((item, index) => (
-          <Grid item xs={6} key={index}>
-            <Typography variant="body2" gutterBottom>
-              {item.label}
-            </Typography>
-            <label>
-              <Input
-                type="file"
-                style={{ display: "none" }} // Hide the default input
-                id={`file-input-${index}`} // Unique ID for each input
-                onChange={(e) => handleFileChange(e, item.key)} // Handle file change
-              />
-              <Button variant="contained" color="light" component="span">
-                Choose File
-              </Button>
-            </label>
-
-           
-            {fileNames[item.key] && (
-              <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
-                {fileNames[item.key]}
-              </Typography>
-            )}
-          </Grid>
-        ))} */}
+   
 
 <Grid container spacing={2}>
   {[{ label: "Firm PAN No Document", key: "firmPanNoDocument" },
     { label: "Firm GST No Document", key: "firmGstNoDocument" },
-    { label: "Firm Light Bill for Address Proof", key: "firmLightBillForAddressProof" }]
+    { label: "Firm Light Bill for Address Proof Document", key: "firmLightBillForAddressProof" }]
     .map((item, index) => (
       <Grid item xs={6} key={index}>
-        <Typography variant="body2" gutterBottom>
+        <Typography variant="body2" gutterBottom style={{ paddingTop: "16px" }}>
           {item.label}
         </Typography>
         <label>
@@ -1148,162 +1024,79 @@ const handleTabClick = (index) => {
         Partner Details
       </Typography>
 
-      {/* {partners.map((partner, index) => (
-        <Paper key={index} className="p-3 mb-3" elevation={2} style={{ borderRadius: "10px" }}>
-          <Grid container spacing={2}>
-            {["Name", "Age", "Occupation", "Mobile No.", "Mail ID", "Residential Address", "PAN No.", "Aadhaar No."]
-              .map((label, i) => (
-                <Grid item xs={6} key={i}>
-                  <TextField
-                    label={label}
-                    fullWidth
-                    variant="outlined"
-                    type={label === "Age" ? "number" : "text"}
-                    value={partner[label.toLowerCase().replace(/ /g, "")]} // Dynamically map to partner data
-                    onChange={(e) => {
-                      if (label === "Name") {
-                        handlePartnerNameChange(e, index); // Handle Name change and validation
-                      }
-                    }}
-                    error={label === "Name" && !!nameError} // Show error for Name field if any
-                    helperText={label === "Name" && nameError} // Show error message for Name if any
-                  />
-                </Grid>
-              ))}
-          </Grid>
-        </Paper>
-      ))} */}
-      {/* {partners.map((partner, index) => (
-  <Paper key={index} className="p-3 mb-3" elevation={2} style={{ borderRadius: "10px" }}>
-    <Grid container spacing={2}>
-      {["Name", "Age", "Occupation", "Mobile No.", "Mail ID", "Residential Address", "PAN No.", "Aadhaar No."]
-        .map((label, i) => (
-          // <Grid item xs={6} key={i}>
-          //   <TextField
-          //     label={label}
-          //     fullWidth
-          //     variant="outlined"
-          //     type={label === "Age" ? "number" : "text"}
-          //     value={partner[label.toLowerCase().replace(/ /g, "")]} // Dynamically map to partner data
-          //     onChange={(e) => {
-          //       if (label === "Name") {
-          //         handlePartnerNameChange(e, index); // Handle Name change and validation
-          //       } else if (label === "Mobile No.") {
-          //         handleMobileChange(e, index); // Handle Mobile No. validation
-          //       } else if (label === "Mail ID") {
-          //         handleEmailChange(e, index); // Handle Email validation
-          //       }else if (label === "PAN No.") {
-          //         handlePANChange(e, index); // Handle PAN No. validation
-          //       }
-          //     }}
-          //     error={
-          //       (label === "Name" && !!nameError) ||
-          //       (label === "Mobile No." && !!mobileError) ||
-          //       (label === "Mail ID" && !!emailError) ||
-          //       (label === "PAN No." && !!panError)
-          //     } // Show error if any validation fails
-          //     helperText={
-          //       (label === "Name" && nameError) ||
-          //       (label === "Mobile No." && mobileError) ||
-          //       (label === "Mail ID" && emailError) ||
-          //       (label === "PAN No." && panError)
-          //     } // Display error message
-          //   />
-          // </Grid>
 
-          <Grid item xs={6} key={i}>
-          <TextField
-            label={label}
-            fullWidth
-            variant="outlined"
-            type={label === "Age" ? "text" : "text"} // Keep text type for simplicity
-            value={partner[label.toLowerCase().replace(/ /g, "")]} // Dynamically map to partner data
-            onChange={(e) => {
-              if (label === "Age") {
-                handleAgeChange(e, index); // Handle Age change
-              } else if (label === "Occupation") {
-                handleOccupationChange(e, index); // Handle Occupation change (if needed)
-              } else if (label === "Name") {
-                handlePartnerNameChange(e, index); // Handle Name change
-              } else if (label === "Mobile No.") {
-                handleMobileChange(e, index); // Handle Mobile No. change
-              } else if (label === "Mail ID") {
-                handleEmailChange(e, index); // Handle Mail ID change
-              } else if (label === "PAN No.") {
-                handlePANChange(e, index); // Handle PAN No. change
-              }
-            }}
-            error={ 
-              (label === "Name" && !!nameError) ||
-              (label === "Mobile No." && !!mobileError) ||
-              (label === "Mail ID" && !!emailError) ||
-              (label === "PAN No." && !!panError) ||
-              (label === "Age" && !!ageError) ||
-              (label === "Occupation" && false) // No error for Occupation
-            }
-            helperText={ 
-              (label === "Name" && nameError) ||
-              (label === "Mobile No." && mobileError) ||
-              (label === "Mail ID" && emailError) ||
-              (label === "PAN No." && panError) ||
-              (label === "Age" && ageError) ||
-              (label === "Occupation" && "") // No error message for Occupation
-            }
-          />
-        </Grid>
-        
-
-        ))}
-    </Grid>
-  </Paper>
-))} */}
 
 
 
 {partners.map((partner, index) => (
   <Paper key={index} className="p-3 mb-3" elevation={2} style={{ borderRadius: "10px" }}>
     <Grid container spacing={2}>
-      {["Name", "Age", "Occupation", "Mobile No.", "Mail ID", "Residential Address", "PAN No.", "Aadhaar No."]
+      {["Name", "Age", "Occupation", "Mobile No.", "Mail ID", "Residential Address", "PAN No.", "Aadhaar No.",
+        "Residential Address Document", "Pan No Document", "Aadhar No Document", "Photo Document", "Light Bill For Address Proof Document"]
         .map((label, i) => (
           <Grid item xs={6} key={i}>
-            <TextField
-              label={label}
-              fullWidth
-              variant="outlined"
-              type={label === "Age" ? "text" : "text"} // Keep text type for simplicity
-              value={partner[label.toLowerCase().replace(/ /g, "")]} // Dynamically map to partner data
-              onChange={(e) => {
-                if (label === "Age") {
-                  handleAgeChange(e, index); // Handle Age change and validation
-                } else if (label === "Occupation") {
-                  handleOccupationChange(e, index); // Handle Occupation change
-                } else if (label === "Name") {
-                  handlePartnerNameChange(e, index); // Handle Name change
-                } else if (label === "Mobile No.") {
-                  handleMobileChange(e, index); // Handle Mobile No. change
-                } else if (label === "Mail ID") {
-                  handleEmailChange(e, index); // Handle Mail ID change
-                } else if (label === "PAN No.") {
-                  handlePANChange(e, index); // Handle PAN No. change
+            {/* Check if the label is one of the document fields to show file input */}
+            {["Residential Address Document", "Pan No Document", "Aadhar No Document", "Photo Document", "Light Bill For Address Proof Document"].includes(label) ? (
+              <>
+                <Typography variant="body2" gutterBottom>{label}</Typography>
+                <label>
+                  <Input
+                    type="file"
+                    style={{ display: "none" }} // Hide default file input
+                    id={`file-input-${label}`} // Unique ID for each file input
+                    onChange={(e) => handleFileChange(e, label)} // Handle file change
+                  />
+                  <Button variant="contained" color="light" component="span">
+                    Choose File
+                  </Button>
+                </label>
+                {/* Display selected file name */}
+                {fileNames[label] && (
+                  <Typography variant="body2" color="textSecondary" style={{ marginTop: "8px" }}>
+                    {fileNames[label]}
+                  </Typography>
+                )}
+              </>
+            ) : (
+              <TextField
+                label={label}
+                fullWidth
+                variant="outlined"
+                type={label === "Age" ? "text" : "text"} // Keep text type for simplicity
+                value={partner[label.toLowerCase().replace(/ /g, "")]} // Dynamically map to partner data
+                onChange={(e) => {
+                  if (label === "Age") {
+                    handleAgeChange(e, index); // Handle Age change and validation
+                  } else if (label === "Occupation") {
+                    handleOccupationChange(e, index); // Handle Occupation change
+                  } else if (label === "Name") {
+                    handlePartnerNameChange(e, index); // Handle Name change
+                  } else if (label === "Mobile No.") {
+                    handleMobileChange(e, index); // Handle Mobile No. change
+                  } else if (label === "Mail ID") {
+                    handleEmailChange(e, index); // Handle Mail ID change
+                  } else if (label === "PAN No.") {
+                    handlePANChange(e, index); // Handle PAN No. change
+                  }
+                }}
+                error={ 
+                  (label === "Name" && !!nameError) ||
+                  (label === "Mobile No." && !!mobileError) ||
+                  (label === "Mail ID" && !!emailError) ||
+                  (label === "PAN No." && !!panError) ||
+                  (label === "Age" && !!ageError) ||
+                  (label === "Occupation" && !!occupationError) // Check for Occupation error
                 }
-              }}
-              error={ 
-                (label === "Name" && !!nameError) ||
-                (label === "Mobile No." && !!mobileError) ||
-                (label === "Mail ID" && !!emailError) ||
-                (label === "PAN No." && !!panError) ||
-                (label === "Age" && !!ageError) ||
-                (label === "Occupation" && !!occupationError) // Check for Occupation error
-              }
-              helperText={ 
-                (label === "Name" && nameError) ||
-                (label === "Mobile No." && mobileError) ||
-                (label === "Mail ID" && emailError) ||
-                (label === "PAN No." && panError) ||
-                (label === "Age" && ageError) ||
-                (label === "Occupation" && occupationError) // Show Occupation error
-              }
-            />
+                helperText={ 
+                  (label === "Name" && nameError) ||
+                  (label === "Mobile No." && mobileError) ||
+                  (label === "Mail ID" && emailError) ||
+                  (label === "PAN No." && panError) ||
+                  (label === "Age" && ageError) ||
+                  (label === "Occupation" && occupationError) // Show Occupation error
+                }
+              />
+            )}
           </Grid>
         ))}
     </Grid>
@@ -1579,7 +1372,7 @@ onClick={() => {
        <div className='button-container'>
       <Button variant="contained" color="primary" style={{ background: '#272ba8' }} className='fw-bold'
       onClick={() => setShowLandownerForm(true)}>
-        + Display LandOwner Info
+        + Create Landowner Info
       </Button>
   
   <div className="right-buttons">

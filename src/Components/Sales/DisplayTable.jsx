@@ -8,9 +8,10 @@ const DisplayTable = ({ data }) => {
         <TableHead>
           {/* <TableRow sx={{ bgcolor: "primary.main" }}> */}
            <TableRow sx={{background:"#3621a9"}}>
-            <TableCell  sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>ACTION</TableCell>
-            <TableCell  sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>FIRM NAME</TableCell>
+            {/* <TableCell  sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>ACTION</TableCell> */}
             <TableCell  sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>TIMESTAMP</TableCell>
+            <TableCell  sx={{ color: "white", fontWeight: "bold",whiteSpace: "nowrap" }}>FIRM NAME</TableCell>
+            
             <TableCell  sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>PROJECT NAME</TableCell>
             <TableCell  sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap" }}>PROJECT ADDRESS</TableCell>
             <TableCell  sx={{ color: "white", fontWeight: "bold" ,whiteSpace: "nowrap"}}>OLD SURVEY NUMBER</TableCell>
